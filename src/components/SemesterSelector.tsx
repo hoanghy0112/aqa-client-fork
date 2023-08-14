@@ -8,7 +8,6 @@ import {
 	DropdownMenu,
 	DropdownSection,
 	DropdownTrigger,
-	Input,
 } from "@nextui-org/react";
 import { useContext } from "react";
 
@@ -23,7 +22,9 @@ export default function SemesterSelector({
 		<Dropdown backdrop="blur">
 			<DropdownTrigger>
 				<Button variant="bordered">
-					{semester?.display_name || "Chọn học kỳ"}
+					<p className="font-medium">
+						{semester?.display_name || "Chọn học kỳ"}
+					</p>
 				</Button>
 			</DropdownTrigger>
 			<DropdownMenu
@@ -36,7 +37,7 @@ export default function SemesterSelector({
 				<DropdownSection title="Chọn học kỳ">
 					{semesters.map(({ display_name, semester_id }) => (
 						<DropdownItem className="py-2" key={semester_id}>
-							{display_name}
+							<p className="font-medium"> {display_name}</p>
 						</DropdownItem>
 					))}
 				</DropdownSection>

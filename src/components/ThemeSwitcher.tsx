@@ -18,7 +18,7 @@ export default function ThemeSwitcher() {
 
 	return (
 		mounted && (
-			<div className="absolute right-5 top-3">
+			<div className="absolute right-7 top-3">
 				<DarkModeToggle
 					mode={theme as Mode}
 					dark="Dark mode"
