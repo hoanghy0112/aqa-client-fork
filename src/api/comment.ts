@@ -8,12 +8,12 @@ export default async function getComments({
 	page_size = PAGE_SIZE,
 }: {
 	page: number;
-	type?: "positive" | "negative";
+	type?: "positive" | "negative" | "all";
 	q?: string;
 	page_size?: number;
 }) {
 	const res = await fetch(
-		`${GET_COMMENT_LIST}?${type ? `type=${type}&` : ""}${
+		`${GET_COMMENT_LIST}?${type && type !== "all" ? `type=${type}&` : ""}${
 			q ? `q=${q}` : ""
 		}page=${page}&page_size=${page_size}`
 	);
