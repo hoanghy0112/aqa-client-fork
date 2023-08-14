@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@anatoliygatt/dark-mode-toggle": "^1.0.1",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@nextui-org/react": "^2.0.18",
     "@types/node": "20.4.8",
     "@types/react": "18.2.18",

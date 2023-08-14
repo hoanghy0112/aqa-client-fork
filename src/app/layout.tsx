@@ -1,6 +1,9 @@
-import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import "./globals.css";
+
+import Providers from "./providers";
+import ThemeSwitcher from "@/components/ThemeSwitcher";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +19,15 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang="en" suppressHydrationWarning>
-			<body className={inter.className}>{children}</body>
+			<body className={inter.className}>
+				<Providers>
+					<ThemeSwitcher />
+					<div className="h-screen w-screen flex flex-row">
+						<nav className="w-20 shadow-xl transition-all hover:w-96 hover:shadow-2xl"></nav>
+						<main className="w-full">{children}</main>
+					</div>
+				</Providers>
+			</body>
 		</html>
 	);
 }
