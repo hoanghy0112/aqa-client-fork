@@ -21,8 +21,8 @@ export default function CommentItem({
 	return (
 		<div className="px-3 py-4 flex flex-row items-center border-b-1 border-b-slate-400 dark:border-b-slate-600">
 			<p className="font-medium text-md">{content}</p>
-			<div className="ml-auto pl-5 flex shrink-0 flex-row gap-5">
-				<Card isPressable shadow="sm" className="p-3 flex flex-row items-center">
+			<div className="ml-auto w-56 pl-5 flex shrink-0 flex-row gap-5">
+				<Card isPressable shadow="sm" className="p-3 w-12 flex flex-row items-center">
 					<Image
 						src={COPY_ICON}
 						width={24}
@@ -33,13 +33,13 @@ export default function CommentItem({
 				<Card
 					isPressable
 					shadow="sm"
-					className={`p-2 ${
+					className={`p-2 w-28 ${
 						type === "positive"
 							? "bg-green-300 dark:bg-green-700"
 							: "bg-red-300 dark:bg-red-700"
 					}`}
 				>
-					<p className=" capitalize font-medium text-md w-24 py-1">{type}</p>
+					<p className=" capitalize font-medium text-md py-1">{type}</p>
 				</Card>
 			</div>
 		</div>

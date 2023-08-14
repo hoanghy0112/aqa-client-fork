@@ -1,5 +1,6 @@
 import getComments from "@/api/comment";
 import CommentItem from "@/components/CommentItem/CommentItem";
+import CommentList from "@/components/CommentList";
 
 export function generateStaticParams() {
 	return [{ type: "all" }, { type: "positive" }, { type: "negative" }];
@@ -26,6 +27,7 @@ export default async function Page({
 					/>
 				)
 			)}
+			<CommentList type={type} />
 		</>
 	);
 }
