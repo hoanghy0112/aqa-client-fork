@@ -7,12 +7,15 @@ import POSITIVE_COMMENT_ICON from "@assets/positive_comment.svg";
 import { ReactNode } from "react";
 
 import CommentWrapper from "@/components/CommentWrapper";
+import { getCommentQuantity } from "@/api/comment";
 
 export default async function CommentLayout({
 	children,
 }: {
 	children: ReactNode;
 }) {
+	const nums = await getCommentQuantity("all", "");
+
 	return (
 		<div className="pt-12">
 			<h1 className="font-semibold text-3xl">Bình luận</h1>
@@ -23,7 +26,7 @@ export default async function CommentLayout({
 						link="all"
 						icon={ALL_COMMENT_ICON}
 						title="Tất cả"
-						number={0}
+						number={nums.total}
 					/>
 					<InfoTab
 						link="positive"

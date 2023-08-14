@@ -3,13 +3,15 @@
 import { motion } from "framer-motion";
 
 import getComments from "@/api/comment";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import CommentItem from "./CommentItem/CommentItem";
 
-import { Spinner, Skeleton } from "@nextui-org/react";
-import { PAGE_SIZE } from "@/constants/fetch_config";
+import SemesterContext from "@/contexts/SemesterContext";
+import { Skeleton, Spinner } from "@nextui-org/react";
 
 export default function CommentList({ type }: { type: string }) {
+	const { semester } = useContext(SemesterContext);
+
 	const [comments, setComments] = useState<Comment[]>([]);
 	const [page, setPage] = useState(0);
 
@@ -21,7 +23,11 @@ export default function CommentList({ type }: { type: string }) {
 	useEffect(() => {
 		(async () => {
 			if (hasNext) setLoading(true);
-			const comments = await getComments({ page, type });
+			const comments = await getComments({
+				page,
+				type,
+				semester: semester?.semester_id || "all",
+			});
 			setHasNext(comments.meta.has_next);
 			setComments((prev: Comment[]) => [...prev, ...comments.data]);
 		})();
@@ -30,7 +36,7 @@ export default function CommentList({ type }: { type: string }) {
 	useEffect(() => {
 		setComments([]);
 		setPage(1);
-	}, [type]);
+	}, [type, semester?.semester_id]);
 
 	useEffect(() => {
 		setLoading(false);
@@ -62,7 +68,6 @@ export default function CommentList({ type }: { type: string }) {
 			<div ref={bottomRef} />
 			{hasNext ? (
 				<>
-					{" "}
 					{Array(4)
 						.fill("")
 						.map((_, index) => (
@@ -97,7 +102,7 @@ export default function CommentList({ type }: { type: string }) {
 			) : (
 				<div>Không còn bình luận nào</div>
 			)}
-			{loading ? (
+			{loading && hasNext ? (
 				<>
 					<div className="w-full pt-9 pb-5 flex flex-row justify-center gap-5 items-center">
 						<Spinner size="md" />
