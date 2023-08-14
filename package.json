@@ -2,6 +2,7 @@
   "name": "qaq-web",
   "version": "0.1.0",
   "private": true,
+  "types": "./src/types/index.d.ts",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

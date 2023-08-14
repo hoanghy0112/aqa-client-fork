@@ -1,10 +1,8 @@
-// "use client";
-
 import FeatureCard from "@/components/FeatureCard";
 import SearchBar from "@/components/SearchBar";
 import { HOME_INTRODUCTION } from "@/constants/home_introduction";
 
-export default function Home() {
+export default async function Home() {
 	return (
 		<div>
 			<SearchBar />
@@ -15,6 +13,7 @@ export default function Home() {
 						introduction={introduction}
 					/>
 				))}
+				Y
 			</div>
 		</div>
 	);
