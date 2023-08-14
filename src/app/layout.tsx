@@ -24,7 +24,7 @@ export default function RootLayout({
 					<ThemeSwitcher />
 					<div className="h-screen w-screen flex flex-row">
 						<nav className="w-20 shadow-xl transition-all hover:w-96 hover:shadow-2xl"></nav>
-						<main className="w-full overflow-y-scroll overflow-x-hidden">
+						<main className="w-full px-20 overflow-y-scroll overflow-x-hidden">
 							{children}
 						</main>
 					</div>
