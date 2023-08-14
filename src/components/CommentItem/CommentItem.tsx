@@ -20,7 +20,7 @@ export default function CommentItem({
 }) {
 	return (
 		<div className="px-3 py-4 flex flex-row items-center border-b-1 border-b-slate-400 dark:border-b-slate-600">
-			<p className="font-medium text-lg">{content}</p>
+			<p className="font-medium text-md">{content}</p>
 			<div className="ml-auto pl-5 flex shrink-0 flex-row gap-5">
 				<Card isPressable shadow="sm" className="p-3 flex flex-row items-center">
 					<Image
@@ -39,7 +39,7 @@ export default function CommentItem({
 							: "bg-red-300 dark:bg-red-700"
 					}`}
 				>
-					<p className=" capitalize font-medium w-24 py-1">{type}</p>
+					<p className=" capitalize font-medium text-md w-24 py-1">{type}</p>
 				</Card>
 			</div>
 		</div>

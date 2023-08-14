@@ -8,7 +8,7 @@ export default async function getComments({
 	page_size = PAGE_SIZE,
 }: {
 	page: number;
-	type?: "positive" | "negative" | "all";
+	type?: string;
 	q?: string;
 	page_size?: number;
 }) {

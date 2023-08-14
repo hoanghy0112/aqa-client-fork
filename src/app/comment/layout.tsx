@@ -1,13 +1,12 @@
 import InfoTab from "@/components/InfoTab";
 
-import ALL_COMMENT_ICON from "@assets/all_comment.svg";
-import POSITIVE_COMMENT_ICON from "@assets/positive_comment.svg";
-import NEGATIVE_COMMENT_ICON from "@assets/negative_comment.svg";
-import { ReactNode } from "react";
 import SemesterSelector from "@/components/SemesterSelector/SemesterSelector";
-import { getSemesterList } from "@/api/semester";
+import ALL_COMMENT_ICON from "@assets/all_comment.svg";
+import NEGATIVE_COMMENT_ICON from "@assets/negative_comment.svg";
+import POSITIVE_COMMENT_ICON from "@assets/positive_comment.svg";
+import { ReactNode } from "react";
 
-import CommentList from "@/components/CommentList";
+import CommentWrapper from "@/components/CommentWrapper";
 
 export default async function CommentLayout({
 	children,
@@ -43,7 +42,7 @@ export default async function CommentLayout({
 					<SemesterSelector />
 				</div>
 			</div>
-			<CommentList>{children}</CommentList>
+			<CommentWrapper>{children}</CommentWrapper>
 		</div>
 	);
 }
