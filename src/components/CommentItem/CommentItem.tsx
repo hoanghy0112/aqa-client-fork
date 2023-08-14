@@ -33,7 +33,7 @@ export default function CommentItem({
 				<Card
 					isPressable
 					shadow="sm"
-					className={`p-2 w-28 ${
+					className={`p-2 w-28 grid items-center ${
 						type === "positive"
 							? "bg-green-300 dark:bg-green-700"
 							: "bg-red-300 dark:bg-red-700"

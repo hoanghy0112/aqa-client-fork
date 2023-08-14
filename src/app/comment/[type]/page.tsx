@@ -11,11 +11,11 @@ export default async function Page({
 }: {
 	params: { type: "all" | "positive" | "negative" };
 }) {
-	const comments = await getComments({ page: 0, type });
+	// const comments = await getComments({ page: 0, type });
 
 	return (
 		<>
-			{comments.data.map(
+			{/* {comments.data.map(
 				({ content, type, comment_id, teach_id }: Comment) => (
 					<CommentItem
 						key={comment_id}
@@ -26,7 +26,7 @@ export default async function Page({
 						isLast={false}
 					/>
 				)
-			)}
+			)} */}
 			<CommentList type={type} />
 		</>
 	);

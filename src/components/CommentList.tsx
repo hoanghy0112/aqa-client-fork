@@ -11,7 +11,7 @@ import { PAGE_SIZE } from "@/constants/fetch_config";
 
 export default function CommentList({ type }: { type: string }) {
 	const [comments, setComments] = useState<Comment[]>([]);
-	const [page, setPage] = useState(1);
+	const [page, setPage] = useState(0);
 
 	const [hasNext, setHasNext] = useState<boolean>(true);
 	const [loading, setLoading] = useState<boolean>(false);
@@ -79,8 +79,7 @@ export default function CommentList({ type }: { type: string }) {
 										}}
 										transition={{
 											ease: "easeOut",
-											duration: 0.8,
-											delay: 0.8,
+											duration: 0.3,
 										}}
 									/>
 								</Skeleton>
