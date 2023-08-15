@@ -8,10 +8,11 @@ import ALL_COMMENT_ICON from "@assets/all_comment.svg";
 import NEGATIVE_COMMENT_ICON from "@assets/negative_comment.svg";
 import POSITIVE_COMMENT_ICON from "@assets/positive_comment.svg";
 
-import { getCommentQuantity } from "@/api/comment";
 import { GET_COMMENT_QUANTITY } from "@/constants/api_endpoint";
-import { useContext } from "react";
 import SemesterContext from "@/contexts/SemesterContext";
+import { useContext } from "react";
+
+import { usePathname } from "next/navigation";
 
 export default function CommentQuantityInfo() {
 	const { semester } = useContext(SemesterContext);
@@ -26,7 +27,6 @@ export default function CommentQuantityInfo() {
 	return (
 		<>
 			<InfoTab
-				defaultChecked
 				link="all"
 				icon={ALL_COMMENT_ICON}
 				title="Tất cả"

@@ -12,7 +12,7 @@ export default async function CommentLayout({
 	return (
 		<div className="pt-12">
 			<h1 className="font-semibold text-3xl">Bình luận</h1>
-			<div className="mt-20 flex flex-row items-center ">
+			<div className="mt-14 flex flex-row items-center ">
 				<div className="rounded-md flex flex-row overflow-hidden">
 					<CommentQuantityInfo />
 				</div>

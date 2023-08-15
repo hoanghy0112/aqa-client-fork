@@ -32,9 +32,14 @@ export default function SemesterSelectorUI({
 				aria-label="Static Actions"
 				selectionMode="single"
 				selectedKeys={new Set([semester?.semester_id || ""])}
-				onAction={(key) =>
-					setSemester?.(semesters.find((v) => v.semester_id === key))
-				}
+				onAction={(key) => {
+					if (key === "all")
+						setSemester?.({
+							display_name: "Tất cả học kỳ",
+							semester_id: "all",
+						});
+					else setSemester?.(semesters.find((v) => v.semester_id === key));
+				}}
 			>
 				<DropdownSection title="Chọn học kỳ">
 					{semesters.map(({ display_name, semester_id }) => (
@@ -42,6 +47,11 @@ export default function SemesterSelectorUI({
 							<p className="font-medium"> {display_name}</p>
 						</DropdownItem>
 					))}
+				</DropdownSection>
+				<DropdownSection title={"Khác"}>
+					<DropdownItem className={`py-2`} key={"all"}>
+						<p className="font-medium">Tất cả</p>
+					</DropdownItem>
 				</DropdownSection>
 			</DropdownMenu>
 		</Dropdown>

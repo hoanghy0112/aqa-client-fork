@@ -2,7 +2,7 @@
 
 import { Card, Spinner } from "@nextui-org/react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function InfoTab({
 	icon,
@@ -20,6 +20,8 @@ export default function InfoTab({
 	defaultChecked?: boolean;
 }) {
 	const { push } = useRouter();
+	const pathName = usePathname();
+
 	return (
 		<Card radius="none" shadow="none" isPressable>
 			<label
@@ -31,7 +33,7 @@ export default function InfoTab({
 					name="comment_tab"
 					className="peer hidden"
 					type="radio"
-					defaultChecked={defaultChecked}
+					checked={pathName.split("/").at(-1) === link}
 					onChange={() => {
 						push(`/comment/${link}`);
 					}}
