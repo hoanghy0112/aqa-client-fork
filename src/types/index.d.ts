@@ -9,3 +9,8 @@ declare interface Comment {
 	comment_id: string;
 	teach_id: string;
 }
+
+declare interface Criteria {
+	criteria_id: string;
+	display_name: string;
+}

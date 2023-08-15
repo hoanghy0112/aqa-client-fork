@@ -19,7 +19,7 @@ export default function SemesterSelectorUI({
 	const { semester, setSemester } = useContext(SemesterContext);
 
 	return (
-		<Dropdown backdrop="blur">
+		<Dropdown backdrop="blur" shouldBlockScroll={false}>
 			<DropdownTrigger>
 				<Button variant="bordered">
 					<p className="font-medium">
