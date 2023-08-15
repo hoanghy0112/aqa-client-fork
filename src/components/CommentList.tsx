@@ -8,9 +8,11 @@ import CommentItem from "./CommentItem/CommentItem";
 
 import SemesterContext from "@/contexts/SemesterContext";
 import { Skeleton, Spinner } from "@nextui-org/react";
+import { CommentContext } from "@/app/comment/context";
 
 export default function CommentList({ type }: { type: string }) {
 	const { semester } = useContext(SemesterContext);
+	const { keyword, setIsLoading } = useContext(CommentContext);
 
 	const [comments, setComments] = useState<Comment[]>([]);
 	const [page, setPage] = useState(0);
@@ -26,18 +28,21 @@ export default function CommentList({ type }: { type: string }) {
 			const comments = await getComments({
 				page,
 				type,
+				q: keyword,
 				semester: semester?.semester_id || "all",
 			});
+			console.log({ comments });
+			setIsLoading(false);
 			setHasNext(comments.meta.has_next);
 			setComments((prev: Comment[]) => [...prev, ...comments.data]);
 		})();
-	}, [page, type]);
+	}, [page, type, keyword]);
 
 	useEffect(() => {
 		setHasNext(true);
 		setComments([]);
 		setPage(1);
-	}, [type, semester?.semester_id]);
+	}, [type, semester?.semester_id, keyword]);
 
 	useEffect(() => {
 		setLoading(false);

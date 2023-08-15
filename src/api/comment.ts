@@ -19,7 +19,7 @@ export default async function getComments({
 }) {
 	const res = await fetch(
 		`${GET_COMMENT_LIST}?${type && type !== "all" ? `type=${type}&` : ""}${
-			q ? `q=${q}` : ""
+			q ? `q=${q}&` : ""
 		}${
 			semester && semester !== "all" ? `semester_id=${semester}&` : ""
 		}page=${page}&page_size=${page_size}`

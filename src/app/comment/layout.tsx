@@ -3,6 +3,8 @@ import { ReactNode } from "react";
 
 import CommentWrapper from "@/components/CommentWrapper";
 import CommentQuantityInfo from "@/components/CommentQuantityInfo";
+import CommentProvider from "./provider";
+import CommentSearchBar from "@/components/CommentSearchBar";
 
 export default async function CommentLayout({
 	children,
@@ -12,15 +14,18 @@ export default async function CommentLayout({
 	return (
 		<div className="pt-12">
 			<h1 className="font-semibold text-3xl">Bình luận</h1>
-			<div className="mt-14 flex flex-row items-center ">
-				<div className="rounded-md flex flex-row overflow-hidden">
-					<CommentQuantityInfo />
+			<CommentProvider>
+				<div className="mt-14 flex flex-row items-center ">
+					<div className="rounded-md flex flex-row overflow-hidden">
+						<CommentQuantityInfo />
+					</div>
+					<div className="ml-auto mr-10">
+						<SemesterSelector />
+					</div>
 				</div>
-				<div className="ml-auto mr-10">
-					<SemesterSelector />
-				</div>
-			</div>
-			<CommentWrapper>{children}</CommentWrapper>
+				<CommentSearchBar />
+				<CommentWrapper>{children}</CommentWrapper>
+			</CommentProvider>
 		</div>
 	);
 }

@@ -13,14 +13,16 @@ import SemesterContext from "@/contexts/SemesterContext";
 import { useContext } from "react";
 
 import { usePathname } from "next/navigation";
+import { CommentContext } from "@/app/comment/context";
 
 export default function CommentQuantityInfo() {
 	const { semester } = useContext(SemesterContext);
+	const { keyword } = useContext(CommentContext);
 
 	const { data, isLoading, error } = useSWR(
 		`${GET_COMMENT_QUANTITY}?semester_id=${
 			semester?.semester_id || "all"
-		}&q=${""}`,
+		}&q=${keyword || ""}`,
 		(...args) => fetch(...args).then((r) => r.json())
 	);
 
@@ -31,7 +33,7 @@ export default function CommentQuantityInfo() {
 				icon={ALL_COMMENT_ICON}
 				title="Tất cả"
 				isLoading={isLoading}
-				number={data?.total}
+				number={(data?.positive || 0) + (data?.negative || 0)}
 			/>
 			<InfoTab
 				link="positive"
