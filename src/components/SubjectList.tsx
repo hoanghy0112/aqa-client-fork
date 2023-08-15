@@ -13,6 +13,7 @@ import {
 	Tooltip,
 	getKeyValue,
 } from "@nextui-org/react";
+import TableSketon from "./TableSkeleton";
 
 export default function SubjectList({
 	semester,
@@ -30,21 +31,25 @@ export default function SubjectList({
 	});
 
 	return (
-		<>
-			<div className="w-[800px]"></div>
-			{items.length > 0 ? (
+		<div className="pt-10">
+			{items.length > 0 || !isLoading ? (
 				<Table
 					isStriped
 					aria-label="Subject table"
-					className="mt-10"
 					bottomContent={
 						isLoading ? (
-							<div
-								ref={bottomRef}
-								className=" w-full py-4 flex flex-row justify-center gap-2 items-center"
-							>
-								<Spinner size="sm" />
-								<p className=" text-md font-semibold"> Đang tải...</p>
+							<div>
+								{/* <TableSketon lines={4} /> */}
+								<div
+									ref={bottomRef}
+									className=" w-full py-4 flex flex-row justify-center gap-2 items-center"
+								>
+									<Spinner size="sm" />
+									<p className=" text-md font-semibold">
+										{" "}
+										Đang tải...
+									</p>
+								</div>
 							</div>
 						) : (
 							<div
@@ -61,11 +66,13 @@ export default function SubjectList({
 					<TableHeader
 						columns={[
 							...columns,
-							...items[0].points.map((v) => ({
-								key: v.criteria_id,
-								index: v.index,
-								label: v.criteria_name,
-							})),
+							...(items.length > 0
+								? items[0].points.map((v) => ({
+										key: v.criteria_id,
+										index: v.index,
+										label: v.criteria_name,
+								  }))
+								: []),
 						]}
 					>
 						{(column) => (
@@ -117,8 +124,10 @@ export default function SubjectList({
 						)}
 					</TableBody>
 				</Table>
-			) : null}
-		</>
+			) : (
+				<TableSketon lines={6} />
+			)}
+		</div>
 	);
 }
 
