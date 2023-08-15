@@ -13,4 +13,5 @@ declare interface Comment {
 declare interface Criteria {
 	criteria_id: string;
 	display_name: string;
+	index: number;
 }

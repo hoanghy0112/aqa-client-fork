@@ -2,22 +2,61 @@
 
 import { Card, Title, AreaChart, BarChart } from "@tremor/react";
 
+import {
+	Button,
+	Modal,
+	ModalBody,
+	ModalContent,
+	ModalFooter,
+	ModalHeader,
+	useDisclosure,
+} from "@nextui-org/react";
+
 import BaseChart from "./BaseChart";
 import SemesterSelector from "../SemesterSelector/SemesterSelector";
 import { useState } from "react";
 import SemesterContext from "@/contexts/SemesterContext";
+import CriteriaSelector from "../CriteriaSelector";
 
 export default function AveragePointChart() {
 	const [semester, setSemester] = useState<Semester | undefined>();
+	const [criteria, setCriteria] = useState<Criteria | undefined>();
+
+	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
 	return (
 		<BaseChart>
-			<Card>
+			<div className=" flex flex-row gap-5 justify-end items-center px-8 py-5 mb-8">
+				<Title className=" mr-auto">
+					Biểu đồ điểm trung bình các môn học
+				</Title>
 				<SemesterContext.Provider
 					value={{ semester, setSemester: (data) => setSemester(data) }}
 				>
 					<SemesterSelector />
+					<Button onPress={onOpen}>
+						{criteria ? criteria.display_name : "Chọn tiêu chí"}
+					</Button>
+
+					<Modal
+						isOpen={isOpen}
+						size="3xl"
+						onOpenChange={onOpenChange}
+						scrollBehavior={"inside"}
+					>
+						<ModalContent>
+							{(onClose) => (
+								<CriteriaSelector
+									criteria={criteria}
+									setCriteria={setCriteria}
+									onClose={onClose}
+								/>
+							)}
+						</ModalContent>
+					</Modal>
 				</SemesterContext.Provider>
+			</div>
+			<div className=" px-14">
 				<BarChart
 					className=" h-72 mt-4"
 					data={chartdata}
@@ -26,7 +65,7 @@ export default function AveragePointChart() {
 					colors={["sky", "green"]}
 					valueFormatter={dataFormatter}
 				/>
-			</Card>
+			</div>
 		</BaseChart>
 	);
 }

@@ -31,12 +31,12 @@ export default function CommentList({ type }: { type: string }) {
 				q: keyword,
 				semester: semester?.semester_id || "all",
 			});
-			console.log({ comments });
 			setIsLoading(false);
 			setHasNext(comments.meta.has_next);
-			setComments((prev: Comment[]) => [...prev, ...comments.data]);
+			if (page == 0) setComments(comments.data);
+			else setComments((prev: Comment[]) => [...prev, ...comments.data]);
 		})();
-	}, [page, type, keyword]);
+	}, [page, type, keyword, semester?.semester_id]);
 
 	useEffect(() => {
 		setHasNext(true);
@@ -86,7 +86,7 @@ export default function CommentList({ type }: { type: string }) {
 										className="h-12"
 										initial={{ width: 0 }}
 										animate={{
-											width: Math.floor(Math.random() * 300 + 200),
+											width: Math.floor(Math.random() * 500 + 200),
 										}}
 										transition={{
 											ease: "easeOut",
@@ -107,7 +107,9 @@ export default function CommentList({ type }: { type: string }) {
 				</>
 			) : (
 				<div className="w-full flex flex-col pt-6 pb-4 items-center">
-					<p className="w-fit text-lg font-semibold">Không còn bình luận nào</p>
+					<p className="w-fit text-lg font-semibold">
+						Không còn bình luận nào
+					</p>
 				</div>
 			)}
 			{loading && hasNext ? (
