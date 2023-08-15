@@ -34,6 +34,7 @@ export default function CommentList({ type }: { type: string }) {
 	}, [page, type]);
 
 	useEffect(() => {
+		setHasNext(true);
 		setComments([]);
 		setPage(1);
 	}, [type, semester?.semester_id]);
