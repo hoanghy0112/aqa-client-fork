@@ -1,8 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { GET_SUBJECT_TABLE } from "@/constants/api_endpoint";
 import useIncrementalFetch from "@/hooks/useIncrementalFetch";
 import {
+	SortDescriptor,
 	Spinner,
 	Table,
 	TableBody,
@@ -14,6 +16,7 @@ import {
 	getKeyValue,
 } from "@nextui-org/react";
 import TableSketon from "./TableSkeleton";
+import { useCallback, useEffect, useState } from "react";
 
 export default function SubjectList({
 	semester,
@@ -22,13 +25,38 @@ export default function SubjectList({
 	semester: Semester | undefined;
 	keyword: string;
 }) {
+	const [columns, setColumns] = useState(defaultColumns);
+	const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
+		column: "subject_name",
+		direction: "ascending",
+	});
+
 	const { items, isLoading, bottomRef } = useIncrementalFetch<ISubjectItem>({
 		url: GET_SUBJECT_TABLE,
 		query: {
 			semester_id: semester?.semester_id,
 			keyword,
+			criteria_id: sortDescriptor.column,
 		},
 	});
+
+	useEffect(() => {
+		setColumns([
+			...defaultColumns,
+			...(items.length > 0
+				? items[0].points.map((v) => ({
+						key: v.criteria_id,
+						index: v.index,
+						label: v.criteria_name,
+				  }))
+				: []),
+		]);
+	}, [items.length]);
+
+	const onSortChange = useCallback((e: SortDescriptor) => {
+		setSortDescriptor(e);
+		console.log({ e });
+	}, []);
 
 	return (
 		<div className="pt-10">
@@ -36,10 +64,11 @@ export default function SubjectList({
 				<Table
 					isStriped
 					aria-label="Subject table"
+					sortDescriptor={sortDescriptor}
+					onSortChange={onSortChange}
 					bottomContent={
 						isLoading ? (
 							<div>
-								{/* <TableSketon lines={4} /> */}
 								<div
 									ref={bottomRef}
 									className=" w-full py-4 flex flex-row justify-center gap-2 items-center"
@@ -63,22 +92,15 @@ export default function SubjectList({
 						)
 					}
 				>
-					<TableHeader
-						columns={[
-							...columns,
-							...(items.length > 0
-								? items[0].points.map((v) => ({
-										key: v.criteria_id,
-										index: v.index,
-										label: v.criteria_name,
-								  }))
-								: []),
-						]}
-					>
+					<TableHeader columns={columns}>
 						{(column) => (
-							<TableColumn id={column.key} key={column.key}>
+							<TableColumn
+								id={column.key}
+								key={column.key}
+								allowsSorting
+							>
 								<div
-									className={`${
+									className={`min-w-fit inline-block ${
 										column.key == "subject_name" && " w-[500px]"
 									}`}
 								>
@@ -131,7 +153,7 @@ export default function SubjectList({
 	);
 }
 
-const columns: { key: string; label: string; index?: number }[] = [
+const defaultColumns: { key: string; label: string; index?: number }[] = [
 	{
 		key: "subject_name",
 		label: "Tên môn học",

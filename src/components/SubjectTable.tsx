@@ -1,28 +1,15 @@
 "use client";
-import { GET_SUBJECT_TABLE } from "@/constants/api_endpoint";
-import withQuery from "@/utils/withQuery";
-import { Button, Card, Input, Spinner } from "@nextui-org/react";
-import { useContext, useRef, useState } from "react";
-import useSWR from "swr";
-import SemesterSelector from "./SemesterSelector/SemesterSelector";
-import { defaultFetcher } from "@/utils/fetchers";
-import SubjectList from "./SubjectList";
 import SemesterContext from "@/contexts/SemesterContext";
+import { Button, Card, Input } from "@nextui-org/react";
+import { useContext, useRef, useState } from "react";
+import SemesterSelector from "./SemesterSelector/SemesterSelector";
+import SubjectList from "./SubjectList";
 
 export default function SubjectTable() {
 	const { semester } = useContext(SemesterContext);
 
 	const keyword = useRef<string>("");
 	const [searchQuery, setSearchQuery] = useState<string>("");
-
-	const { data, isLoading } = useSWR(
-		withQuery(GET_SUBJECT_TABLE, {
-			keyword: searchQuery,
-		}),
-		defaultFetcher
-	);
-
-	console.log({ data });
 
 	function handleSearch() {
 		setSearchQuery(keyword.current);
@@ -53,11 +40,7 @@ export default function SubjectTable() {
 					color="primary"
 					size="md"
 				>
-					{isLoading ? (
-						<Spinner color="default" />
-					) : (
-						<p className=" font-medium">Tìm kiếm</p>
-					)}
+					<p className=" font-medium">Tìm kiếm</p>
 				</Button>
 				<SemesterSelector />
 			</div>
