@@ -1,6 +1,6 @@
 "use client";
 
-import { Card } from "@nextui-org/react";
+import { Card, Spinner } from "@nextui-org/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -9,12 +9,14 @@ export default function InfoTab({
 	title,
 	link,
 	number,
+	isLoading,
 	defaultChecked = false,
 }: {
 	icon: string;
 	title: string;
 	link: string;
 	number: number;
+	isLoading: boolean;
 	defaultChecked?: boolean;
 }) {
 	const { push } = useRouter();
@@ -40,7 +42,13 @@ export default function InfoTab({
 						{title}
 					</p>
 				</div>
-				<p className="text-2xl  font-semibold pl-6 mt-1 w-fit">{number}</p>
+				{isLoading ? (
+					<Spinner className="mt-2 w-fit" />
+				) : (
+					<p className="text-2xl font-semibold pl-6 mt-2 w-fit">
+						{number || 0}
+					</p>
+				)}
 				<div className="w-full h-1 mt-1 bg-transparent peer-checked:bg-sky-900 transition-all" />
 			</label>
 		</Card>
