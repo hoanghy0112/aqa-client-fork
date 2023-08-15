@@ -26,7 +26,7 @@ export default function CriteriaSelector({
 }: {
 	criteria: Criteria | undefined;
 	setCriteria: (d: Criteria | undefined) => void;
-	onClose: (d: any) => any;
+	onClose: (d?: any) => any;
 }) {
 	const { semester } = useContext(SemesterContext);
 	const { data, isLoading, error } = useSWR<Criteria[]>(
@@ -66,11 +66,15 @@ export default function CriteriaSelector({
 							<div key={index} className="">
 								<Card
 									isPressable
+									onPress={() => {
+										setCriteria({ criteria_id, display_name, index });
+										onClose();
+									}}
 									className="py-3 px-4 w-full"
 									radius="sm"
 								>
-									<p className=" text-sm mb-2 ">{`Tiêu chí ${index}`}</p>
-									<h1 className=" text-md w-full font-medium text-start">
+									<p className=" text-md font-semibold mb-1 text-start">{`Tiêu chí ${index}`}</p>
+									<h1 className=" text-sm w-full font-normal text-start">
 										{display_name}
 									</h1>
 								</Card>

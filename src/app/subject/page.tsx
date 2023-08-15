@@ -1,5 +1,6 @@
 import AveragePointChart from "@/components/Chart/AveragePointChart";
 import NavigationTab from "@/components/NavigationTab";
+import SubjectTable from "@/components/SubjectTable";
 
 export default function SubjectPage() {
 	return (
@@ -18,6 +19,7 @@ export default function SubjectPage() {
 					},
 				]}
 			/>
+			<SubjectTable />
 		</div>
 	);
 }
