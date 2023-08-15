@@ -29,7 +29,7 @@ export default function CommentSearchBar() {
 			</Card>
 			<Button
 				onPress={() => {
-					if (searchText == "") return;
+					if (searchText == "" || isLoading) return;
 					setKeyword(searchText);
 					setIsLoading(true);
 				}}
