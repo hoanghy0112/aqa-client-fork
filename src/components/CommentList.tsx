@@ -41,7 +41,7 @@ export default function CommentList({ type }: { type: string }) {
 	useEffect(() => {
 		setHasNext(true);
 		setComments([]);
-		setPage(1);
+		setPage(0);
 	}, [type, semester?.semester_id, keyword]);
 
 	useEffect(() => {
@@ -106,7 +106,9 @@ export default function CommentList({ type }: { type: string }) {
 						))}
 				</>
 			) : (
-				<div>Không còn bình luận nào</div>
+				<div className="w-full flex flex-col pt-6 pb-4 items-center">
+					<p className="w-fit text-lg font-semibold">Không còn bình luận nào</p>
+				</div>
 			)}
 			{loading && hasNext ? (
 				<>
