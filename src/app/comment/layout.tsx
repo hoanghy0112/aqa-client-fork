@@ -12,7 +12,7 @@ export default async function CommentLayout({
 	children: ReactNode;
 }) {
 	return (
-		<div className="pt-12">
+		<>
 			<h1 className="font-semibold text-3xl">Bình luận</h1>
 			<CommentProvider>
 				<div className="mt-14 flex flex-row items-center ">
@@ -26,6 +26,6 @@ export default async function CommentLayout({
 				<CommentSearchBar />
 				<CommentWrapper>{children}</CommentWrapper>
 			</CommentProvider>
-		</div>
+		</>
 	);
 }
