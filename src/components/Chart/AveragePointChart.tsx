@@ -40,6 +40,8 @@ export default function AveragePointChart() {
 
 					<Modal
 						isOpen={isOpen}
+						className="h-full"
+						backdrop="blur"
 						size="3xl"
 						onOpenChange={onOpenChange}
 						scrollBehavior={"inside"}
