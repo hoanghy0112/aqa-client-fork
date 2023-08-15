@@ -4,15 +4,16 @@ export default function usePersistentState<T>(
 	name: string,
 	defaultValue: T | undefined
 ) {
-	const value = localStorage.getItem(name);
+	const [data, setData] = useState(null);
 
-	const [data, setData] = useState(
-		value != null ? JSON.parse(value) : defaultValue
-	);
+	useEffect(() => {
+		const value = localStorage.getItem(name);
+		setData(value != null ? JSON.parse(value) : defaultValue);
+	}, []);
 
 	useEffect(() => {
 		if (data) localStorage.setItem(name, JSON.stringify(data));
 	}, [data, name]);
 
-	return [data, setData];
+	return [data === null ? defaultValue : data, setData];
 }
