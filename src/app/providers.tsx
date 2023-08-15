@@ -14,7 +14,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 	return (
 		<NextUIProvider>
 			<NextThemesProvider attribute="class" defaultTheme="dark">
-				<SemesterContext.Provider value={{ semester, setSemester }}>
+				<SemesterContext.Provider
+					value={{ semester, setSemester: (data) => setSemester(data) }}
+				>
 					{children}
 				</SemesterContext.Provider>
 			</NextThemesProvider>

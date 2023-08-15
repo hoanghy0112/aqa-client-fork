@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 export default function usePersistentState<T>(
 	name: string,
 	defaultValue: T | undefined
-) {
-	const [data, setData] = useState(null);
+): [T | undefined, (data: T) => void] {
+	const [data, setData] = useState<T | undefined>(undefined);
 
 	useEffect(() => {
 		const value = localStorage.getItem(name);
@@ -15,5 +15,5 @@ export default function usePersistentState<T>(
 		if (data) localStorage.setItem(name, JSON.stringify(data));
 	}, [data, name]);
 
-	return [data === null ? defaultValue : data, setData];
+	return [data === undefined ? defaultValue : data, setData];
 }
