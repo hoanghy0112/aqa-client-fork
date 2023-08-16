@@ -2,24 +2,17 @@
 
 import { BarChart, Legend, Title } from "@tremor/react";
 
-import {
-	Button,
-	Modal,
-	ModalContent,
-	Spinner,
-	Tooltip,
-	useDisclosure,
-} from "@nextui-org/react";
+import { Spinner } from "@nextui-org/react";
 
 import { GET_SUBJECT_AVERAGE_POINT } from "@/constants/api_endpoint";
-import SemesterContext from "@/contexts/SemesterContext";
 import withQuery from "@/utils/withQuery";
-import { useContext, useState } from "react";
-import useSWR from "swr";
+import BaseChart from "@components/Chart/BaseChart";
 import CriteriaSelector from "@components/CriteriaSelector";
 import SemesterSelector from "@components/SemesterSelector/SemesterSelector";
-import BaseChart from "@components/Chart/BaseChart";
 import { SortSelector } from "@components/SortSelector";
+import { useState } from "react";
+import useSWR from "swr";
+import ChartLayout from "./ChartLayout";
 
 export default function AveragePointChart() {
 	const [semester, setSemester] = useState<Semester>();
@@ -37,18 +30,15 @@ export default function AveragePointChart() {
 	);
 
 	return (
-		<BaseChart>
-			<div className=" relative w-full  px-8 py-5 mb-32 lg:mb-16">
-				<div className=" absolute w-full top-0 left-0 px-8 py-5 flex flex-col lg:flex-row gap-5 justify-end items-start lg:items-center">
-					<Title className=" mr-auto w-full">
-						<p> Biểu đồ điểm trung bình các môn học</p>
-						<div className="w-3/4 mt-2">
-							<p className="w-full font-normal text-sm">
-								{criteria?.display_name || "Tất cả các tiêu chí"}
-							</p>
-						</div>
-					</Title>
-					<div className="w-fit flex flex-row gap-4">
+		<>
+			<ChartLayout
+				primaryTitle="Biểu đồ điểm trung bình các môn học"
+				secondaryTitle={criteria?.display_name || "Tất cả các tiêu chí"}
+				legends={[LEGEND_NAME]}
+				colors={["sky"]}
+				columnNum={data?.length || 0}
+				handlerButtons={
+					<>
 						<SemesterSelector
 							semester={semester}
 							setSemester={(d) => setSemester(d)}
@@ -61,54 +51,40 @@ export default function AveragePointChart() {
 							selectedKeys={selectedKeys}
 							setSelectedKeys={setSelectedKeys}
 						></SortSelector>
-					</div>
-				</div>
-			</div>
-			<div className="w-full h-fit overflow-x-auto pb-10">
-				<div
-					className="pr-4 h-fit"
-					style={{
-						width:
-							data?.length || 0 > 0 ? (data?.length || 0) * 60 : "100%",
-					}}
-				>
-					<BarChart
-						className=" h-64 mt-4"
-						data={
-							data?.map((d) => ({
-								...d,
-								[LEGEND_NAME]: d.average_point / d.max_point,
-							})) || []
-						}
-						index="display_name"
-						categories={[LEGEND_NAME]}
-						colors={["sky"]}
-						yAxisWidth={80}
-						autoMinValue
-						valueFormatter={dataFormatter}
-						showLegend={false}
-						//@ts-ignore
-						noDataText={
-							isLoading ? (
-								<div className=" flex flex-row items-center gap-4">
-									<Spinner size="sm" />
-									<p className=" text-medium font-medium">Đang tải</p>
-								</div>
-							) : (
-								<p className=" text-medium font-medium">
-									Không có dữ liệu
-								</p>
-							)
-						}
-					/>
-				</div>
-				<Legend
-					className="ml-14 my-5 absolute bottom-2 left-0"
+					</>
+				}
+			>
+				<BarChart
+					className=" h-64 mt-4"
+					data={
+						data?.map((d) => ({
+							...d,
+							[LEGEND_NAME]: d.average_point / d.max_point,
+						})) || []
+					}
+					index="display_name"
 					categories={[LEGEND_NAME]}
 					colors={["sky"]}
+					yAxisWidth={80}
+					autoMinValue
+					valueFormatter={dataFormatter}
+					showLegend={false}
+					//@ts-ignore
+					noDataText={
+						isLoading ? (
+							<div className=" flex flex-row items-center gap-4">
+								<Spinner size="sm" />
+								<p className=" text-medium font-medium">Đang tải</p>
+							</div>
+						) : (
+							<p className=" text-medium font-medium">
+								Không có dữ liệu
+							</p>
+						)
+					}
 				/>
-			</div>
-		</BaseChart>
+			</ChartLayout>
+		</>
 	);
 }
 
