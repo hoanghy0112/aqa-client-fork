@@ -15,3 +15,11 @@ declare interface Criteria {
 	display_name: string;
 	index: number;
 }
+
+declare interface Subject {
+	average_point: number;
+	faculty_id: string;
+	faculty_name: string;
+	subject_id: string;
+	subject_name: string;
+}

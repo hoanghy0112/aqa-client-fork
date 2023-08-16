@@ -12,10 +12,12 @@ import { SortSelector } from "@components/SortSelector";
 import { useState } from "react";
 import useSWR from "swr";
 import ChartLayout from "./ChartLayout";
+import SubjectSelector from "../SubjectSelector";
 
-export default function AveragePointChart() {
+export default function SubjectPointAcrossSemesterChart() {
 	const [semester, setSemester] = useState<Semester>();
 	const [criteria, setCriteria] = useState<Criteria | undefined>();
+	const [subjects, setSubjects] = useState<Map<string, Subject>>(new Map());
 
 	const [selectedKeys, setSelectedKeys] = useState(new Set(["desc"]));
 
@@ -38,9 +40,9 @@ export default function AveragePointChart() {
 				columnNum={data?.length || 0}
 				handlerButtons={
 					<>
-						<SemesterSelector
-							semester={semester}
-							setSemester={(d) => setSemester(d)}
+						<SubjectSelector
+							subjects={subjects}
+							setSubjects={(d: any) => setSubjects(d)}
 						/>
 						<CriteriaSelector
 							criteria={criteria}

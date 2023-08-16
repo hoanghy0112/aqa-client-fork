@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 export default function usePersistentState<T>(
 	name: string,
-	defaultValue: T | undefined
+	defaultValue?: T | undefined
 ): [T | undefined, (data: T) => void] {
 	const [data, setData] = useState<T | undefined>(undefined);
 

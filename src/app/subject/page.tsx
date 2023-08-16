@@ -1,4 +1,5 @@
 import AveragePointChart from "@/components/Chart/AveragePointChart";
+import SubjectPointAcrossSemesterChart from "@/components/Chart/SubjectPointAcrossSemesterChart";
 import NavigationTab from "@/components/NavigationTab";
 import SubjectTable from "@/components/SubjectTable";
 
@@ -15,7 +16,7 @@ export default function SubjectPage() {
 					},
 					{
 						title: "Thống kê điểm trung bình qua các năm",
-						body: <p></p>,
+						body: <SubjectPointAcrossSemesterChart />,
 					},
 				]}
 			/>
