@@ -14,6 +14,7 @@ import {
 	Card,
 	Skeleton,
 	Input,
+	Tooltip,
 } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { useContext, useEffect, useMemo, useState } from "react";
@@ -22,12 +23,12 @@ import useSWR from "swr";
 export default function CriteriaSelector({
 	criteria,
 	setCriteria,
-	onClose,
 }: {
 	criteria: Criteria | undefined;
 	setCriteria: (d: Criteria | undefined) => void;
-	onClose: (d?: any) => any;
 }) {
+	const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
 	const { semester } = useContext(SemesterContext);
 	const { data, isLoading, error } = useSWR<Criteria[]>(
 		`${GET_CRITERIA_NAME}?semester_id=${semester?.semester_id || ""}`,
@@ -45,64 +46,105 @@ export default function CriteriaSelector({
 
 	return (
 		<>
-			<ModalHeader className="flex flex-col gap-1">
-				<p> Chọn tiêu chí</p>
-				<Input
-					value={keyword}
-					onChange={(e) => setKeyword(e.target.value)}
-					onClear={() => setKeyword("")}
-					isClearable
-					type="text"
-					size="md"
-					placeholder="Nhập từ khóa cần tìm..."
-					variant="bordered"
-					className="w-[500px] mt-5"
-				/>
-			</ModalHeader>
-			<ModalBody className="mb-5">
-				{!isLoading && !error ? (
-					<>
-						{criterias?.map(({ criteria_id, display_name, index }) => (
-							<div key={index} className="">
-								<Card
-									isPressable
-									onPress={() => {
-										setCriteria({ criteria_id, display_name, index });
-										onClose();
-									}}
-									className="py-3 px-4 w-full"
-									radius="sm"
-								>
-									<p className=" text-md font-semibold mb-1 text-start">{`Tiêu chí ${index}`}</p>
-									<h1 className=" text-sm w-full font-normal text-start">
-										{display_name}
-									</h1>
-								</Card>
-							</div>
-						))}
-					</>
-				) : (
-					Array(6)
-						.fill(0)
-						.map((_, index) => (
-							<div key={index}>
-								<Skeleton className="w-fit h-fit">
-									<motion.div
-										className="h-12"
-										initial={{ width: 0 }}
-										animate={{
-											width: Math.floor(Math.random() * 500 + 100),
-										}}
-										transition={{
-											ease: "easeOut",
-											duration: 0.3,
-										}}
-									/>
-								</Skeleton>
-							</div>
-						))
-				)}
-			</ModalBody>
+			<Tooltip
+				content={
+					<div className="">
+						<p className=" max-w-md h-auto">
+							{criteria
+								? criteria.display_name
+								: "Nếu không chọn, tất cả các tiêu chí sẽ được xét"}
+						</p>
+					</div>
+				}
+			>
+				<Button onPress={onOpen} className="">
+					<p className="">
+						{criteria ? `Tiêu chí ${criteria.index}` : "Chọn tiêu chí"}
+					</p>
+				</Button>
+			</Tooltip>
+			<Modal
+				isOpen={isOpen}
+				className="h-full"
+				backdrop="blur"
+				size="3xl"
+				onOpenChange={onOpenChange}
+				scrollBehavior={"inside"}
+			>
+				<ModalContent>
+					{(onClose) => (
+						<>
+							<ModalHeader className="flex flex-col gap-1">
+								<p> Chọn tiêu chí</p>
+								<Input
+									value={keyword}
+									onChange={(e) => setKeyword(e.target.value)}
+									onClear={() => setKeyword("")}
+									isClearable
+									type="text"
+									size="md"
+									placeholder="Nhập từ khóa cần tìm..."
+									variant="bordered"
+									className="w-[500px] mt-5"
+								/>
+							</ModalHeader>
+							<ModalBody className="mb-5">
+								{!isLoading && !error ? (
+									<>
+										{criterias?.map(
+											({ criteria_id, display_name, index }) => (
+												<div key={index} className="">
+													<Card
+														isPressable
+														onPress={() => {
+															setCriteria({
+																criteria_id,
+																display_name,
+																index,
+															});
+															onClose();
+														}}
+														className="py-3 px-4 w-full"
+														radius="sm"
+													>
+														<p className=" text-md font-semibold mb-1 text-start">{`Tiêu chí ${index}`}</p>
+														<h1 className=" text-sm w-full font-normal text-start">
+															{display_name}
+														</h1>
+													</Card>
+												</div>
+											)
+										)}
+									</>
+								) : (
+									Array(6)
+										.fill(0)
+										.map((_, index) => (
+											<div key={index}>
+												<Skeleton className="w-fit h-fit">
+													<motion.div
+														className="h-12"
+														initial={{ width: 0 }}
+														animate={{
+															width: Math.floor(
+																Math.random() * 500 + 100
+															),
+														}}
+														transition={{
+															ease: "easeOut",
+															duration: 0.3,
+														}}
+													/>
+												</Skeleton>
+											</div>
+										))
+								)}
+							</ModalBody>
+						</>
+					)}
+				</ModalContent>
+			</Modal>
+
 			{/* <ModalFooter>
 				<Button color="danger" variant="light" onClick={onClose}>
 					Close

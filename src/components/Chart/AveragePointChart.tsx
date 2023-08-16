@@ -27,8 +27,6 @@ export default function AveragePointChart() {
 
 	const [selectedKeys, setSelectedKeys] = useState(new Set(["desc"]));
 
-	const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
 	const { data, isLoading } = useSWR<IChartData[]>(
 		withQuery(GET_SUBJECT_AVERAGE_POINT, {
 			semester_id: semester?.semester_id,
@@ -37,10 +35,6 @@ export default function AveragePointChart() {
 		}),
 		(url: string) => fetch(url).then((r) => r.json())
 	);
-
-	console.log({
-		data,
-	});
 
 	return (
 		<BaseChart>
@@ -62,25 +56,10 @@ export default function AveragePointChart() {
 							}}
 						>
 							<SemesterSelector />
-							<Tooltip
-								content={
-									<div className="">
-										<p className=" max-w-md h-auto">
-											{criteria
-												? criteria.display_name
-												: "Nếu không chọn, tất cả các tiêu chí sẽ được xét"}
-										</p>
-									</div>
-								}
-							>
-								<Button onPress={onOpen} className="">
-									<p className="">
-										{criteria
-											? `Tiêu chí ${criteria.index}`
-											: "Chọn tiêu chí"}
-									</p>
-								</Button>
-							</Tooltip>
+							<CriteriaSelector
+								criteria={criteria}
+								setCriteria={setCriteria}
+							/>
 							<SortSelector
 								selectedKeys={selectedKeys}
 								setSelectedKeys={setSelectedKeys}
@@ -89,12 +68,7 @@ export default function AveragePointChart() {
 					</div>
 				</div>
 			</div>
-			<Legend
-				className="ml-14 mb-5"
-				categories={[LEGEND_NAME]}
-				colors={["sky"]}
-			/>
-			<div className="w-full h-fit overflow-x-auto bg-white dark:bg-neutral-900">
+			<div className="w-full h-fit overflow-x-auto pb-10">
 				<div
 					className="pr-4 h-fit"
 					style={{
@@ -103,7 +77,7 @@ export default function AveragePointChart() {
 					}}
 				>
 					<BarChart
-						className=" h-72 mt-4"
+						className=" h-64 mt-4"
 						data={
 							data?.map((d) => ({
 								...d,
@@ -132,25 +106,12 @@ export default function AveragePointChart() {
 						}
 					/>
 				</div>
+				<Legend
+					className="ml-14 my-5 absolute bottom-2 left-0"
+					categories={[LEGEND_NAME]}
+					colors={["sky"]}
+				/>
 			</div>
-			<Modal
-				isOpen={isOpen}
-				className="h-full"
-				backdrop="blur"
-				size="3xl"
-				onOpenChange={onOpenChange}
-				scrollBehavior={"inside"}
-			>
-				<ModalContent>
-					{(onClose) => (
-						<CriteriaSelector
-							criteria={criteria}
-							setCriteria={setCriteria}
-							onClose={onClose}
-						/>
-					)}
-				</ModalContent>
-			</Modal>
 		</BaseChart>
 	);
 }
