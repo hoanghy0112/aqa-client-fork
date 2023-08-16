@@ -14,6 +14,7 @@ export default function ChartLayout({
 	colors,
 	handlerButtons,
 	children,
+	isFullWidth = false,
 }: {
 	primaryTitle: string;
 	secondaryTitle: string;
@@ -23,6 +24,7 @@ export default function ChartLayout({
 	colors: Color[];
 	handlerButtons: ReactNode;
 	children: ReactNode;
+	isFullWidth?: boolean;
 }) {
 	return (
 		<BaseChart>
@@ -39,17 +41,22 @@ export default function ChartLayout({
 					<div className="w-fit flex flex-row gap-4">{handlerButtons}</div>
 				</div>
 			</div>
-			<div className="w-full h-fit overflow-x-auto pb-10">
+			<div className="w-full h-fit overflow-x-auto pb-5">
 				<div
 					className="pr-4 h-fit"
-					style={{
-						width: columnNum > 0 ? columnNum * columnSize : "100%",
-					}}
+					style={
+						isFullWidth
+							? { width: "100%" }
+							: {
+									width:
+										columnNum > 0 ? columnNum * columnSize : "100%",
+							  }
+					}
 				>
 					{children}
 				</div>
 				<Legend
-					className="ml-14 my-5 absolute bottom-2 left-0"
+					className="ml-14 mt-5 mr-8"
 					categories={legends}
 					colors={colors}
 				/>

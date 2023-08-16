@@ -89,7 +89,7 @@ export default function SubjectSelector({
 					<p className="">
 						{subjects.size == 0
 							? "Tất cả các môn"
-							: `Đã chọn ${_subjects.size}`}
+							: `Đã chọn ${_subjects.size} môn`}
 					</p>
 				</Button>
 			</Tooltip>
@@ -284,6 +284,16 @@ export default function SubjectSelector({
 								) : null}
 							</ModalBody>
 							<ModalFooter>
+								<Button
+									color="danger"
+									isDisabled={subjects.size == 0}
+									onPress={() => {
+										onClose();
+										setSubjects(new Map());
+									}}
+								>
+									Xóa tất cả
+								</Button>
 								<Button color="primary" onPress={onClose}>
 									OK
 								</Button>
