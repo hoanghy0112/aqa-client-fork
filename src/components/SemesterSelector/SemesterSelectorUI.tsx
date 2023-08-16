@@ -21,8 +21,8 @@ export default function SemesterSelectorUI({
 	return (
 		<Dropdown backdrop="blur" shouldBlockScroll={false}>
 			<DropdownTrigger>
-				<Button variant="bordered">
-					<p className="font-medium">
+				<Button variant="bordered" className="w-fit">
+					<p className="font-medium w-fit">
 						{semester?.display_name || "Chọn học kỳ"}
 					</p>
 				</Button>
