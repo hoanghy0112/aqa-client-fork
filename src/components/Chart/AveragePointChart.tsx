@@ -14,7 +14,7 @@ import {
 import { GET_SUBJECT_AVERAGE_POINT } from "@/constants/api_endpoint";
 import SemesterContext from "@/contexts/SemesterContext";
 import withQuery from "@/utils/withQuery";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import useSWR from "swr";
 import CriteriaSelector from "@components/CriteriaSelector";
 import SemesterSelector from "@components/SemesterSelector/SemesterSelector";
@@ -22,7 +22,7 @@ import BaseChart from "@components/Chart/BaseChart";
 import { SortSelector } from "@components/SortSelector";
 
 export default function AveragePointChart() {
-	const [semester, setSemester] = useState<Semester | undefined>();
+	const [semester, setSemester] = useState<Semester>();
 	const [criteria, setCriteria] = useState<Criteria | undefined>();
 
 	const [selectedKeys, setSelectedKeys] = useState(new Set(["desc"]));
@@ -49,22 +49,18 @@ export default function AveragePointChart() {
 						</div>
 					</Title>
 					<div className="w-fit flex flex-row gap-4">
-						<SemesterContext.Provider
-							value={{
-								semester,
-								setSemester: (data) => setSemester(data),
-							}}
-						>
-							<SemesterSelector />
-							<CriteriaSelector
-								criteria={criteria}
-								setCriteria={setCriteria}
-							/>
-							<SortSelector
-								selectedKeys={selectedKeys}
-								setSelectedKeys={setSelectedKeys}
-							></SortSelector>
-						</SemesterContext.Provider>
+						<SemesterSelector
+							semester={semester}
+							setSemester={(d) => setSemester(d)}
+						/>
+						<CriteriaSelector
+							criteria={criteria}
+							setCriteria={setCriteria}
+						/>
+						<SortSelector
+							selectedKeys={selectedKeys}
+							setSelectedKeys={setSelectedKeys}
+						></SortSelector>
 					</div>
 				</div>
 			</div>

@@ -1,6 +1,5 @@
 "use client";
 
-import SemesterContext from "@/contexts/SemesterContext";
 import {
 	Button,
 	Dropdown,
@@ -9,15 +8,16 @@ import {
 	DropdownSection,
 	DropdownTrigger,
 } from "@nextui-org/react";
-import { Key, useContext } from "react";
 
 export default function SemesterSelectorUI({
 	semesters,
+	semester,
+	setSemester,
 }: {
 	semesters: Semester[];
+	semester: Semester | undefined;
+	setSemester: (d: Semester | undefined) => void;
 }) {
-	const { semester, setSemester } = useContext(SemesterContext);
-
 	return (
 		<Dropdown backdrop="blur" shouldBlockScroll={false}>
 			<DropdownTrigger>
