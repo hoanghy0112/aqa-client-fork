@@ -36,31 +36,31 @@ export default function SubjectList({
 		query: {
 			semester_id: semester?.semester_id,
 			keyword,
-			criteria_id: sortDescriptor.column,
+			page_size: 20,
+			filter_field: sortDescriptor.column,
+			direction: sortDescriptor.direction === "ascending" ? "asc" : "desc",
 		},
 	});
 
 	useEffect(() => {
-		setColumns([
-			...defaultColumns,
-			...(items.length > 0
-				? items[0].points.map((v) => ({
-						key: v.criteria_id,
-						index: v.index,
-						label: v.criteria_name,
-				  }))
-				: []),
-		]);
+		if (items.length > 0)
+			setColumns([
+				...defaultColumns,
+				...items[0].points.map((v) => ({
+					key: v.criteria_id,
+					index: v.index,
+					label: v.criteria_name,
+				})),
+			]);
 	}, [items.length]);
 
 	const onSortChange = useCallback((e: SortDescriptor) => {
 		setSortDescriptor(e);
-		console.log({ e });
 	}, []);
 
 	return (
 		<div className="pt-10">
-			{items.length > 0 || !isLoading ? (
+			{columns.length > 2 || !isLoading ? (
 				<Table
 					isStriped
 					aria-label="Subject table"
@@ -74,10 +74,7 @@ export default function SubjectList({
 									className=" w-full py-4 flex flex-row justify-center gap-2 items-center"
 								>
 									<Spinner size="sm" />
-									<p className=" text-md font-semibold">
-										{" "}
-										Đang tải...
-									</p>
+									<p className=" text-md font-semibold">Đang tải...</p>
 								</div>
 							</div>
 						) : (
@@ -85,9 +82,9 @@ export default function SubjectList({
 								ref={bottomRef}
 								className=" w-full py-4 flex flex-row justify-center gap-2 items-center"
 							>
-								<p className=" text-md font-semibold">
-									Không còn môn học nào
-								</p>
+								{/* <p className=" text-md font-semibold">
+									{hasMore ? "" : "Không còn môn học nào"}
+								</p> */}
 							</div>
 						)
 					}

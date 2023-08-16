@@ -16,10 +16,10 @@ export default function useIncrementalFetch<T>({
 	const [items, setItems] = useState<T[]>([]);
 
 	const [page, setPage] = useState(0);
-	const [hasNext, setHasNext] = useState<boolean>(true);
 	const [loading, setLoading] = useState<boolean>(false);
 
 	const bottomRef = useRef<any>();
+	const hasNext = useRef<boolean>(true);
 
 	useEffect(() => {
 		(async () => {
@@ -27,13 +27,12 @@ export default function useIncrementalFetch<T>({
 			const response = await (
 				await fetch(withQuery(url, { ...query, page }))
 			).json();
-			console.log({ response });
 			const {
 				data: newData,
 				meta: { has_next: newHasNext },
 			} = onFetch(response);
 			setLoading(false);
-			setHasNext(newHasNext);
+			hasNext.current = newHasNext;
 			if (page == 0) setItems(newData);
 			else setItems((prev) => [...prev, ...newData]);
 		})();
@@ -42,7 +41,7 @@ export default function useIncrementalFetch<T>({
 	useEffect(() => {
 		setItems([]);
 		setPage(0);
-		setHasNext(true);
+		hasNext.current = true;
 	}, [...Object.values(query)]);
 
 	useEffect(() => {
@@ -58,5 +57,5 @@ export default function useIncrementalFetch<T>({
 		observer.observe(bottomRef.current);
 	}, [items.length]);
 
-	return { items, isLoading: loading, hasMore: hasNext, bottomRef };
+	return { items, isLoading: loading, hasMore: hasNext.current, bottomRef };
 }
