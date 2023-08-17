@@ -111,7 +111,7 @@ export default function SubjectPointAcrossSemesterChart() {
 				}
 			>
 				<LineChart
-					className=" h-72 mt-4"
+					className=" h-full mt-4"
 					data={chartData}
 					index="semester_name"
 					categories={subjectNames}
@@ -147,7 +147,6 @@ const COLORS = shuffle([
 	"violet",
 	"yellow",
 	"slate",
-	"blue",
 	"cyan",
 	"fuchsia",
 	"gray",

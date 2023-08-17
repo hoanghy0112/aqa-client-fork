@@ -4,6 +4,7 @@ import { Color, Legend, Title } from "@tremor/react";
 
 import BaseChart from "@components/Chart/BaseChart";
 import { ReactNode } from "react";
+import Extensible from "../Extensible";
 
 export default function ChartLayout({
 	primaryTitle,
@@ -28,39 +29,45 @@ export default function ChartLayout({
 }) {
 	return (
 		<BaseChart>
-			<div className=" relative w-full  px-8 py-5 mb-32 lg:mb-16">
-				<div className=" absolute w-full top-0 left-0 px-8 py-5 flex flex-col lg:flex-row gap-5 justify-end items-start lg:items-center">
-					<Title className=" mr-auto w-full">
-						<p>{primaryTitle}</p>
-						<div className="w-3/4 mt-2">
-							<p className="w-full font-normal text-sm">
-								{secondaryTitle}
-							</p>
+			<Extensible>
+				<div className=" relative w-full h-44 lg:h-24 px-8">
+					<div className=" absolute w-full top-0 left-0 px-8 py-5 flex flex-col lg:flex-row gap-5 justify-end items-start lg:items-center">
+						<Title className=" mr-auto w-full">
+							<p>{primaryTitle}</p>
+							<div className="w-3/4 mt-2">
+								<p className="w-full font-normal text-sm">
+									{secondaryTitle}
+								</p>
+							</div>
+						</Title>
+						<div className="w-fit flex flex-row gap-4 pr-5">
+							{handlerButtons}
 						</div>
-					</Title>
-					<div className="w-fit flex flex-row gap-4">{handlerButtons}</div>
-				</div>
-			</div>
-			<div className="w-full h-fit overflow-x-auto pb-5">
-				<div
-					className="pr-4 h-fit"
-					style={
-						isFullWidth
-							? { width: "100%" }
-							: {
-									width:
-										columnNum > 0 ? columnNum * columnSize : "100%",
-							  }
-					}
-				>
-					{children}
+					</div>
 				</div>
 				<Legend
-					className="ml-14 mt-5 mr-8"
+					className="ml-14 mr-8"
 					categories={legends}
 					colors={colors}
 				/>
-			</div>
+				<div className="w-full overflow-x-auto overflow-y-hidden flex flex-col justify-stretch flex-grow">
+					<div
+						className=" h-full pr-4 basis-full flex flex-col flex-grow"
+						style={
+							isFullWidth
+								? { width: "100%" }
+								: {
+										width:
+											columnNum > 0
+												? columnNum * columnSize
+												: "100%",
+								  }
+						}
+					>
+						{children}
+					</div>
+				</div>
+			</Extensible>
 		</BaseChart>
 	);
 }

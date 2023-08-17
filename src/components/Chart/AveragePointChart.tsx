@@ -54,7 +54,7 @@ export default function AveragePointChart() {
 				}
 			>
 				<BarChart
-					className=" h-64 mt-4"
+					className=" h-full mt-4"
 					data={
 						data?.map((d) => ({
 							...d,

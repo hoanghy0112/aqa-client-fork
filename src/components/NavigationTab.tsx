@@ -18,7 +18,7 @@ export default function NavigationTab({
 			<Tabs aria-label="Options">
 				{tabs.map((tab) => (
 					<Tab key={tab.title} title={tab.title}>
-						<Card className=" mt-5 p-0 h-fit">
+						<Card className=" mt-5 p-0 h-[400px]">
 							<CardBody className="p-0">{tab.body}</CardBody>
 						</Card>
 					</Tab>
