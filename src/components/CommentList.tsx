@@ -8,7 +8,7 @@ import CommentItem from "./CommentItem/CommentItem";
 
 import SemesterContext from "@/contexts/SemesterContext";
 import { Skeleton, Spinner } from "@nextui-org/react";
-import { CommentContext } from "@/app/comment/provider";
+import { CommentContext } from "@contexts/CommentPageContext";
 
 export default function CommentList({ type }: { type: string }) {
 	const { semester } = useContext(SemesterContext);

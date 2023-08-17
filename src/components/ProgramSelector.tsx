@@ -1,19 +1,16 @@
 "use client";
 
-import { CommentContext } from "@/app/comment/provider";
 import { GET_PROGRAM_LIST } from "@/constants/api_endpoint";
-import { ProgramContext } from "@/contexts/ProgramContext";
 import { defaultFetcher } from "@/utils/fetchers";
 import {
-	Button,
-	Dropdown,
-	DropdownItem,
-	DropdownMenu,
-	DropdownSection,
-	DropdownTrigger,
-	Spinner,
+    Button,
+    Dropdown,
+    DropdownItem,
+    DropdownMenu,
+    DropdownSection,
+    DropdownTrigger,
+    Spinner,
 } from "@nextui-org/react";
-import { useContext, useState } from "react";
 import useSWR from "swr";
 
 export default function ProgramSelector({
