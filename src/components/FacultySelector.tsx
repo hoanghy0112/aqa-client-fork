@@ -20,8 +20,14 @@ import {
 import { useContext, useEffect, useRef } from "react";
 import useSWR from "swr";
 
-export default function FacultySelector() {
-	const { faculty, setFaculty } = useContext(FacultyContext);
+export default function FacultySelector({
+	faculty,
+	setFaculty,
+}: {
+	faculty?: string;
+	setFaculty?: (d: string) => any;
+}) {
+	const {} = useContext(FacultyContext);
 
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 

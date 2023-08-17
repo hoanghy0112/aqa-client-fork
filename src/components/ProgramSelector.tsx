@@ -16,9 +16,13 @@ import {
 import { useContext, useState } from "react";
 import useSWR from "swr";
 
-export default function ProgramSelector() {
-	const { program, setProgram } = useContext(ProgramContext);
-
+export default function ProgramSelector({
+	program,
+	setProgram,
+}: {
+	program?: string;
+	setProgram?: (d: string) => any;
+}) {
 	const { data, isLoading } = useSWR<string[]>(
 		GET_PROGRAM_LIST,
 		defaultFetcher

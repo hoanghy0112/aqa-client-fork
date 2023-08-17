@@ -31,7 +31,7 @@ export default function CommentList({ type }: { type: string }) {
 				q: keyword,
 				semester: semester?.semester_id || "all",
 			});
-			setIsLoading(false);
+			setIsLoading?.(false);
 			setHasNext(comments.meta.has_next);
 			if (page == 0) setComments(comments.data);
 			else setComments((prev: Comment[]) => [...prev, ...comments.data]);

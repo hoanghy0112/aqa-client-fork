@@ -1,53 +1,53 @@
 "use client";
 
-import { FacultyContext } from "@/contexts/FacultyContext";
-import { ProgramContext } from "@/contexts/ProgramContext";
+import { FacultyContext, IFacultyContext } from "@/contexts/FacultyContext";
+import { IProgramContext, ProgramContext } from "@/contexts/ProgramContext";
 import { ReactNode, useState, createContext } from "react";
 
-export default function CommentProvider({ children }: { children: ReactNode }) {
-	const [keyword, setKeyword] = useState("");
-	const [program, setProgram] = useState("");
-	const [faculty, setFaculty] = useState("");
-	const [isLoading, setIsLoading] = useState(false);
+export default function CommentProvider({
+	children,
+}: {
+	children: ({
+		faculty,
+		setFaculty,
+		program,
+		setProgram,
+	}: IFacultyContext &
+		IProgramContext & {
+			keyword: string;
+			setKeyword: (d: string) => any;
+			isLoading: boolean;
+			setIsLoading: (d: boolean) => any;
+		}) => ReactNode;
+}) {
+	const [keyword, setKeyword] = useState<string>("");
+	const [program, setProgram] = useState<string>("");
+	const [faculty, setFaculty] = useState<string>("");
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	return (
-		<CommentContext.Provider
-			value={{
-				keyword,
-				setKeyword: (data: string) => {
-					setKeyword(data);
-				},
+		<CommentContext.Provider value={{ keyword, isLoading, setIsLoading }}>
+			{children({
+				faculty,
+				setFaculty,
 				program,
 				setProgram,
+				keyword,
+				setKeyword,
 				isLoading,
-				setIsLoading: (data: boolean) => {
-					setIsLoading(data);
-				},
-			}}
-		>
-			<ProgramContext.Provider value={{ program, setProgram }}>
-				<FacultyContext.Provider value={{ faculty, setFaculty }}>
-					{children}
-				</FacultyContext.Provider>
-			</ProgramContext.Provider>
+				setIsLoading,
+			})}
 		</CommentContext.Provider>
 	);
 }
 
 export const CommentContext = createContext<ICommentContext>({
 	keyword: "",
-	setKeyword: (d: string) => {},
-	program: "",
-	setProgram: (d: string) => {},
 	isLoading: false,
-	setIsLoading: (d: boolean) => {},
 });
 
 export interface ICommentContext {
 	keyword: string;
-	setKeyword: (data: string) => void;
-	program: string;
-	setProgram: (d: string) => any;
 	isLoading: boolean;
-	setIsLoading: (data: boolean) => void;
+	setIsLoading?: (d: boolean) => any;
 }

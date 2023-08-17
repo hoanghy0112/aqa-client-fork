@@ -12,11 +12,8 @@ import { GET_COMMENT_QUANTITY } from "@/constants/api_endpoint";
 import SemesterContext from "@/contexts/SemesterContext";
 import { useContext } from "react";
 
-import { CommentContext } from "@/app/comment/provider";
-
-export default function CommentQuantityInfo() {
+export default function CommentQuantityInfo({ keyword }: { keyword: string }) {
 	const { semester } = useContext(SemesterContext);
-	const { keyword } = useContext(CommentContext);
 
 	const { data, isLoading, error } = useSWR(
 		`${GET_COMMENT_QUANTITY}?semester_id=${

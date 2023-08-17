@@ -2,15 +2,17 @@
 
 import { Color, LineChart } from "@tremor/react";
 
-import { Spinner } from "@nextui-org/react";
 
 import { GET_SUBJECT_POINT_ACROSS_SEMESTER } from "@/constants/api_endpoint";
+import { COLORS } from "@/constants/colors";
 import useMultipleFetch from "@/hooks/useMultipleFetch";
-import { shuffle } from "@/utils/arrayManipulate";
+import { chartMapper } from "@/utils/arrayManipulate";
 import withQuery from "@/utils/withQuery";
 import CriteriaSelector from "@components/CriteriaSelector";
 import { useMemo, useState } from "react";
 import useSWR from "swr";
+import Loading from "../Loading";
+import NoData from "../NoData";
 import SubjectSelector from "../SubjectSelector";
 import ChartLayout from "./ChartLayout";
 
@@ -44,39 +46,18 @@ export default function SubjectPointAcrossSemesterChart() {
 		[data, averageData]
 	);
 
-	const chartData = useMemo(() => {
-		const subjectNames = Array.from(subjects.entries()).map(
-			([_, sub]) => sub.subject_name
-		);
-
-		const items = new Map();
-		if (averageData) {
-			averageData.forEach((d) =>
-				items.set(d.semester_name, {
-					[AVG_LEGEND]: d.point / d.max_point,
-					...d,
-				})
-			);
-		}
-		data.forEach((d, i) => {
-			d.forEach((v, j) => {
-				items.set(v.semester_name, {
-					...v,
-					...(items.get(v.semester_name) || {}),
-					[subjectNames[i]]: v.point / v.max_point,
-				});
-			});
-		});
-
-		const semesterConverter = ({ type, year }: IChartData) =>
-			`${year}, ${type}`;
-
-		return Array.from(items.entries())
-			.map(([_, v]) => v)
-			.sort((a, b) =>
-				semesterConverter(a) > semesterConverter(b) ? 1 : -1
-			);
-	}, [data, averageData]);
+	const chartData = useMemo(
+		() =>
+			chartMapper(
+				subjectNames,
+				data,
+				averageData || [],
+				AVG_LEGEND,
+				"semester_name",
+				(d: IChartData) => d.point / d.max_point
+			),
+		[data, averageData, subjectNames]
+	);
 
 	const colors = useMemo(
 		() =>
@@ -122,46 +103,13 @@ export default function SubjectPointAcrossSemesterChart() {
 					showLegend={false}
 					//@ts-ignore
 					noDataText={
-						isLoading && isLoadingAverage ? (
-							<div className=" flex flex-row items-center gap-4">
-								<Spinner size="sm" />
-								<p className=" text-medium font-medium">Đang tải</p>
-							</div>
-						) : (
-							<p className=" text-medium font-medium">
-								Không có dữ liệu
-							</p>
-						)
+						isLoading && isLoadingAverage ? <Loading /> : <NoData />
 					}
 				/>
 			</ChartLayout>
 		</>
 	);
 }
-
-const COLORS = shuffle([
-	"indigo",
-	"lime",
-	"red",
-	"teal",
-	"violet",
-	"yellow",
-	"slate",
-	"cyan",
-	"fuchsia",
-	"gray",
-	"green",
-	"orange",
-	"pink",
-	"purple",
-	"zinc",
-	"neutral",
-	"stone",
-	"amber",
-	"emerald",
-	"sky",
-	"rose",
-]);
 
 const dataFormatter = (number: number) => {
 	// return "$ " + Intl.NumberFormat("us").format(number).toString();

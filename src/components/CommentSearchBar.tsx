@@ -1,12 +1,19 @@
 "use client";
 
-import { CommentContext } from "@/app/comment/provider";
 import { Button, Card, Input, Spinner } from "@nextui-org/react";
-import { useContext, useRef, useState } from "react";
+import { useState } from "react";
 
-export default function CommentSearchBar() {
-	const { keyword, setKeyword, isLoading, setIsLoading } =
-		useContext(CommentContext);
+export default function CommentSearchBar({
+	keyword,
+	setKeyword,
+	isLoading,
+	setIsLoading,
+}: {
+	keyword: string;
+	setKeyword: (d: string) => any;
+	isLoading: boolean;
+	setIsLoading: (d: boolean) => any;
+}) {
 	const [searchText, setSearchText] = useState("");
 
 	return (
