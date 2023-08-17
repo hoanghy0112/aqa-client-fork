@@ -12,8 +12,7 @@ import { GET_COMMENT_QUANTITY } from "@/constants/api_endpoint";
 import SemesterContext from "@/contexts/SemesterContext";
 import { useContext } from "react";
 
-import { usePathname } from "next/navigation";
-import { CommentContext } from "@/app/comment/context";
+import { CommentContext } from "@/app/comment/provider";
 
 export default function CommentQuantityInfo() {
 	const { semester } = useContext(SemesterContext);

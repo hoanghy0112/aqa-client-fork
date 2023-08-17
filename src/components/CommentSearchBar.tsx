@@ -1,6 +1,6 @@
 "use client";
 
-import { CommentContext } from "@/app/comment/context";
+import { CommentContext } from "@/app/comment/provider";
 import { Button, Card, Input, Spinner } from "@nextui-org/react";
 import { useContext, useRef, useState } from "react";
 

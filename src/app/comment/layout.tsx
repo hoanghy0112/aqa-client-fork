@@ -5,6 +5,7 @@ import CommentWrapper from "@/components/CommentWrapper";
 import CommentQuantityInfo from "@/components/CommentQuantityInfo";
 import CommentProvider from "./provider";
 import CommentSearchBar from "@/components/CommentSearchBar";
+import ProgramSelector from "@/components/ProgramSelector";
 
 export default async function CommentLayout({
 	children,
@@ -19,8 +20,9 @@ export default async function CommentLayout({
 					<div className="rounded-md flex flex-row overflow-hidden">
 						<CommentQuantityInfo />
 					</div>
-					<div className="ml-auto mr-10">
+					<div className=" flex flex-row gap-3 ml-auto mr-10">
 						<SemesterSelector />
+						<ProgramSelector />
 					</div>
 				</div>
 				<CommentSearchBar />

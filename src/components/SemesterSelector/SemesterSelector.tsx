@@ -1,9 +1,9 @@
 "use client";
 
 import { getSemesterList } from "@/api/semester";
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import SemesterSelectorUI from "./SemesterSelectorUI";
 import SemesterContext from "@/contexts/SemesterContext";
+import { useContext, useEffect, useMemo, useState } from "react";
+import SemesterSelectorUI from "./SemesterSelectorUI";
 
 export default function SemesterSelector({
 	semester,
