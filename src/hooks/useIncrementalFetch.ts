@@ -1,8 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { defaultFetcher } from "@/utils/fetchers";
 import withQuery from "@/utils/withQuery";
 import { Ref, useEffect, useRef, useState } from "react";
-import useSWR from "swr";
 
 export default function useIncrementalFetch<T>({
 	url,
@@ -19,7 +17,7 @@ export default function useIncrementalFetch<T>({
 	const [loading, setLoading] = useState<boolean>(false);
 
 	const bottomRef = useRef<any>();
-	const hasNext = useRef<boolean>(true);
+	const [hasNext, setHasNext] = useState<boolean>(true);
 
 	useEffect(() => {
 		(async () => {
@@ -32,7 +30,7 @@ export default function useIncrementalFetch<T>({
 				meta: { has_next: newHasNext },
 			} = onFetch(response);
 			setLoading(false);
-			hasNext.current = newHasNext;
+			setHasNext(newHasNext);
 			if (page == 0) setItems(newData);
 			else setItems((prev) => [...prev, ...newData]);
 		})();
@@ -41,7 +39,7 @@ export default function useIncrementalFetch<T>({
 	useEffect(() => {
 		setItems([]);
 		setPage(0);
-		hasNext.current = true;
+		setHasNext(true);
 	}, [...Object.values(query)]);
 
 	useEffect(() => {
@@ -57,5 +55,5 @@ export default function useIncrementalFetch<T>({
 		observer.observe(bottomRef.current);
 	}, [items.length]);
 
-	return { items, isLoading: loading, hasMore: hasNext.current, bottomRef };
+	return { items, isLoading: loading, hasMore: hasNext, bottomRef };
 }

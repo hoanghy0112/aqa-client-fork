@@ -59,7 +59,9 @@ export default function CriteriaSelector({
 			>
 				<Button onPress={onOpen} className="">
 					<p className="">
-						{criteria ? `Tiêu chí ${criteria.index}` : "Chọn tiêu chí"}
+						{criteria?.index
+							? `Tiêu chí ${criteria.index}`
+							: "Tất cả tiêu chí"}
 					</p>
 				</Button>
 			</Tooltip>
@@ -91,6 +93,28 @@ export default function CriteriaSelector({
 							<ModalBody className="mb-5">
 								{!isLoading && !error ? (
 									<>
+										<div>
+											<Card
+												isPressable
+												onPress={() => {
+													setCriteria({
+														criteria_id: "",
+														display_name: "Tất cả tiêu chí",
+														index: 0,
+													});
+													onClose();
+												}}
+												className="py-3 px-4 w-full"
+												radius="sm"
+											>
+												<p className=" text-md font-semibold mb-1 text-start">
+													Tất cả
+												</p>
+												<p className=" text-sm w-full font-normal text-start">
+													Chọn tất cả các tiêu chí
+												</p>
+											</Card>
+										</div>
 										{criterias?.map(
 											({ criteria_id, display_name, index }) => (
 												<div key={index} className="">

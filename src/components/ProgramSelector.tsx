@@ -3,13 +3,13 @@
 import { GET_PROGRAM_LIST } from "@/constants/api_endpoint";
 import { defaultFetcher } from "@/utils/fetchers";
 import {
-    Button,
-    Dropdown,
-    DropdownItem,
-    DropdownMenu,
-    DropdownSection,
-    DropdownTrigger,
-    Spinner,
+	Button,
+	Dropdown,
+	DropdownItem,
+	DropdownMenu,
+	DropdownSection,
+	DropdownTrigger,
+	Spinner,
 } from "@nextui-org/react";
 import useSWR from "swr";
 
@@ -41,10 +41,14 @@ export default function ProgramSelector({
 				selectedKeys={new Set([program || ""])}
 				onAction={(key) => setProgram?.(key as string)}
 			>
-				<DropdownSection title="Chọn học kỳ">
+				<DropdownSection title="Chọn chương trình">
 					{data && !isLoading ? (
 						data.map((programTitle) => (
-							<DropdownItem className={`py-2`} key={programTitle}>
+							<DropdownItem
+								onPress={() => setProgram?.(programTitle)}
+								className={`py-2`}
+								key={programTitle}
+							>
 								<p className="font-medium"> {programTitle}</p>
 							</DropdownItem>
 						))
@@ -56,7 +60,11 @@ export default function ProgramSelector({
 					)}
 				</DropdownSection>
 				<DropdownSection title={"Khác"}>
-					<DropdownItem className={`py-2`} key={""}>
+					<DropdownItem
+						onPress={() => setProgram?.("")}
+						className={`py-2`}
+						key={""}
+					>
 						<p className="font-medium">Tất cả</p>
 					</DropdownItem>
 				</DropdownSection>

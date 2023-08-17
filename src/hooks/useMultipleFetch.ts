@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react";
 
 export default function useMultipleFetch<T>(urls: string[]) {
 	const [items, setItems] = useState<T[]>([]);
-	// const [isLoading, setIsLoading] = useState<boolean>(false);
 	const isLoading = useRef(true);
 
 	useEffect(() => {

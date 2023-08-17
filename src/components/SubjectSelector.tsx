@@ -3,16 +3,9 @@
 import { GET_SUBJECT_TABLE } from "@/constants/api_endpoint";
 import useIncrementalFetch from "@/hooks/useIncrementalFetch";
 import {
-	Accordion,
-	AccordionItem,
 	Button,
-	Card,
 	Checkbox,
 	Chip,
-	Dropdown,
-	DropdownItem,
-	DropdownMenu,
-	DropdownTrigger,
 	Input,
 	Modal,
 	ModalBody,
@@ -20,32 +13,24 @@ import {
 	ModalFooter,
 	ModalHeader,
 	Skeleton,
-	SortDescriptor,
 	Spinner,
-	Table,
-	TableBody,
-	TableCell,
-	TableColumn,
-	TableHeader,
-	TableRow,
 	Tooltip,
 	cn,
-	getKeyValue,
 	useDisclosure,
 } from "@nextui-org/react";
-import TableSketon from "./TableSkeleton";
-import { useCallback, useEffect, useState } from "react";
-import usePersistentState from "@/hooks/usePersistentState";
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { useDebounce } from "usehooks-ts";
 import { SortSelector } from "./SortSelector";
 
 export default function SubjectSelector({
 	subjects: _subjects,
 	setSubjects: _setSubjects,
+	faculty,
 }: {
 	subjects: Map<string, Subject>;
 	setSubjects: (d: Map<string, Subject>) => any;
+	faculty: string;
 }) {
 	const [subjects, setSubjects] = useState<Map<string, Subject>>(_subjects);
 
@@ -70,6 +55,7 @@ export default function SubjectSelector({
 				debouncedKeyword,
 				page_size: 20,
 				filter_field: "subject_name",
+				faculty_name: faculty,
 				direction: selectedKeys.has("asc") ? "asc" : "desc",
 			},
 		});
@@ -226,7 +212,7 @@ export default function SubjectSelector({
 										className=" w-full py-4 flex flex-row justify-center gap-2 items-center"
 									>
 										<p className=" text-md font-semibold">
-											Đang tải...
+											Không còn môn học nào
 										</p>
 									</div>
 								)}

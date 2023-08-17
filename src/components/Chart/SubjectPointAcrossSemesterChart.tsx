@@ -2,7 +2,6 @@
 
 import { Color, LineChart } from "@tremor/react";
 
-
 import { GET_SUBJECT_POINT_ACROSS_SEMESTER } from "@/constants/api_endpoint";
 import { COLORS } from "@/constants/colors";
 import useMultipleFetch from "@/hooks/useMultipleFetch";
@@ -15,16 +14,22 @@ import Loading from "../Loading";
 import NoData from "../NoData";
 import SubjectSelector from "../SubjectSelector";
 import ChartLayout from "./ChartLayout";
+import ProgramSelector from "../ProgramSelector";
+import FacultySelector from "../FacultySelector";
 
 export default function SubjectPointAcrossSemesterChart() {
 	const [criteria, setCriteria] = useState<Criteria | undefined>();
 	const [subjects, setSubjects] = useState<Map<string, Subject>>(new Map());
+	const [program, setProgram] = useState<string>("");
+	const [faculty, setFaculty] = useState<string>("");
 
 	const { data: averageData, isLoading: isLoadingAverage } = useSWR<
 		IChartData[]
 	>(
 		withQuery(GET_SUBJECT_POINT_ACROSS_SEMESTER, {
 			criteria_id: criteria?.criteria_id,
+			program,
+			faculty_name: faculty,
 		}),
 		(url: string) => fetch(url).then((r) => r.json())
 	);
@@ -34,6 +39,8 @@ export default function SubjectPointAcrossSemesterChart() {
 			withQuery(GET_SUBJECT_POINT_ACROSS_SEMESTER, {
 				criteria_id: criteria?.criteria_id,
 				subject_id: subject_id,
+				program,
+				faculty_name: faculty,
 			})
 		)
 	);
@@ -83,11 +90,14 @@ export default function SubjectPointAcrossSemesterChart() {
 						<SubjectSelector
 							subjects={subjects}
 							setSubjects={(d: any) => setSubjects(d)}
+							faculty={faculty}
 						/>
 						<CriteriaSelector
 							criteria={criteria}
 							setCriteria={setCriteria}
 						/>
+						<ProgramSelector program={program} setProgram={setProgram} />
+						<FacultySelector faculty={faculty} setFaculty={setFaculty} />
 					</>
 				}
 			>
