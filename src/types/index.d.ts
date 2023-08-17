@@ -23,3 +23,8 @@ declare interface Subject {
 	subject_id: string;
 	subject_name: string;
 }
+
+declare interface Faculty {
+	faculty_id: string;
+	faculty_name: string;
+}

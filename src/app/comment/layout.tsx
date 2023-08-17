@@ -1,11 +1,12 @@
 import SemesterSelector from "@/components/SemesterSelector/SemesterSelector";
 import { ReactNode } from "react";
 
-import CommentWrapper from "@/components/CommentWrapper";
 import CommentQuantityInfo from "@/components/CommentQuantityInfo";
-import CommentProvider from "./provider";
 import CommentSearchBar from "@/components/CommentSearchBar";
+import CommentWrapper from "@/components/CommentWrapper";
+import FacultySelector from "@/components/FacultySelector";
 import ProgramSelector from "@/components/ProgramSelector";
+import CommentProvider from "./provider";
 
 export default async function CommentLayout({
 	children,
@@ -23,6 +24,7 @@ export default async function CommentLayout({
 					<div className=" flex flex-row gap-3 ml-auto mr-10">
 						<SemesterSelector />
 						<ProgramSelector />
+						<FacultySelector />
 					</div>
 				</div>
 				<CommentSearchBar />

@@ -1,11 +1,13 @@
 "use client";
 
+import { FacultyContext } from "@/contexts/FacultyContext";
 import { ProgramContext } from "@/contexts/ProgramContext";
 import { ReactNode, useState, createContext } from "react";
 
 export default function CommentProvider({ children }: { children: ReactNode }) {
 	const [keyword, setKeyword] = useState("");
 	const [program, setProgram] = useState("");
+	const [faculty, setFaculty] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 
 	return (
@@ -24,7 +26,9 @@ export default function CommentProvider({ children }: { children: ReactNode }) {
 			}}
 		>
 			<ProgramContext.Provider value={{ program, setProgram }}>
-				{children}
+				<FacultyContext.Provider value={{ faculty, setFaculty }}>
+					{children}
+				</FacultyContext.Provider>
 			</ProgramContext.Provider>
 		</CommentContext.Provider>
 	);
