@@ -1,6 +1,7 @@
 "use client";
 
 import { GET_PROGRAM_LIST } from "@/constants/api_endpoint";
+import { useFilter } from "@/contexts/FilterContext";
 import { defaultFetcher } from "@/utils/fetchers";
 import {
 	Button,
@@ -13,13 +14,9 @@ import {
 } from "@nextui-org/react";
 import useSWR from "swr";
 
-export default function ProgramSelector({
-	program,
-	setProgram,
-}: {
-	program?: string;
-	setProgram?: (d: string) => any;
-}) {
+export default function ProgramSelector() {
+	const { program, setProgram } = useFilter();
+
 	const { data, isLoading } = useSWR<string[]>(
 		GET_PROGRAM_LIST,
 		defaultFetcher

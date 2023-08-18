@@ -2,6 +2,7 @@
 
 import { GET_FACULTY_LIST } from "@/constants/api_endpoint";
 import { FacultyContext } from "@/contexts/FacultyContext";
+import { useFilter } from "@/contexts/FilterContext";
 import { defaultFetcher } from "@/utils/fetchers";
 import {
 	Button,
@@ -20,14 +21,8 @@ import {
 import { useContext, useEffect, useRef } from "react";
 import useSWR from "swr";
 
-export default function FacultySelector({
-	faculty,
-	setFaculty,
-}: {
-	faculty?: string;
-	setFaculty?: (d: string) => any;
-}) {
-	const {} = useContext(FacultyContext);
+export default function FacultySelector() {
+	const { faculty, setFaculty } = useFilter();
 
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 

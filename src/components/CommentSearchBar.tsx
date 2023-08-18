@@ -1,19 +1,11 @@
 "use client";
 
+import { useFilter } from "@/contexts/FilterContext";
 import { Button, Card, Input, Spinner } from "@nextui-org/react";
 import { useState } from "react";
 
-export default function CommentSearchBar({
-	keyword,
-	setKeyword,
-	isLoading,
-	setIsLoading,
-}: {
-	keyword: string;
-	setKeyword: (d: string) => any;
-	isLoading: boolean;
-	setIsLoading: (d: boolean) => any;
-}) {
+export default function CommentSearchBar() {
+	const { keyword, setKeyword, isLoading, setIsLoading } = useFilter();
 	const [searchText, setSearchText] = useState("");
 
 	return (

@@ -3,16 +3,14 @@
 import { motion } from "framer-motion";
 
 import getComments from "@/api/comment";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CommentItem from "./CommentItem/CommentItem";
 
-import SemesterContext from "@/contexts/SemesterContext";
+import { useFilter } from "@/contexts/FilterContext";
 import { Skeleton, Spinner } from "@nextui-org/react";
-import { CommentContext } from "@contexts/CommentPageContext";
 
 export default function CommentList({ type }: { type: string }) {
-	const { semester } = useContext(SemesterContext);
-	const { keyword, setIsLoading } = useContext(CommentContext);
+	const { semester, keyword, setIsLoading } = useFilter();
 
 	const [comments, setComments] = useState<Comment[]>([]);
 	const [page, setPage] = useState(0);

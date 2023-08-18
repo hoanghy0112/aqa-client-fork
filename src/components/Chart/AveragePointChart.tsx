@@ -12,6 +12,7 @@ import { SortSelector } from "@components/SortSelector";
 import { useState } from "react";
 import useSWR from "swr";
 import ChartLayout from "./ChartLayout";
+import { FilterProvider } from "@/contexts/FilterContext";
 
 export default function AveragePointChart() {
 	const [semester, setSemester] = useState<Semester>();
@@ -37,7 +38,7 @@ export default function AveragePointChart() {
 				colors={["sky"]}
 				columnNum={data?.length || 0}
 				handlerButtons={
-					<>
+					<FilterProvider>
 						<SemesterSelector
 							semester={semester}
 							setSemester={(d) => setSemester(d)}
@@ -50,7 +51,7 @@ export default function AveragePointChart() {
 							selectedKeys={selectedKeys}
 							setSelectedKeys={setSelectedKeys}
 						></SortSelector>
-					</>
+					</FilterProvider>
 				}
 			>
 				<BarChart

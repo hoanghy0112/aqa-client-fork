@@ -16,6 +16,7 @@ import SubjectSelector from "../SubjectSelector";
 import ChartLayout from "./ChartLayout";
 import ProgramSelector from "../ProgramSelector";
 import FacultySelector from "../FacultySelector";
+import { FilterProvider } from "@/contexts/FilterContext";
 
 export default function SubjectPointAcrossSemesterChart() {
 	const [criteria, setCriteria] = useState<Criteria | undefined>();
@@ -86,7 +87,7 @@ export default function SubjectPointAcrossSemesterChart() {
 				columnNum={data?.length || 0}
 				isFullWidth
 				handlerButtons={
-					<>
+					<FilterProvider>
 						<SubjectSelector
 							subjects={subjects}
 							setSubjects={(d: any) => setSubjects(d)}
@@ -96,9 +97,9 @@ export default function SubjectPointAcrossSemesterChart() {
 							criteria={criteria}
 							setCriteria={setCriteria}
 						/>
-						<ProgramSelector program={program} setProgram={setProgram} />
-						<FacultySelector faculty={faculty} setFaculty={setFaculty} />
-					</>
+						<ProgramSelector />
+						<FacultySelector />
+					</FilterProvider>
 				}
 			>
 				<LineChart

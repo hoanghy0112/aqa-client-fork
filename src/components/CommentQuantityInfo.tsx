@@ -11,9 +11,11 @@ import POSITIVE_COMMENT_ICON from "@assets/positive_comment.svg";
 import { GET_COMMENT_QUANTITY } from "@/constants/api_endpoint";
 import SemesterContext from "@/contexts/SemesterContext";
 import { useContext } from "react";
+import { useFilter } from "@/contexts/FilterContext";
 
-export default function CommentQuantityInfo({ keyword }: { keyword: string }) {
-	const { semester } = useContext(SemesterContext);
+export default function CommentQuantityInfo() {
+	const { semester, keyword } = useFilter();
+	// const { semester } = useContext(SemesterContext);
 
 	const { data, isLoading, error } = useSWR(
 		`${GET_COMMENT_QUANTITY}?semester_id=${
