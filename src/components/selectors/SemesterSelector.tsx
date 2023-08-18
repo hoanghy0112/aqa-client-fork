@@ -28,7 +28,7 @@ export default function SemesterSelector() {
 			<DropdownTrigger>
 				<Button variant="bordered" className="w-fit">
 					<p className="font-medium w-fit">
-						{semester?.display_name || "Chọn học kỳ"}
+						{semester?.display_name || "Tất cả học kỳ"}
 					</p>
 				</Button>
 			</DropdownTrigger>
@@ -54,7 +54,7 @@ export default function SemesterSelector() {
 					))}
 				</DropdownSection>
 				<DropdownSection title={"Khác"}>
-					<DropdownItem className={`py-2`} key={"all"}>
+					<DropdownItem className={`py-2`} key={""}>
 						<p className="font-medium">Tất cả</p>
 					</DropdownItem>
 				</DropdownSection>

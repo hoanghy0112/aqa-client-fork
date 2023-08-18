@@ -3,7 +3,7 @@
 import { Color, Legend } from "@tremor/react";
 
 import BaseChart from "@components/chart/BaseChart";
-import { ReactNode } from "react";
+import { ReactNode, useMemo, useRef } from "react";
 import Extensible from "../Extensible";
 
 export default function ChartLayout({
@@ -27,6 +27,21 @@ export default function ChartLayout({
 	children: ReactNode;
 	isFullWidth?: boolean;
 }) {
+	const containerRef = useRef<HTMLDivElement>(null);
+
+	const width: string | number = useMemo(() => {
+		if (isFullWidth) return "100%";
+		if (containerRef?.current && columnNum > 0) {
+			return Math.max(
+				columnNum * columnSize,
+				containerRef.current.getBoundingClientRect().width
+			);
+		} else if (columnNum > 0) {
+			return columnNum * columnSize;
+		}
+		return "100%";
+	}, [columnNum, columnSize, isFullWidth]);
+
 	return (
 		<BaseChart>
 			<Extensible>
@@ -48,19 +63,13 @@ export default function ChartLayout({
 					categories={legends}
 					colors={colors}
 				/>
-				<div className="w-full overflow-x-auto overflow-y-hidden flex flex-col justify-stretch flex-grow">
+				<div
+					ref={containerRef}
+					className="w-full overflow-x-auto overflow-y-hidden flex flex-col justify-stretch flex-grow"
+				>
 					<div
 						className=" h-full pr-4 basis-full flex flex-col flex-grow"
-						style={
-							isFullWidth
-								? { width: "100%" }
-								: {
-										width:
-											columnNum > 0
-												? columnNum * columnSize
-												: "100%",
-								  }
-						}
+						style={{ width }}
 					>
 						{children}
 					</div>

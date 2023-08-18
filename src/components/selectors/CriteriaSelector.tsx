@@ -84,7 +84,7 @@ export default function CriteriaSelector() {
 									size="md"
 									placeholder="Nhập từ khóa cần tìm..."
 									variant="bordered"
-									className="w-[500px] mt-5"
+									className="w-full mt-5"
 								/>
 							</ModalHeader>
 							<ModalBody className="mb-5">

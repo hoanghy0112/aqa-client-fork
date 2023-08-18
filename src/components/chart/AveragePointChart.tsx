@@ -12,14 +12,18 @@ import SemesterSelector from "@components/selectors/SemesterSelector";
 import { SortSelector } from "@components/selectors/SortSelector";
 import useSWR from "swr";
 import ChartLayout from "./ChartLayout";
+import ProgramSelector from "../selectors/ProgramSelector";
+import FacultySelector from "../selectors/FacultySelector";
 
 export default function AveragePointChart() {
-	const { semester, criteria, sort } = useFilter();
+	const { semester, criteria, sort, faculty, program } = useFilter();
 
 	const { data, isLoading } = useSWR<IChartData[]>(
 		withQuery(GET_SUBJECT_AVERAGE_POINT, {
 			semester_id: semester?.semester_id,
 			criteria_id: criteria?.criteria_id,
+			program,
+			faculty_name: faculty,
 			sort,
 		}),
 		(url: string) => fetch(url).then((r) => r.json())
@@ -37,6 +41,8 @@ export default function AveragePointChart() {
 					<>
 						<SemesterSelector />
 						<CriteriaSelector />
+						<ProgramSelector />
+						<FacultySelector />
 						<SortSelector />
 					</>
 				}
