@@ -7,9 +7,9 @@ import { Spinner } from "@nextui-org/react";
 import { GET_SUBJECT_AVERAGE_POINT } from "@/constants/api_endpoint";
 import { useFilter } from "@/contexts/FilterContext";
 import withQuery from "@/utils/withQuery";
-import CriteriaSelector from "@components/CriteriaSelector";
-import SemesterSelector from "@components/SemesterSelector/SemesterSelector";
-import { SortSelector } from "@components/SortSelector";
+import CriteriaSelector from "@components/selectors/CriteriaSelector";
+import SemesterSelector from "@components/selectors/SemesterSelector";
+import { SortSelector } from "@components/selectors/SortSelector";
 import useSWR from "swr";
 import ChartLayout from "./ChartLayout";
 
@@ -37,7 +37,7 @@ export default function AveragePointChart() {
 					<>
 						<SemesterSelector />
 						<CriteriaSelector />
-						<SortSelector></SortSelector>
+						<SortSelector />
 					</>
 				}
 			>

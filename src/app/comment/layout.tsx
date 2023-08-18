@@ -1,12 +1,12 @@
 "use client";
 
-import SemesterSelector from "@/components/SemesterSelector/SemesterSelector";
+import SemesterSelector from "@/components/selectors/SemesterSelector";
 import { ReactNode } from "react";
 
-import CommentQuantityInfo from "@/components/CommentQuantityInfo";
-import CommentSearchBar from "@/components/CommentSearchBar";
-import FacultySelector from "@/components/FacultySelector";
-import ProgramSelector from "@/components/ProgramSelector";
+import CommentQuantityInfo from "@/components/comments/CommentQuantityInfo";
+import CommentSearchBar from "@/components/comments/CommentSearchBar";
+import FacultySelector from "@/components/selectors/FacultySelector";
+import ProgramSelector from "@/components/selectors/ProgramSelector";
 import { FilterProvider } from "@/contexts/FilterContext";
 import { Card } from "@nextui-org/react";
 

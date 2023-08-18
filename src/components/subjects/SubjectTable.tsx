@@ -2,7 +2,7 @@
 import SemesterContext from "@/contexts/SemesterContext";
 import { Button, Card, Input } from "@nextui-org/react";
 import { useContext, useRef, useState } from "react";
-import SemesterSelector from "./SemesterSelector/SemesterSelector";
+import SemesterSelector from "../selectors/SemesterSelector";
 import SubjectList from "./SubjectList";
 
 export default function SubjectTable() {

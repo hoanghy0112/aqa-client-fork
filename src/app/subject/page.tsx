@@ -1,7 +1,7 @@
-import AveragePointChart from "@/components/Chart/AveragePointChart";
-import SubjectPointAcrossSemesterChart from "@/components/Chart/SubjectPointAcrossSemesterChart";
+import AveragePointChart from "@/components/chart/AveragePointChart";
+import SubjectPointAcrossSemesterChart from "@/components/chart/SubjectPointAcrossSemesterChart";
 import NavigationTab from "@/components/NavigationTab";
-import SubjectTable from "@/components/SubjectTable";
+import SubjectTable from "@/components/subjects/SubjectTable";
 import { FilterProvider } from "@/contexts/FilterContext";
 
 export default function SubjectPage() {

@@ -1,5 +1,7 @@
 "use client";
 
+import { getSemesterList } from "@/api/semester";
+import { useFilter } from "@/contexts/FilterContext";
 import {
 	Button,
 	Dropdown,
@@ -8,16 +10,19 @@ import {
 	DropdownSection,
 	DropdownTrigger,
 } from "@nextui-org/react";
+import { useEffect, useState } from "react";
 
-export default function SemesterSelectorUI({
-	semesters,
-	semester,
-	setSemester,
-}: {
-	semesters: Semester[];
-	semester: Semester | undefined;
-	setSemester: (d: Semester | undefined) => void;
-}) {
+export default function SemesterSelector() {
+	const { semester, setSemester } = useFilter();
+	const [semesters, setSemesters] = useState<Semester[]>([]);
+
+	useEffect(() => {
+		(async () => {
+			const semesterList = await getSemesterList();
+			setSemesters(semesterList);
+		})();
+	}, []);
+
 	return (
 		<Dropdown backdrop="blur" shouldBlockScroll={false}>
 			<DropdownTrigger>

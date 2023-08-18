@@ -1,17 +1,12 @@
 "use client";
 
-import { Color, LineChart } from "@tremor/react";
+import { Color } from "@tremor/react";
 
 import { GET_CRITERIA_POINT_ACROSS_SEMESTER } from "@/constants/api_endpoint";
 import { COLORS } from "@/constants/colors";
 import useMultipleFetch from "@/hooks/useMultipleFetch";
 import { chartMapper } from "@/utils/arrayManipulate";
 import withQuery from "@/utils/withQuery";
-import ChartLayout from "@components/Chart/ChartLayout";
-import CriteriaSelector from "@components/CriteriaSelector";
-import Loading from "@components/Loading";
-import NoData from "@components/NoData";
-import SubjectSelector from "@components/SubjectSelector";
 import { useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
 
@@ -75,7 +70,7 @@ export default function CriteriaOverallChart() {
 
 	return (
 		<>
-			{isClient && (
+			{/* {isClient && (
 				<ChartLayout
 					primaryTitle="Biểu đồ điểm trung bình các môn học qua các kỳ"
 					secondaryTitle={criteria?.display_name || "Tất cả các tiêu chí"}
@@ -113,7 +108,7 @@ export default function CriteriaOverallChart() {
 						}
 					/>
 				</ChartLayout>
-			)}
+			)} */}
 		</>
 	);
 }

@@ -15,9 +15,9 @@ import {
 	Tooltip,
 	getKeyValue,
 } from "@nextui-org/react";
-import TableSketon from "./TableSkeleton";
+import TableSketon from "../TableSkeleton";
 import { useCallback, useEffect, useState } from "react";
-import Loading from "./Loading";
+import Loading from "../Loading";
 
 export default function SubjectList({
 	semester,

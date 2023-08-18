@@ -2,7 +2,7 @@
 
 import { Color, Legend, Title } from "@tremor/react";
 
-import BaseChart from "@components/Chart/BaseChart";
+import BaseChart from "@components/chart/BaseChart";
 import { ReactNode } from "react";
 import Extensible from "../Extensible";
 import { FilterProvider } from "@/contexts/FilterContext";

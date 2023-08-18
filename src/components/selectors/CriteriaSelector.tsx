@@ -2,7 +2,7 @@
 
 import { GET_CRITERIA_NAME } from "@/constants/api_endpoint";
 import { useFilter } from "@/contexts/FilterContext";
-import SemesterContext from "@/contexts/SemesterContext";
+import withQuery from "@/utils/withQuery";
 import {
 	Button,
 	Card,
@@ -16,16 +16,19 @@ import {
 	useDisclosure,
 } from "@nextui-org/react";
 import { motion } from "framer-motion";
-import { useContext, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import useSWR from "swr";
 
 export default function CriteriaSelector() {
 	const { criteria, setCriteria } = useFilter();
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-	const { semester } = useContext(SemesterContext);
+	const { semester } = useFilter();
+
 	const { data, isLoading, error } = useSWR<Criteria[]>(
-		`${GET_CRITERIA_NAME}?semester_id=${semester?.semester_id || ""}`,
+		withQuery(GET_CRITERIA_NAME, {
+			semester_id: semester?.semester_id,
+		}),
 		(url: string) => fetch(url).then((r) => r.json())
 	);
 

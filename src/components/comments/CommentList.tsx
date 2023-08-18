@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import CommentItem from "./CommentItem";
 
 import { GET_COMMENT_LIST } from "@/constants/api_endpoint";
 import { useFilter } from "@/contexts/FilterContext";
 import useIncrementalFetch from "@/hooks/useIncrementalFetch";
-import Loading from "./Loading";
+import Loading from "../Loading";
 
 export default function CommentList({ type }: { type: string }) {
 	const { semester, keyword, setIsLoading } = useFilter();

@@ -8,14 +8,14 @@ import { useFilter } from "@/contexts/FilterContext";
 import useMultipleFetch from "@/hooks/useMultipleFetch";
 import { chartMapper } from "@/utils/arrayManipulate";
 import withQuery from "@/utils/withQuery";
-import CriteriaSelector from "@components/CriteriaSelector";
+import CriteriaSelector from "@components/selectors/CriteriaSelector";
 import { useMemo } from "react";
 import useSWR from "swr";
-import FacultySelector from "../FacultySelector";
+import FacultySelector from "../selectors/FacultySelector";
 import Loading from "../Loading";
 import NoData from "../NoData";
-import ProgramSelector from "../ProgramSelector";
-import SubjectSelector from "../SubjectSelector";
+import ProgramSelector from "../selectors/ProgramSelector";
+import SubjectSelector from "../selectors/SubjectSelector";
 import ChartLayout from "./ChartLayout";
 
 export default function SubjectPointAcrossSemesterChart() {
