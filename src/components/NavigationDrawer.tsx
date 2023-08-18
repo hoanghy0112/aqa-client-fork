@@ -38,7 +38,7 @@ export default function NavigationDrawer({
 				<div
 					className={`h-10 ${
 						open ? "opacity-100" : "opacity-0 invisible"
-					} transition-all mt-5`}
+					} transition-all mt-8`}
 				>
 					<ThemeSwitcher />
 				</div>
@@ -60,7 +60,7 @@ export function NavItem({ title, link, icon: Icon, subItems }: INavItemProps) {
 
 	return (
 		<div
-			className="group/nav h-fit"
+			className="group/nav h-fit w-fit"
 			onMouseOver={() => setIsHover(true)}
 			onMouseLeave={() => setIsHover(false)}
 		>
@@ -105,8 +105,8 @@ export function NavItem({ title, link, icon: Icon, subItems }: INavItemProps) {
 			</Card>
 			{subItems ? (
 				<div
-					className={`opacity-0 pl-3 ${
-						isOpen ? "group-hover/nav:opacity-100 w-fit" : "w-0"
+					className={` opacity-0 pl-3 ${
+						isOpen ? "group-hover/nav:opacity-100" : "w-0"
 					} overflow-hidden transition-all`}
 					style={{
 						height:
@@ -117,15 +117,15 @@ export function NavItem({ title, link, icon: Icon, subItems }: INavItemProps) {
 				>
 					<ul
 						ref={subRef}
-						className="pb-3 pl-3 mt-3 list-none border-l-3 border-l-blue-800"
+						className="pb-3 pl-3 mt-3 w-full list-none border-l-3 border-l-blue-800"
 					>
 						{subItems?.map(({ title, link }) => (
 							<li
 								key={link}
 								onClick={() => router.push(link)}
-								className={` rounded-xl p-3 hover:bg-slate-200 dark:hover:bg-slate-700 cursor-pointer transition-all ${
+								className={` my-1 rounded-xl p-3 hover:bg-slate-200 dark:hover:bg-slate-700 cursor-pointer transition-all ${
 									pathname === link
-										? " bg-blue-600 text-white dark:text-white hover:text-black dark:hover:text-white"
+										? " bg-blue-300 dark:bg-blue-900 text-black dark:text-white hover:text-black dark:hover:text-white"
 										: ""
 								}`}
 							>

@@ -30,26 +30,25 @@ export default function RootLayout({
 								title="Bình luận"
 								link="/comment/all"
 								icon={CommentIcon}
-							/>
-							<NavItem
-								title="Môn học"
-								link="/subject"
-								icon={SubjectIcon}
 								subItems={[
 									{
-										title: "Điểm trung bình các môn",
-										link: "/subject/average-point",
+										title: "Tất cả",
+										link: "/comment/all",
 									},
 									{
-										title: "Điểm trung bình qua các học kỳ",
-										link: "/subject/point-per-year",
+										title: "Tích cực",
+										link: "/comment/positive",
+									},
+									{
+										title: "Tiêu cực",
+										link: "/comment/negative",
 									},
 								]}
 							/>
 							<NavItem
 								title="Môn học"
 								link="/subject"
-								icon={SubjectIcon }
+								icon={SubjectIcon}
 								subItems={[
 									{
 										title: "Điểm trung bình các môn",
