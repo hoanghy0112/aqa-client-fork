@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+
 export default function CommentPage() {
-	return <div></div>;
+	redirect("/comment/all");
 }
