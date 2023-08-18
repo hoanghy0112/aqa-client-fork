@@ -33,8 +33,11 @@ export function FilterProvider({
 	criteria: default_criteria,
 	program: default_program,
 	faculty: default_faculty = "",
-	semester: default_semester,
-	sort: default_sort = "asc",
+	semester: default_semester = {
+		display_name: "",
+		semester_id: "",
+	} as Semester,
+	sort: default_sort = "desc",
 	setSort: default_setSort,
 	children,
 }: {
@@ -60,7 +63,7 @@ export function FilterProvider({
 
 	useEffect(() => {
 		default_setSort?.(sort);
-	}, [sort]);
+	}, [sort, default_setSort]);
 
 	return (
 		<FilterContext.Provider
@@ -78,7 +81,8 @@ export function FilterProvider({
 				faculty,
 				setFaculty,
 				semester,
-				setSemester,
+				setSemester: (d: Semester | undefined) =>
+					setSemester(d as Semester),
 				sort,
 				setSort,
 			}}

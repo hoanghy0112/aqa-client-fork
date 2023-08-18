@@ -5,20 +5,18 @@ import { useFilter } from "@/contexts/FilterContext";
 import SemesterContext from "@/contexts/SemesterContext";
 import {
 	Button,
+	Card,
+	Input,
 	Modal,
 	ModalBody,
 	ModalContent,
-	ModalFooter,
 	ModalHeader,
-	useDisclosure,
-	Divider,
-	Card,
 	Skeleton,
-	Input,
 	Tooltip,
+	useDisclosure,
 } from "@nextui-org/react";
 import { motion } from "framer-motion";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import useSWR from "swr";
 
 export default function CriteriaSelector() {
@@ -37,7 +35,7 @@ export default function CriteriaSelector() {
 		() =>
 			data?.filter((criteria) => criteria.display_name.includes(keyword)) ||
 			[],
-		[keyword, isLoading]
+		[keyword, data]
 	);
 
 	return (
@@ -164,15 +162,6 @@ export default function CriteriaSelector() {
 					)}
 				</ModalContent>
 			</Modal>
-
-			{/* <ModalFooter>
-				<Button color="danger" variant="light" onClick={onClose}>
-					Close
-				</Button>
-				<Button color="primary" onPress={onClose}>
-					Action
-				</Button>
-			</ModalFooter> */}
 		</>
 	);
 }

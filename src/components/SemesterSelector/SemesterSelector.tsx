@@ -16,10 +16,6 @@ export default function SemesterSelector() {
 		})();
 	}, []);
 
-	useEffect(() => {
-		if (!semester && semesters.length > 0) setSemester?.(semesters[0]);
-	}, [JSON.stringify(semesters)]);
-
 	return (
 		<SemesterSelectorUI
 			semesters={semesters}

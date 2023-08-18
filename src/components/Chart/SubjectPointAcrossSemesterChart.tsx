@@ -48,7 +48,7 @@ export default function SubjectPointAcrossSemesterChart() {
 			AVG_LEGEND,
 			...Array.from(subjects.entries()).map(([_, sub]) => sub.subject_name),
 		],
-		[data, averageData]
+		[subjects]
 	);
 
 	const chartData = useMemo(
@@ -70,7 +70,7 @@ export default function SubjectPointAcrossSemesterChart() {
 				"sky",
 				...Object.values(COLORS).slice(0, subjectNames.length - 1),
 			] as Color[],
-		[data, averageData]
+		[subjectNames.length]
 	);
 
 	return (
