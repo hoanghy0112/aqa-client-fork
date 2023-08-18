@@ -20,7 +20,7 @@ import Loading from "../Loading";
 import TableSketon from "../TableSkeleton";
 
 export default function SubjectList() {
-	const { semester, keyword } = useFilter();
+	const { semester, keyword, program, faculty } = useFilter();
 	const [columns, setColumns] = useState(defaultColumns);
 	const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
 		column: "subject_name",
@@ -32,6 +32,8 @@ export default function SubjectList() {
 		query: {
 			semester_id: semester?.semester_id,
 			keyword,
+			program,
+			faculty_name: faculty,
 			page_size: 20,
 			filter_field: sortDescriptor.column,
 			direction: sortDescriptor.direction === "ascending" ? "asc" : "desc",
