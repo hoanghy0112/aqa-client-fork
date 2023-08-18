@@ -1,10 +1,6 @@
 import CommentList from "@/components/comments/CommentList";
 import { notFound } from "next/navigation";
 
-export function generateStaticParams() {
-	return [{ type: "all" }, { type: "positive" }, { type: "negative" }];
-}
-
 export default function Page({
 	params: { type },
 }: {

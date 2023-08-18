@@ -1,11 +1,10 @@
 "use client";
 
-import { Color, Legend, Title } from "@tremor/react";
+import { Color, Legend } from "@tremor/react";
 
 import BaseChart from "@components/chart/BaseChart";
 import { ReactNode } from "react";
 import Extensible from "../Extensible";
-import { FilterProvider } from "@/contexts/FilterContext";
 
 export default function ChartLayout({
 	primaryTitle,
@@ -31,16 +30,14 @@ export default function ChartLayout({
 	return (
 		<BaseChart>
 			<Extensible>
-				<div className=" relative w-full h-44 lg:h-24 px-8">
-					<div className=" absolute w-full top-0 left-0 px-8 py-5 flex flex-col lg:flex-row gap-5 justify-end items-start lg:items-center">
-						<Title className=" mr-auto w-full">
+				<div className=" relative w-full h-48 lg:h-28 px-8">
+					<div className=" absolute w-full top-0 left-0 px-8 pt-5 flex flex-col lg:flex-row gap-5 justify-end items-start lg:items-center">
+						<div className=" w-3/4 mt-2">
 							<p>{primaryTitle}</p>
-							<div className="w-3/4 mt-2">
-								<p className="w-full font-normal text-sm">
-									{secondaryTitle}
-								</p>
-							</div>
-						</Title>
+							<p className="w-full mt-2 font-normal text-sm">
+								{secondaryTitle}
+							</p>
+						</div>
 						<div className="w-fit flex flex-row gap-4 pr-5">
 							{handlerButtons}
 						</div>
