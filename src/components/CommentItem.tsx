@@ -5,14 +5,11 @@ import { motion } from "framer-motion";
 import COPY_ICON from "@assets/copy.svg";
 import Image from "next/image";
 
-import { Button, Card } from "@nextui-org/react";
+import { Card } from "@nextui-org/react";
 
 export default function CommentItem({
 	content,
 	type,
-	comment_id,
-	teach_id,
-	isLast,
 }: {
 	content: string;
 	type: "positive" | "negative";

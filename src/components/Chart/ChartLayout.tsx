@@ -5,6 +5,7 @@ import { Color, Legend, Title } from "@tremor/react";
 import BaseChart from "@components/Chart/BaseChart";
 import { ReactNode } from "react";
 import Extensible from "../Extensible";
+import { FilterProvider } from "@/contexts/FilterContext";
 
 export default function ChartLayout({
 	primaryTitle,

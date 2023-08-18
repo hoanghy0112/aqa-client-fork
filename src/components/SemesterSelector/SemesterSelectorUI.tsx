@@ -38,7 +38,7 @@ export default function SemesterSelectorUI({
 							display_name: "Tất cả học kỳ",
 							semester_id: "all",
 						});
-					else setSemester?.(semesters.find((v) => v.semester_id === key));
+					else setSemester(semesters.find((v) => v.semester_id === key));
 				}}
 			>
 				<DropdownSection title="Chọn học kỳ">

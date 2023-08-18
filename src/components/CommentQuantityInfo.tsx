@@ -9,18 +9,17 @@ import NEGATIVE_COMMENT_ICON from "@assets/negative_comment.svg";
 import POSITIVE_COMMENT_ICON from "@assets/positive_comment.svg";
 
 import { GET_COMMENT_QUANTITY } from "@/constants/api_endpoint";
-import SemesterContext from "@/contexts/SemesterContext";
-import { useContext } from "react";
 import { useFilter } from "@/contexts/FilterContext";
+import withQuery from "@/utils/withQuery";
 
 export default function CommentQuantityInfo() {
 	const { semester, keyword } = useFilter();
-	// const { semester } = useContext(SemesterContext);
 
 	const { data, isLoading, error } = useSWR(
-		`${GET_COMMENT_QUANTITY}?semester_id=${
-			semester?.semester_id || "all"
-		}&q=${keyword || ""}`,
+		withQuery(GET_COMMENT_QUANTITY, {
+			semester_id: semester,
+			keyword,
+		}),
 		(...args) => fetch(...args).then((r) => r.json())
 	);
 

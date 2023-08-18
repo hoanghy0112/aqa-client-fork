@@ -5,26 +5,22 @@ import { BarChart } from "@tremor/react";
 import { Spinner } from "@nextui-org/react";
 
 import { GET_SUBJECT_AVERAGE_POINT } from "@/constants/api_endpoint";
+import { useFilter } from "@/contexts/FilterContext";
 import withQuery from "@/utils/withQuery";
 import CriteriaSelector from "@components/CriteriaSelector";
 import SemesterSelector from "@components/SemesterSelector/SemesterSelector";
 import { SortSelector } from "@components/SortSelector";
-import { useState } from "react";
 import useSWR from "swr";
 import ChartLayout from "./ChartLayout";
-import { FilterProvider } from "@/contexts/FilterContext";
 
 export default function AveragePointChart() {
-	const [semester, setSemester] = useState<Semester>();
-	const [criteria, setCriteria] = useState<Criteria | undefined>();
-
-	const [selectedKeys, setSelectedKeys] = useState(new Set(["desc"]));
+	const { semester, criteria, sort } = useFilter();
 
 	const { data, isLoading } = useSWR<IChartData[]>(
 		withQuery(GET_SUBJECT_AVERAGE_POINT, {
 			semester_id: semester?.semester_id,
 			criteria_id: criteria?.criteria_id,
-			sort: selectedKeys.has("asc") ? "asc" : "desc",
+			sort,
 		}),
 		(url: string) => fetch(url).then((r) => r.json())
 	);
@@ -38,20 +34,11 @@ export default function AveragePointChart() {
 				colors={["sky"]}
 				columnNum={data?.length || 0}
 				handlerButtons={
-					<FilterProvider>
-						<SemesterSelector
-							semester={semester}
-							setSemester={(d) => setSemester(d)}
-						/>
-						<CriteriaSelector
-							criteria={criteria}
-							setCriteria={setCriteria}
-						/>
-						<SortSelector
-							selectedKeys={selectedKeys}
-							setSelectedKeys={setSelectedKeys}
-						></SortSelector>
-					</FilterProvider>
+					<>
+						<SemesterSelector />
+						<CriteriaSelector />
+						<SortSelector></SortSelector>
+					</>
 				}
 			>
 				<BarChart

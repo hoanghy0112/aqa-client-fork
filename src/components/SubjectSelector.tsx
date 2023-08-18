@@ -22,24 +22,21 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { useDebounce } from "usehooks-ts";
 import { SortSelector } from "./SortSelector";
+import { FilterProvider, useFilter } from "@/contexts/FilterContext";
 
-export default function SubjectSelector({
-	subjects: _subjects,
-	setSubjects: _setSubjects,
-	faculty,
-}: {
-	subjects: Map<string, Subject>;
-	setSubjects: (d: Map<string, Subject>) => any;
-	faculty: string;
-}) {
+export default function SubjectSelector() {
+	const {
+		subjects: _subjects,
+		setSubjects: _setSubjects,
+		faculty,
+	} = useFilter();
+
 	const [subjects, setSubjects] = useState<Map<string, Subject>>(_subjects);
 
 	const [keyword, setKeyword] = useState<string | undefined>();
 	const debouncedKeyword = useDebounce<string>(keyword || "", 500);
 
-	const [selectedKeys, setSelectedKeys] = useState<Set<string>>(
-		new Set(["asc"])
-	);
+	const [sort, setSort] = useState("asc");
 
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 	const {
@@ -56,7 +53,7 @@ export default function SubjectSelector({
 				page_size: 20,
 				filter_field: "subject_name",
 				faculty_name: faculty,
-				direction: selectedKeys.has("asc") ? "asc" : "desc",
+				direction: sort,
 			},
 		});
 
@@ -104,10 +101,9 @@ export default function SubjectSelector({
 										variant="bordered"
 										className="w-full"
 									/>
-									<SortSelector
-										selectedKeys={selectedKeys}
-										setSelectedKeys={setSelectedKeys}
-									/>
+									<FilterProvider sort={sort} setSort={setSort}>
+										<SortSelector />
+									</FilterProvider>
 								</div>
 
 								<Button

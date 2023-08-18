@@ -4,25 +4,22 @@ import { Color, LineChart } from "@tremor/react";
 
 import { GET_SUBJECT_POINT_ACROSS_SEMESTER } from "@/constants/api_endpoint";
 import { COLORS } from "@/constants/colors";
+import { useFilter } from "@/contexts/FilterContext";
 import useMultipleFetch from "@/hooks/useMultipleFetch";
 import { chartMapper } from "@/utils/arrayManipulate";
 import withQuery from "@/utils/withQuery";
 import CriteriaSelector from "@components/CriteriaSelector";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import useSWR from "swr";
+import FacultySelector from "../FacultySelector";
 import Loading from "../Loading";
 import NoData from "../NoData";
+import ProgramSelector from "../ProgramSelector";
 import SubjectSelector from "../SubjectSelector";
 import ChartLayout from "./ChartLayout";
-import ProgramSelector from "../ProgramSelector";
-import FacultySelector from "../FacultySelector";
-import { FilterProvider } from "@/contexts/FilterContext";
 
 export default function SubjectPointAcrossSemesterChart() {
-	const [criteria, setCriteria] = useState<Criteria | undefined>();
-	const [subjects, setSubjects] = useState<Map<string, Subject>>(new Map());
-	const [program, setProgram] = useState<string>("");
-	const [faculty, setFaculty] = useState<string>("");
+	const { criteria, subjects, program, faculty } = useFilter();
 
 	const { data: averageData, isLoading: isLoadingAverage } = useSWR<
 		IChartData[]
@@ -87,19 +84,12 @@ export default function SubjectPointAcrossSemesterChart() {
 				columnNum={data?.length || 0}
 				isFullWidth
 				handlerButtons={
-					<FilterProvider>
-						<SubjectSelector
-							subjects={subjects}
-							setSubjects={(d: any) => setSubjects(d)}
-							faculty={faculty}
-						/>
-						<CriteriaSelector
-							criteria={criteria}
-							setCriteria={setCriteria}
-						/>
+					<>
+						<SubjectSelector />
+						<CriteriaSelector />
 						<ProgramSelector />
 						<FacultySelector />
-					</FilterProvider>
+					</>
 				}
 			>
 				<LineChart
@@ -123,7 +113,6 @@ export default function SubjectPointAcrossSemesterChart() {
 }
 
 const dataFormatter = (number: number) => {
-	// return "$ " + Intl.NumberFormat("us").format(number).toString();
 	return `${Math.round(number * 100)}%`;
 };
 

@@ -2,6 +2,7 @@ import AveragePointChart from "@/components/Chart/AveragePointChart";
 import SubjectPointAcrossSemesterChart from "@/components/Chart/SubjectPointAcrossSemesterChart";
 import NavigationTab from "@/components/NavigationTab";
 import SubjectTable from "@/components/SubjectTable";
+import { FilterProvider } from "@/contexts/FilterContext";
 
 export default function SubjectPage() {
 	return (
@@ -12,11 +13,19 @@ export default function SubjectPage() {
 				tabs={[
 					{
 						title: "Biểu đồ điểm trung bình",
-						body: <AveragePointChart />,
+						body: (
+							<FilterProvider>
+								<AveragePointChart />
+							</FilterProvider>
+						),
 					},
 					{
 						title: "Thống kê điểm trung bình qua các năm",
-						body: <SubjectPointAcrossSemesterChart />,
+						body: (
+							<FilterProvider>
+								<SubjectPointAcrossSemesterChart />
+							</FilterProvider>
+						),
 					},
 				]}
 			/>

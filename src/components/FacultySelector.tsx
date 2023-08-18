@@ -1,16 +1,10 @@
 "use client";
 
 import { GET_FACULTY_LIST } from "@/constants/api_endpoint";
-import { FacultyContext } from "@/contexts/FacultyContext";
 import { useFilter } from "@/contexts/FilterContext";
 import { defaultFetcher } from "@/utils/fetchers";
 import {
 	Button,
-	Dropdown,
-	DropdownItem,
-	DropdownMenu,
-	DropdownSection,
-	DropdownTrigger,
 	Modal,
 	ModalBody,
 	ModalContent,
@@ -18,7 +12,7 @@ import {
 	Spinner,
 	useDisclosure,
 } from "@nextui-org/react";
-import { useContext, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import useSWR from "swr";
 
 export default function FacultySelector() {
@@ -40,7 +34,7 @@ export default function FacultySelector() {
 				block: "center",
 			});
 		}
-	}, [currentSelectedRef.current]);
+	}, [isOpen]);
 
 	return (
 		<>
@@ -60,50 +54,34 @@ export default function FacultySelector() {
 								<p>Chọn khoa</p>
 							</ModalHeader>
 							<ModalBody className="pb-8 pt-3">
-								<Button
-									onPress={() => {
-										setFaculty?.("" as string);
-										onClose();
-									}}
-									variant={"" == faculty ? "shadow" : "flat"}
-									color={"" == faculty ? "primary" : "default"}
-									className={`py-5`}
-								>
-									<p className="font-medium">Tất cả</p>
-								</Button>
 								{data && !isLoading ? (
-									data
-										.filter(({ faculty_name }) => faculty_name)
-										.map(({ faculty_name }) => (
-											<Button
-												ref={
-													faculty_name == faculty
-														? currentSelectedRef
-														: null
-												}
-												onPress={() => {
-													setFaculty?.(faculty_name as string);
-													onClose();
-												}}
-												variant={
-													faculty_name == faculty
-														? "shadow"
-														: "flat"
-												}
-												color={
-													faculty_name == faculty
-														? "primary"
-														: "default"
-												}
-												className={`py-5`}
-												key={faculty_name}
-											>
-												<p className="font-medium">
-													{" "}
-													{faculty_name}
-												</p>
-											</Button>
-										))
+									data.map(({ faculty_name = "" }) => (
+										<Button
+											ref={
+												faculty_name == faculty
+													? currentSelectedRef
+													: null
+											}
+											onPress={() => {
+												setFaculty?.(faculty_name as string);
+												onClose();
+											}}
+											variant={
+												faculty_name == faculty ? "shadow" : "flat"
+											}
+											color={
+												faculty_name == faculty
+													? "primary"
+													: "default"
+											}
+											className={`py-5`}
+											key={faculty_name}
+										>
+											<p className="font-medium">
+												{faculty_name || "Tất cả"}
+											</p>
+										</Button>
+									))
 								) : (
 									<div className=" flex flex-row gap-3">
 										<Spinner size="sm" />
@@ -116,24 +94,5 @@ export default function FacultySelector() {
 				</ModalContent>
 			</Modal>
 		</>
-		// <Dropdown backdrop="blur" shouldBlockScroll={false}>
-		// 	<DropdownTrigger>
-		// 	</DropdownTrigger>
-		// 	<DropdownMenu
-		// 		variant="faded"
-		// 		aria-label="Program dropdown"
-		// 		selectionMode="single"
-		// 		selectedKeys={new Set([faculty || ""])}
-		// 		onAction={(key) => setFaculty?.(key as string)}
-		// 	>
-		// 		<DropdownSection title="Chọn khoa">
-		// 		</DropdownSection>
-		// 		<DropdownSection title={"Khác"}>
-		// 			<DropdownItem className={`py-2`} key={""}>
-		// 				<p className="font-medium">Tất cả</p>
-		// 			</DropdownItem>
-		// 		</DropdownSection>
-		// 	</DropdownMenu>
-		// </Dropdown>
 	);
 }

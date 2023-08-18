@@ -1,4 +1,5 @@
 "use client";
+import { useFilter } from "@/contexts/FilterContext";
 import {
 	Button,
 	Dropdown,
@@ -7,20 +8,16 @@ import {
 	DropdownTrigger,
 } from "@nextui-org/react";
 
-export function SortSelector({
-	selectedKeys,
-	setSelectedKeys,
-}: {
-	selectedKeys: Set<string>;
-	setSelectedKeys: (d: Set<string>) => void;
-}) {
+export function SortSelector() {
+	const { sort, setSort } = useFilter();
+
 	return (
 		<Dropdown>
 			<DropdownTrigger>
 				<Button variant="bordered" className="">
-					{selectedKeys.has("asc")
+					{sort == "asc"
 						? "Tăng dần"
-						: selectedKeys.has("desc")
+						: sort == "desc"
 						? "Giảm dần"
 						: "Chọn cách sắp xếp"}
 				</Button>
@@ -30,10 +27,8 @@ export function SortSelector({
 				variant="flat"
 				disallowEmptySelection
 				selectionMode="single"
-				selectedKeys={selectedKeys}
-				onSelectionChange={(e: any) =>
-					setSelectedKeys(new Set([e.currentKey]))
-				}
+				selectedKeys={new Set([sort || ""])}
+				onSelectionChange={(e: any) => setSort(e.currentKey)}
 			>
 				<DropdownItem key="asc">Tăng dần</DropdownItem>
 				<DropdownItem key="desc">Giảm dần</DropdownItem>

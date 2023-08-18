@@ -17,6 +17,7 @@ import {
 } from "@nextui-org/react";
 import TableSketon from "./TableSkeleton";
 import { useCallback, useEffect, useState } from "react";
+import Loading from "./Loading";
 
 export default function SubjectList({
 	semester,
@@ -69,23 +70,13 @@ export default function SubjectList({
 					bottomContent={
 						isLoading ? (
 							<div>
-								<div
-									ref={bottomRef}
-									className=" w-full py-4 flex flex-row justify-center gap-2 items-center"
-								>
-									<Spinner size="sm" />
-									<p className=" text-md font-semibold">Đang tải...</p>
-								</div>
+								<Loading ref={bottomRef} />
 							</div>
 						) : (
 							<div
 								ref={bottomRef}
 								className=" w-full py-4 flex flex-row justify-center gap-2 items-center"
-							>
-								{/* <p className=" text-md font-semibold">
-									{hasMore ? "" : "Không còn môn học nào"}
-								</p> */}
-							</div>
+							/>
 						)
 					}
 				>

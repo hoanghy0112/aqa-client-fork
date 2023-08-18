@@ -1,15 +1,23 @@
 "use client";
 
-import { ReactNode, createContext, useContext, useState } from "react";
+import {
+	ReactNode,
+	createContext,
+	useContext,
+	useEffect,
+	useState,
+} from "react";
 
 export const FilterContext = createContext<IFilterContext>({
 	setKeyword: (d: string) => {},
 	setIsLoading: (d: boolean) => {},
-	setSubjects: (d: Subject[]) => {},
+	subjects: new Map<string, Subject>(),
+	setSubjects: (d: Map<string, Subject>) => {},
 	setCriteria: (d: Criteria) => {},
 	setProgram: (d: string) => {},
 	setFaculty: (d: string) => {},
-	setSemester: (d: Semester) => {},
+	setSemester: (d: Semester | undefined) => {},
+	setSort: (d: string) => {},
 });
 
 export function useFilter() {
@@ -21,20 +29,24 @@ export function useFilter() {
 export function FilterProvider({
 	keyword: default_keyword = "",
 	isLoading: default_isLoading = false,
-	subjects: default_subjects,
+	subjects: default_subjects = new Map<string, Subject>(),
 	criteria: default_criteria,
 	program: default_program,
-	faculty: default_faculty,
+	faculty: default_faculty = "",
 	semester: default_semester,
+	sort: default_sort = "asc",
+	setSort: default_setSort,
 	children,
 }: {
 	keyword?: string;
 	isLoading?: boolean;
-	subjects?: Subject[];
+	subjects?: Map<string, Subject>;
 	criteria?: Criteria;
 	program?: string;
 	faculty?: string;
 	semester?: Semester;
+	sort?: string;
+	setSort?: (d: string) => any;
 	children: ReactNode;
 }) {
 	const [keyword, setKeyword] = useState(default_keyword);
@@ -44,6 +56,11 @@ export function FilterProvider({
 	const [program, setProgram] = useState(default_program);
 	const [faculty, setFaculty] = useState(default_faculty);
 	const [semester, setSemester] = useState(default_semester);
+	const [sort, setSort] = useState(default_sort);
+
+	useEffect(() => {
+		default_setSort?.(sort);
+	}, [sort]);
 
 	return (
 		<FilterContext.Provider
@@ -62,6 +79,8 @@ export function FilterProvider({
 				setFaculty,
 				semester,
 				setSemester,
+				sort,
+				setSort,
 			}}
 		>
 			{children}
@@ -74,8 +93,8 @@ export interface IFilterContext {
 	setKeyword: (d: string) => any;
 	isLoading?: boolean;
 	setIsLoading: (d: boolean) => any;
-	subjects?: Subject[];
-	setSubjects: (d: Subject[]) => any;
+	subjects: Map<string, Subject>;
+	setSubjects: (d: Map<string, Subject>) => any;
 	criteria?: Criteria;
 	setCriteria: (d: Criteria) => any;
 	program?: string;
@@ -83,5 +102,7 @@ export interface IFilterContext {
 	faculty?: string;
 	setFaculty: (d: string) => any;
 	semester?: Semester;
-	setSemester: (d: Semester) => any;
+	setSemester: (d: Semester | undefined) => any;
+	sort?: string;
+	setSort: (d: string) => any;
 }

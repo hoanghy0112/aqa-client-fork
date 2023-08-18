@@ -1,6 +1,7 @@
 "use client";
 
 import { GET_CRITERIA_NAME } from "@/constants/api_endpoint";
+import { useFilter } from "@/contexts/FilterContext";
 import SemesterContext from "@/contexts/SemesterContext";
 import {
 	Button,
@@ -20,13 +21,8 @@ import { motion } from "framer-motion";
 import { useContext, useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
 
-export default function CriteriaSelector({
-	criteria,
-	setCriteria,
-}: {
-	criteria: Criteria | undefined;
-	setCriteria: (d: Criteria | undefined) => void;
-}) {
+export default function CriteriaSelector() {
+	const { criteria, setCriteria } = useFilter();
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
 	const { semester } = useContext(SemesterContext);

@@ -25,7 +25,7 @@ export default function CommentLayout({ children }: { children: ReactNode }) {
 				</div>
 			</div>
 			<CommentSearchBar />
-			<Card className="mt-8 mb-20 w-full p-5">{children}</Card>;
+			<Card className="mt-8 mb-20 w-full p-5">{children}</Card>
 		</FilterProvider>
 	);
 }
