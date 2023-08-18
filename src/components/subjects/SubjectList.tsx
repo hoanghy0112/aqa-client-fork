@@ -2,10 +2,10 @@
 "use client";
 
 import { GET_SUBJECT_TABLE } from "@/constants/api_endpoint";
+import { useFilter } from "@/contexts/FilterContext";
 import useIncrementalFetch from "@/hooks/useIncrementalFetch";
 import {
 	SortDescriptor,
-	Spinner,
 	Table,
 	TableBody,
 	TableCell,
@@ -15,17 +15,12 @@ import {
 	Tooltip,
 	getKeyValue,
 } from "@nextui-org/react";
-import TableSketon from "../TableSkeleton";
 import { useCallback, useEffect, useState } from "react";
 import Loading from "../Loading";
+import TableSketon from "../TableSkeleton";
 
-export default function SubjectList({
-	semester,
-	keyword,
-}: {
-	semester: Semester | undefined;
-	keyword: string;
-}) {
+export default function SubjectList() {
+	const { semester, keyword } = useFilter();
 	const [columns, setColumns] = useState(defaultColumns);
 	const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
 		column: "subject_name",

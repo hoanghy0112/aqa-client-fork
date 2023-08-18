@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode, useMemo } from "react";
 import SubjectTabs from "./tabs";
+import { FilterProvider } from "@/contexts/FilterContext";
 
 export default function Layout({ children }: { children: ReactNode }) {
 	const pathName = usePathname();
@@ -30,7 +31,9 @@ export default function Layout({ children }: { children: ReactNode }) {
 			<Card className=" w-full mt-5 p-0 h-[400px]">
 				<CardBody className="p-0">{children}</CardBody>
 			</Card>
-			<SubjectTable />
+			<FilterProvider>
+				<SubjectTable />
+			</FilterProvider>
 		</>
 	);
 }

@@ -1,18 +1,18 @@
 "use client";
-import SemesterContext from "@/contexts/SemesterContext";
+import { useFilter } from "@/contexts/FilterContext";
 import { Button, Card, Input } from "@nextui-org/react";
-import { useContext, useRef, useState } from "react";
+import { useRef } from "react";
+import FacultySelector from "../selectors/FacultySelector";
+import ProgramSelector from "../selectors/ProgramSelector";
 import SemesterSelector from "../selectors/SemesterSelector";
 import SubjectList from "./SubjectList";
 
 export default function SubjectTable() {
-	const { semester } = useContext(SemesterContext);
-
-	const keyword = useRef<string>("");
-	const [searchQuery, setSearchQuery] = useState<string>("");
+	const searchText = useRef<string>("");
+	const { setKeyword } = useFilter();
 
 	function handleSearch() {
-		setSearchQuery(keyword.current);
+		setKeyword(searchText.current);
 	}
 
 	return (
@@ -20,9 +20,9 @@ export default function SubjectTable() {
 			<div className="flex flex-row items-center mt-12 gap-5">
 				<Card className=" w-fit" shadow="md">
 					<Input
-						onChange={(e) => (keyword.current = e.target.value)}
+						onChange={(e) => (searchText.current = e.target.value)}
 						onClear={() => {
-							keyword.current = "";
+							searchText.current = "";
 							handleSearch();
 						}}
 						isClearable
@@ -43,8 +43,10 @@ export default function SubjectTable() {
 					<p className=" font-medium">Tìm kiếm</p>
 				</Button>
 				<SemesterSelector />
+				<ProgramSelector />
+				<FacultySelector />
 			</div>
-			<SubjectList semester={semester} keyword={searchQuery} />
+			<SubjectList />
 		</div>
 	);
 }
