@@ -28,7 +28,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 					},
 				]}
 			/>
-			<Card className=" w-full mt-5 p-0 h-[400px]">
+			<Card className=" w-full mt-5 p-0 h-[420px]">
 				<CardBody className="p-0">{children}</CardBody>
 			</Card>
 			<FilterProvider>

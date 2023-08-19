@@ -45,7 +45,7 @@ export default function ChartLayout({
 	return (
 		<BaseChart>
 			<Extensible>
-				<div className=" relative w-full h-48 lg:h-28 px-8">
+				<div className=" relative w-full h-48 lg:h-32 px-8">
 					<div className=" absolute w-full top-0 left-0 px-8 pt-5 flex flex-col lg:flex-row gap-5 justify-end items-start lg:items-center">
 						<div className=" w-3/4 mt-2">
 							<p>{primaryTitle}</p>
