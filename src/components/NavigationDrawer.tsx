@@ -29,18 +29,28 @@ export default function NavigationDrawer({
 
 	return (
 		<NavigationDrawerContext.Provider value={{ isOpen: open }}>
-			<nav className="w-fit group py-5 px-5 flex flex-col shadow-xl transition-all hover:shadow-2xl">
-				<Button className="ml-2" isIconOnly onPress={toggleDrawer}>
-					<Image src={NAV_ICON} width={20} height={20} alt="Nav icon" />
-				</Button>
-				<div
-					className={`h-10 ${
-						open ? "opacity-100" : "opacity-0 invisible"
-					} transition-all mt-8`}
-				>
-					<ThemeSwitcher />
+			<nav className="w-fit group py-5 px-5 flex flex-col shadow-none transition-all hover:shadow-2xl">
+				<div className="flex flex-row items-center">
+					<Button className="ml-1" isIconOnly onPress={toggleDrawer}>
+						<Image src={NAV_ICON} width={20} height={20} alt="Nav icon" />
+					</Button>
+					<div
+						className={`relative h-5 ${
+							open ? "opacity-100" : "opacity-0 invisible"
+						} transition-all`}
+					>
+						<div className=" absolute -right-48">
+							<ThemeSwitcher />
+						</div>
+					</div>
 				</div>
-				<div className="mt-10 flex flex-col gap-2">{children}</div>
+				<div
+					className={`-mt-20 h-full flex flex-col gap-4 ${
+						open ? "justify-center" : "justify-center"
+					}`}
+				>
+					{children}
+				</div>
 			</nav>
 		</NavigationDrawerContext.Provider>
 	);
@@ -65,7 +75,7 @@ export function NavItem({ title, link, icon: Icon, subItems }: INavItemProps) {
 			<Card
 				onPress={() => router.push(link)}
 				isPressable
-				className={`h-fit ${
+				className={`h-fit transition-all ${isOpen ? "shadow-none" : ""} ${
 					pathname.split("/")[1] === link.split("/")[1]
 						? " bg-blue-600"
 						: ""
@@ -76,7 +86,7 @@ export function NavItem({ title, link, icon: Icon, subItems }: INavItemProps) {
 						: {}
 				}
 			>
-				<CardBody className="flex flex-col h-fit">
+				<CardBody className="flex flex-col h-fit p-4">
 					<div className={` flex flex-row items-start transition-all`}>
 						<div className="w-[20px]">
 							{Icon ? (

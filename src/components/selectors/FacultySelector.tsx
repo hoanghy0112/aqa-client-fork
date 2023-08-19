@@ -16,7 +16,7 @@ import { useEffect, useRef } from "react";
 import useSWR from "swr";
 
 export default function FacultySelector() {
-	const { faculty, setFaculty } = useFilter();
+	const { faculty, setFaculty, setSubjects } = useFilter();
 
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -35,6 +35,10 @@ export default function FacultySelector() {
 			});
 		}
 	}, [isOpen]);
+
+	useEffect(() => {
+		setSubjects(new Map());
+	}, [faculty, setSubjects]);
 
 	return (
 		<>
