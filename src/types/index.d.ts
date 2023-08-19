@@ -3,7 +3,7 @@ declare type Semester = {
 	semester_id: string;
 };
 
-declare type Comment = {
+declare type IComment = {
 	content: string;
 	type: "positive" | "negative";
 	comment_id: string;

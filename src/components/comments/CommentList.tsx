@@ -16,7 +16,7 @@ export default function CommentList({ type }: { type: string }) {
 		hasMore,
 		isLoading,
 		bottomRef,
-	} = useIncrementalFetch<Comment>({
+	} = useIncrementalFetch<IComment>({
 		url: GET_COMMENT_LIST,
 		query: {
 			type,
@@ -33,7 +33,7 @@ export default function CommentList({ type }: { type: string }) {
 
 	return (
 		<>
-			{comments.map(({ content, type, comment_id, teach_id }: Comment) => (
+			{comments.map(({ content, type, comment_id, teach_id }: IComment) => (
 				<CommentItem
 					key={comment_id}
 					content={content}
