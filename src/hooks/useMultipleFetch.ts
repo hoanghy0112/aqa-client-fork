@@ -6,7 +6,6 @@ export default function useMultipleFetch<T>(urls: string[]) {
 	const isLoading = useRef(true);
 
 	useEffect(() => {
-		console.log("fetching");
 		(async () => {
 			isLoading.current = true;
 			const data = await Promise.all(

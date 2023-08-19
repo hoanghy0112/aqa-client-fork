@@ -19,7 +19,7 @@ import {
 	useDisclosure,
 } from "@nextui-org/react";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDebounce } from "usehooks-ts";
 import { SortSelector } from "./SortSelector";
 import { FilterProvider, useFilter } from "@/contexts/FilterContext";
@@ -37,6 +37,10 @@ export default function SubjectSelector() {
 	const debouncedKeyword = useDebounce<string>(keyword || "", 500);
 
 	const [sort, setSort] = useState("asc");
+
+	useEffect(() => {
+		setSubjects(_subjects);
+	}, [_subjects, setSubjects]);
 
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 	const {

@@ -1,7 +1,7 @@
 "use client";
 
 import { Tab, Tabs } from "@nextui-org/react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function SubjectTabs({
 	tabs,
@@ -11,10 +11,13 @@ export default function SubjectTabs({
 	selectedTab: string;
 }) {
 	const router = useRouter();
+	const pathname = usePathname();
+
+	const currTab = pathname.split("/")[2];
 
 	return (
 		<Tabs
-			defaultSelectedKey={selectedTab}
+			selectedKey={currTab}
 			onSelectionChange={(tab) => {
 				router.push(`/subject/${tab}`);
 			}}

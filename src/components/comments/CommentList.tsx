@@ -9,7 +9,7 @@ import useIncrementalFetch from "@/hooks/useIncrementalFetch";
 import Loading from "../Loading";
 
 export default function CommentList({ type }: { type: string }) {
-	const { semester, keyword, setIsLoading } = useFilter();
+	const { semester, keyword, setIsLoading, faculty, program } = useFilter();
 
 	const {
 		items: comments,
@@ -22,6 +22,8 @@ export default function CommentList({ type }: { type: string }) {
 			type,
 			q: keyword,
 			semester_id: semester?.semester_id || "all",
+			program,
+			faculty_name: faculty,
 		},
 	});
 

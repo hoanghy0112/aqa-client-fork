@@ -1,30 +1,30 @@
-declare interface Semester {
+declare type Semester = {
 	display_name: string;
 	semester_id: string;
-}
+};
 
-declare interface Comment {
+declare type Comment = {
 	content: string;
 	type: "positive" | "negative";
 	comment_id: string;
 	teach_id: string;
-}
+};
 
-declare interface Criteria {
+declare type Criteria = {
 	criteria_id: string;
 	display_name: string;
 	index: number;
-}
+};
 
-declare interface Subject {
+declare type Subject = {
 	average_point: number;
 	faculty_id: string;
 	faculty_name: string;
 	subject_id: string;
 	subject_name: string;
-}
+};
 
-declare interface Faculty {
+declare type Faculty = {
 	faculty_id: string;
 	faculty_name: string;
-}
+};

@@ -13,11 +13,13 @@ import { useFilter } from "@/contexts/FilterContext";
 import withQuery from "@/utils/withQuery";
 
 export default function CommentQuantityInfo() {
-	const { semester, keyword } = useFilter();
+	const { semester, keyword, program, faculty } = useFilter();
 
 	const { data, isLoading, error } = useSWR(
 		withQuery(GET_COMMENT_QUANTITY, {
-			semester_id: semester,
+			semester_id: semester?.semester_id || "all",
+			program,
+			faculty_name: faculty,
 			keyword,
 		}),
 		(...args) => fetch(...args).then((r) => r.json())
