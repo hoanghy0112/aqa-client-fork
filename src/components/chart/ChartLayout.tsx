@@ -3,8 +3,13 @@
 import { Color, Legend } from "@tremor/react";
 
 import BaseChart from "@components/chart/BaseChart";
+import { Button } from "@nextui-org/react";
 import { ReactNode, useMemo, useRef } from "react";
 import Extensible from "../Extensible";
+import DownloadIcon from "@assets/DownloadIcon";
+
+//@ts-ignore
+import domtoimage from "dom-to-image";
 
 export default function ChartLayout({
 	primaryTitle,
@@ -55,22 +60,42 @@ export default function ChartLayout({
 						</div>
 						<div className="w-fit flex flex-row gap-4 pr-5">
 							{handlerButtons}
+							<Button
+								isIconOnly
+								color="primary"
+								onPress={() => {
+									domtoimage
+										.toJpeg(document.getElementById("chart"), {
+											quality: 0.95,
+											bgcolor: "white",
+										})
+										.then(function (dataUrl: string) {
+											var link = document.createElement("a");
+											link.download = "chart.jpeg";
+											link.href = dataUrl;
+											link.click();
+										});
+								}}
+							>
+								<DownloadIcon color="white" />
+							</Button>
 						</div>
 					</div>
 				</div>
-				<Legend
-					className="ml-14 mr-8"
-					categories={legends}
-					colors={colors}
-				/>
 				<div
 					ref={containerRef}
-					className="w-full overflow-x-auto overflow-y-hidden flex flex-col justify-stretch flex-grow"
+					className=" w-full overflow-x-auto overflow-y-hidden flex flex-col justify-stretch flex-grow"
 				>
 					<div
-						className=" h-full pr-4 basis-full flex flex-col flex-grow"
+						id="chart"
+						className=" pt-2 relative h-full pr-4 basis-full flex flex-col flex-grow"
 						style={{ width }}
 					>
+						<Legend
+							className="absolute left-8 top-0"
+							categories={legends}
+							colors={colors}
+						/>
 						{children}
 					</div>
 				</div>
