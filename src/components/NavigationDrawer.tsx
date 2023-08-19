@@ -2,7 +2,6 @@
 
 import { Button, Card, CardBody } from "@nextui-org/react";
 import Image from "next/image";
-import Link from "next/link";
 import {
 	FunctionComponent,
 	ReactNode,
@@ -15,8 +14,7 @@ import {
 import ThemeSwitcher from "./ThemeSwitcher";
 
 import NAV_ICON from "@assets/nav.svg";
-import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function NavigationDrawer({
 	children,

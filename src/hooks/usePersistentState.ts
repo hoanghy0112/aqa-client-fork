@@ -9,7 +9,7 @@ export default function usePersistentState<T>(
 	useEffect(() => {
 		const value = localStorage.getItem(name);
 		setData(value != null ? JSON.parse(value) : defaultValue);
-	}, []);
+	}, [defaultValue, name]);
 
 	useEffect(() => {
 		if (data) localStorage.setItem(name, JSON.stringify(data));

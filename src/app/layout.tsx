@@ -7,6 +7,7 @@ import Providers from "./providers";
 
 import CommentIcon from "@assets/CommentIcon";
 import SubjectIcon from "@assets/SubjectIcon";
+import HomeIcon from "@assets/HomeIcon";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,6 +27,7 @@ export default function RootLayout({
 				<Providers>
 					<div className="h-screen w-screen flex flex-row">
 						<NavigationDrawer>
+							<NavItem title="Trang chủ" link="/" icon={HomeIcon} />
 							<NavItem
 								title="Bình luận"
 								link="/comment/all"
