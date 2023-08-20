@@ -28,7 +28,9 @@ export default function Layout({ children }: { children: ReactNode }) {
 				]}
 			/>
 			<Card className=" w-full mt-5 p-0 h-[420px]">
-				<CardBody className="p-0">{children}</CardBody>
+				<CardBody className="p-0">
+					<FilterProvider>{children}</FilterProvider>
+				</CardBody>
 			</Card>
 			<FilterProvider>
 				<SubjectTable />
