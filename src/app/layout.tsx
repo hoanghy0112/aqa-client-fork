@@ -58,6 +58,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 									},
 								]}
 							/>
+							<NavItem title="Lớp học" link="/class" icon={SubjectIcon} />
 						</NavigationDrawer>
 						<main className="w-full px-20 pt-12 pb-10 overflow-y-scroll overflow-x-hidden">
 							{children}

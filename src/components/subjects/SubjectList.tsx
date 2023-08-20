@@ -18,6 +18,7 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import Loading from "../Loading";
 import TableSketon from "../TableSkeleton";
+import Link from "next/link";
 
 export default function SubjectList() {
 	const { semester, keyword, program, faculty } = useFilter();
@@ -79,11 +80,7 @@ export default function SubjectList() {
 				>
 					<TableHeader columns={columns}>
 						{(column) => (
-							<TableColumn
-								id={column.key}
-								key={column.key}
-								allowsSorting
-							>
+							<TableColumn id={column.key} key={column.key} allowsSorting>
 								<div
 									className={`min-w-fit inline-block ${
 										column.key == "subject_name" && " w-[500px]"
@@ -122,13 +119,27 @@ export default function SubjectList() {
 					>
 						{(item) => (
 							<TableRow key={item.subject_id}>
-								{(columnKey) => (
-									<TableCell>
-										<div className="py-3">
-											{getKeyValue(item, columnKey)}
-										</div>
-									</TableCell>
-								)}
+								{(columnKey) => {
+									if (columnKey === "subject_name") {
+										return (
+											<TableCell>
+												<Link
+													href={`/detail/subject/${item.subject_id}`}
+													className="py-3"
+												>
+													{getKeyValue(item, columnKey)}
+												</Link>
+											</TableCell>
+										);
+									}
+									return (
+										<TableCell>
+											<div className="py-3">
+												{getKeyValue(item, columnKey)}
+											</div>
+										</TableCell>
+									);
+								}}
 							</TableRow>
 						)}
 					</TableBody>
