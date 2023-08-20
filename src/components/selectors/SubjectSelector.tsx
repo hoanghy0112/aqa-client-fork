@@ -25,11 +25,7 @@ import { SortSelector } from "./SortSelector";
 import { FilterProvider, useFilter } from "@/contexts/FilterContext";
 
 export default function SubjectSelector() {
-	const {
-		subjects: _subjects,
-		setSubjects: _setSubjects,
-		faculty,
-	} = useFilter();
+	const { subjects: _subjects, setSubjects: _setSubjects, faculty } = useFilter();
 
 	const [subjects, setSubjects] = useState<Map<string, Subject>>(_subjects);
 
@@ -49,17 +45,16 @@ export default function SubjectSelector() {
 		onOpenChange: onOpenChangeDetail,
 	} = useDisclosure();
 
-	const { items, isLoading, hasMore, bottomRef } =
-		useIncrementalFetch<Subject>({
-			url: GET_SUBJECT_TABLE,
-			query: {
-				debouncedKeyword,
-				page_size: 20,
-				filter_field: "subject_name",
-				faculty_name: faculty,
-				direction: sort,
-			},
-		});
+	const { items, isLoading, hasMore, bottomRef } = useIncrementalFetch<Subject>({
+		url: GET_SUBJECT_TABLE,
+		query: {
+			debouncedKeyword,
+			page_size: 20,
+			filter_field: "subject_name",
+			faculty_name: faculty,
+			direction: sort,
+		},
+	});
 
 	return (
 		<>
@@ -144,20 +139,29 @@ export default function SubjectSelector() {
 															label: "w-full",
 														}}
 														isSelected={
-															!!subjects.get(subject_id)
+															!!subjects.get(
+																subject_id
+															)
 														}
 														onValueChange={(e) => {
 															if (!e)
-																subjects.delete(subject_id);
+																subjects.delete(
+																	subject_id
+																);
 															else
-																subjects.set(subject_id, {
+																subjects.set(
 																	subject_id,
-																	subject_name,
-																	faculty_name,
-																	faculty_id,
-																	average_point,
-																});
-															setSubjects(new Map(subjects));
+																	{
+																		subject_id,
+																		subject_name,
+																		faculty_name,
+																		faculty_id,
+																		average_point,
+																	}
+																);
+															setSubjects(
+																new Map(subjects)
+															);
 														}}
 													>
 														<div className="w-full flex flex-col justify-between gap-0">
@@ -184,7 +188,8 @@ export default function SubjectSelector() {
 														initial={{ width: 0 }}
 														animate={{
 															width: Math.floor(
-																Math.random() * 500 + 100
+																Math.random() * 500 +
+																	100
 															),
 														}}
 														transition={{
@@ -239,11 +244,7 @@ export default function SubjectSelector() {
 					)}
 				</ModalContent>
 			</Modal>
-			<Modal
-				size="xl"
-				isOpen={isOpenDetail}
-				onOpenChange={onOpenChangeDetail}
-			>
+			<Modal size="xl" isOpen={isOpenDetail} onOpenChange={onOpenChangeDetail}>
 				<ModalContent>
 					{(onClose) => (
 						<>

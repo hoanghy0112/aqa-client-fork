@@ -20,10 +20,7 @@ export default function FacultySelector() {
 
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-	const { data, isLoading } = useSWR<Faculty[]>(
-		GET_FACULTY_LIST,
-		defaultFetcher
-	);
+	const { data, isLoading } = useSWR<Faculty[]>(GET_FACULTY_LIST, defaultFetcher);
 
 	const currentSelectedRef = useRef<any>();
 
@@ -71,7 +68,9 @@ export default function FacultySelector() {
 												onClose();
 											}}
 											variant={
-												faculty_name == faculty ? "shadow" : "flat"
+												faculty_name == faculty
+													? "shadow"
+													: "flat"
 											}
 											color={
 												faculty_name == faculty
@@ -89,7 +88,9 @@ export default function FacultySelector() {
 								) : (
 									<div className=" flex flex-row gap-3">
 										<Spinner size="sm" />
-										<p className=" text-sm font-medium">Đang tải</p>
+										<p className=" text-sm font-medium">
+											Đang tải
+										</p>
 									</div>
 								)}
 							</ModalBody>

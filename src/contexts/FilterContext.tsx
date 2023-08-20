@@ -1,12 +1,6 @@
 "use client";
 
-import {
-	ReactNode,
-	createContext,
-	useContext,
-	useEffect,
-	useState,
-} from "react";
+import { ReactNode, createContext, useContext, useEffect, useState } from "react";
 
 export const FilterContext = createContext<IFilterContext>({
 	setKeyword: (d: string) => {},
@@ -81,8 +75,7 @@ export function FilterProvider({
 				faculty,
 				setFaculty,
 				semester,
-				setSemester: (d: Semester | undefined) =>
-					setSemester(d as Semester),
+				setSemester: (d: Semester | undefined) => setSemester(d as Semester),
 				sort,
 				setSort,
 			}}

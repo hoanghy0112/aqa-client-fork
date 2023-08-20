@@ -96,7 +96,8 @@ export default function CriteriaSelector() {
 												onPress={() => {
 													setCriteria({
 														criteria_id: "",
-														display_name: "Tất cả tiêu chí",
+														display_name:
+															"Tất cả tiêu chí",
 														index: 0,
 													});
 													onClose();
@@ -113,7 +114,11 @@ export default function CriteriaSelector() {
 											</Card>
 										</div>
 										{criterias?.map(
-											({ criteria_id, display_name, index }) => (
+											({
+												criteria_id,
+												display_name,
+												index,
+											}) => (
 												<div key={index} className="">
 													<Card
 														isPressable
@@ -148,7 +153,8 @@ export default function CriteriaSelector() {
 														initial={{ width: 0 }}
 														animate={{
 															width: Math.floor(
-																Math.random() * 500 + 100
+																Math.random() * 500 +
+																	100
 															),
 														}}
 														transition={{

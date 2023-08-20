@@ -20,9 +20,7 @@ export default function CriteriaOverallChart() {
 	const [criteria, setCriteria] = useState<Criteria | undefined>();
 	const [subjects, setSubjects] = useState<Map<string, Subject>>(new Map());
 
-	const { data: averageData, isLoading: isLoadingAverage } = useSWR<
-		IChartData[]
-	>(
+	const { data: averageData, isLoading: isLoadingAverage } = useSWR<IChartData[]>(
 		withQuery(GET_CRITERIA_POINT_ACROSS_SEMESTER, {
 			criteria_id: criteria?.criteria_id,
 		}),

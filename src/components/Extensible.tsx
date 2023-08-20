@@ -22,7 +22,7 @@ export default function Extensible({ children }: { children: ReactNode }) {
 				isIconOnly
 				onPress={onOpen}
 				size="sm"
-                color="primary"
+				color="primary"
 				className="absolute top-0 -right-0"
 			>
 				<Image src={EXTEND_ICON} width={14} height={14} alt="button" />

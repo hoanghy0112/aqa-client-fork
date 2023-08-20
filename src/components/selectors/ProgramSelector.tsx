@@ -17,10 +17,7 @@ import useSWR from "swr";
 export default function ProgramSelector() {
 	const { program, setProgram } = useFilter();
 
-	const { data, isLoading } = useSWR<string[]>(
-		GET_PROGRAM_LIST,
-		defaultFetcher
-	);
+	const { data, isLoading } = useSWR<string[]>(GET_PROGRAM_LIST, defaultFetcher);
 
 	return (
 		<Dropdown backdrop="blur" shouldBlockScroll={false}>

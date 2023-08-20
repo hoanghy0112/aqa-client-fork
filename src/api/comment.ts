@@ -1,7 +1,4 @@
-import {
-	GET_COMMENT_LIST,
-	GET_COMMENT_QUANTITY,
-} from "@/constants/api_endpoint";
+import { GET_COMMENT_LIST, GET_COMMENT_QUANTITY } from "@/constants/api_endpoint";
 import { PAGE_SIZE } from "@/constants/fetch_config";
 
 export default async function getComments({

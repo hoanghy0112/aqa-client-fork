@@ -20,11 +20,7 @@ import NAV_ICON from "@assets/nav.svg";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 
-export default function NavigationDrawer({
-	children,
-}: {
-	children?: ReactNode;
-}) {
+export default function NavigationDrawer({ children }: { children?: ReactNode }) {
 	const [open, setOpen] = useState(false);
 
 	const toggleDrawer = useCallback(() => {
@@ -83,9 +79,7 @@ export function NavItem({ title, link, icon: Icon, subItems }: INavItemProps) {
 			<Card
 				isPressable
 				onPress={() => router.push(link)}
-				className={`h-fit transition-all ${
-					isOpen ? "shadow-none" : ""
-				} ${
+				className={`h-fit transition-all ${isOpen ? "shadow-none" : ""} ${
 					pathname.split("/")[1] === link.split("/")[1]
 						? " bg-blue-600"
 						: ""
@@ -97,15 +91,12 @@ export function NavItem({ title, link, icon: Icon, subItems }: INavItemProps) {
 				}
 			>
 				<CardBody className="flex flex-col h-fit p-4">
-					<div
-						className={` flex flex-row items-start transition-all`}
-					>
+					<div className={` flex flex-row items-start transition-all`}>
 						<div className="w-[20px]">
 							{Icon ? (
 								<Icon
 									color={
-										pathname.split("/")[1] ===
-										link.split("/")[1]
+										pathname.split("/")[1] === link.split("/")[1]
 											? "white"
 											: ""
 									}

@@ -1,10 +1,7 @@
 import { Spinner } from "@nextui-org/react";
 import { ForwardedRef, forwardRef } from "react";
 
-const Loading = forwardRef(function Loading(
-	{},
-	ref: ForwardedRef<HTMLDivElement>
-) {
+const Loading = forwardRef(function Loading({}, ref: ForwardedRef<HTMLDivElement>) {
 	return (
 		<div
 			ref={ref}

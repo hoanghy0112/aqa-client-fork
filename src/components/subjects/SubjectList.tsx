@@ -92,7 +92,9 @@ export default function SubjectList() {
 									{column.index ? (
 										<Tooltip
 											content={
-												<p className=" max-w-xs">{column.label}</p>
+												<p className=" max-w-xs">
+													{column.label}
+												</p>
 											}
 										>
 											<p className="">{`Tiêu chí ${column.index}`}</p>
