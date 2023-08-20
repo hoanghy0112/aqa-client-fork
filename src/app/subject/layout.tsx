@@ -1,12 +1,11 @@
 "use client";
 
 import SubjectTable from "@/components/subjects/SubjectTable";
-import { Card, CardBody, Tab, Tabs } from "@nextui-org/react";
-import Link from "next/link";
+import { FilterProvider } from "@/contexts/FilterContext";
+import { Card, CardBody } from "@nextui-org/card";
 import { usePathname } from "next/navigation";
 import { ReactNode, useMemo } from "react";
 import SubjectTabs from "./tabs";
-import { FilterProvider } from "@/contexts/FilterContext";
 
 export default function Layout({ children }: { children: ReactNode }) {
 	const pathName = usePathname();

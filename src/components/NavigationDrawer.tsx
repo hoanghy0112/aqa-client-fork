@@ -1,7 +1,10 @@
 "use client";
+import dynamic from "next/dynamic";
 
 import { Button, Card, CardBody } from "@nextui-org/react";
+// const { Button, Card, CardBody } = dynamic(() => import("@nextui-org/button"));
 import Image from "next/image";
+import Link from "next/link";
 import {
 	FunctionComponent,
 	ReactNode,
@@ -14,7 +17,8 @@ import {
 import ThemeSwitcher from "./ThemeSwitcher";
 
 import NAV_ICON from "@assets/nav.svg";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function NavigationDrawer({
 	children,
@@ -32,7 +36,12 @@ export default function NavigationDrawer({
 			<nav className="w-fit group py-5 px-5 flex flex-col shadow-none transition-all hover:shadow-2xl">
 				<div className="flex flex-row items-center">
 					<Button className="ml-1" isIconOnly onPress={toggleDrawer}>
-						<Image src={NAV_ICON} width={20} height={20} alt="Nav icon" />
+						<Image
+							src={NAV_ICON}
+							width={20}
+							height={20}
+							alt="Nav icon"
+						/>
 					</Button>
 					<div
 						className={`relative h-5 ${
@@ -58,13 +67,12 @@ export default function NavigationDrawer({
 
 export function NavItem({ title, link, icon: Icon, subItems }: INavItemProps) {
 	const pathname = usePathname();
+	const router = useRouter();
 
 	const { isOpen } = useContext(NavigationDrawerContext);
 	const [isHover, setIsHover] = useState(false);
 
 	const subRef = useRef<HTMLUListElement>(null);
-
-	const router = useRouter();
 
 	return (
 		<div
@@ -73,9 +81,11 @@ export function NavItem({ title, link, icon: Icon, subItems }: INavItemProps) {
 			onMouseLeave={() => setIsHover(false)}
 		>
 			<Card
-				onPress={() => router.push(link)}
 				isPressable
-				className={`h-fit transition-all ${isOpen ? "shadow-none" : ""} ${
+				onPress={() => router.push(link)}
+				className={`h-fit transition-all ${
+					isOpen ? "shadow-none" : ""
+				} ${
 					pathname.split("/")[1] === link.split("/")[1]
 						? " bg-blue-600"
 						: ""
@@ -87,12 +97,15 @@ export function NavItem({ title, link, icon: Icon, subItems }: INavItemProps) {
 				}
 			>
 				<CardBody className="flex flex-col h-fit p-4">
-					<div className={` flex flex-row items-start transition-all`}>
+					<div
+						className={` flex flex-row items-start transition-all`}
+					>
 						<div className="w-[20px]">
 							{Icon ? (
 								<Icon
 									color={
-										pathname.split("/")[1] === link.split("/")[1]
+										pathname.split("/")[1] ===
+										link.split("/")[1]
 											? "white"
 											: ""
 									}
@@ -128,17 +141,17 @@ export function NavItem({ title, link, icon: Icon, subItems }: INavItemProps) {
 						className="pb-3 pl-3 mt-3 w-full list-none border-l-3 border-l-blue-800"
 					>
 						{subItems?.map(({ title, link }) => (
-							<li
-								key={link}
-								onClick={() => router.push(link)}
-								className={` my-1 rounded-xl p-3 hover:bg-slate-200 dark:hover:bg-slate-700 cursor-pointer transition-all ${
-									pathname === link
-										? " bg-blue-300 dark:bg-blue-900 text-black dark:text-white hover:text-black dark:hover:text-white"
-										: ""
-								}`}
-							>
-								{title}
-							</li>
+							<Link href={link} key={link}>
+								<li
+									className={` my-1 rounded-xl p-3 hover:bg-slate-200 dark:hover:bg-slate-700 cursor-pointer transition-all ${
+										pathname === link
+											? " bg-blue-300 dark:bg-blue-900 text-black dark:text-white hover:text-black dark:hover:text-white"
+											: ""
+									}`}
+								>
+									{title}
+								</li>
+							</Link>
 						))}
 					</ul>
 				</div>
