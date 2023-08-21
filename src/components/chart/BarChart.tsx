@@ -11,6 +11,7 @@ import {
 	ChartData,
 	TooltipPositionerFunction,
 	ChartType,
+	ChartDataset,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 
@@ -70,41 +71,18 @@ export const options: ChartOptions = {
 	},
 };
 
-const labels = [
-	"January",
-	"February",
-	"March",
-	"April",
-	"May",
-	"June",
-	"July",
-	"January",
-	"February",
-	"March",
-	"April",
-	"May",
-	"June",
-	"July",
-];
-
-export function BarChart<T>({
+export function BarChart({
 	className,
 	data,
-	title,
+	labels,
 }: {
 	className?: React.ComponentProps<"div">["className"];
-	data: T[];
-	title: string;
+	labels: string[];
+	data: ChartDataset<"bar", number[]>[];
 }) {
 	const chartData: ChartData<"bar", number[], string> = {
 		labels,
-		datasets: [
-			{
-				label: "Dataset 1",
-				data: labels.map(() => Math.random()),
-				backgroundColor: "#0ea5e9",
-			},
-		],
+		datasets: data,
 	};
 
 	return (

@@ -1,4 +1,3 @@
-import { FilterProvider } from "@/contexts/FilterContext";
 import { ReactNode } from "react";
 
 export default function BaseChart({ children }: { children: ReactNode }) {

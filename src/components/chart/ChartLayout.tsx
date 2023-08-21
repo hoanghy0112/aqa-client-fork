@@ -50,19 +50,20 @@ export default function ChartLayout({
 	return (
 		<BaseChart>
 			<Extensible>
-				<div className=" relative w-full h-48 lg:h-32 px-8">
-					<div className=" absolute w-full top-0 left-0 px-8 pt-5 flex flex-col lg:flex-row gap-5 justify-end items-start lg:items-center">
+				<div className="w-full px-8">
+					<div className="  w-full mb-6 px-8 pt-5 flex flex-col xl:flex-row gap-5 justify-end items-start xl:items-center">
 						<div className=" w-3/4 mt-2">
 							<p>{primaryTitle}</p>
 							<p className="w-full mt-2 font-normal text-sm">
 								{secondaryTitle}
 							</p>
 						</div>
-						<div className="w-fit flex flex-row gap-4 pr-5">
+						<div className="w-full xl:w-fit flex flex-row flex-wrap xl:flex-nowrap gap-4 pr-5">
 							{handlerButtons}
 							<Button
 								isIconOnly
 								color="primary"
+								className="w-fit"
 								onPress={() => {
 									domtoimage
 										.toJpeg(document.getElementById("chart"), {
@@ -84,19 +85,21 @@ export default function ChartLayout({
 				</div>
 				<div
 					ref={containerRef}
-					className=" w-full overflow-x-auto overflow-y-hidden flex flex-col justify-stretch flex-grow"
+					id="chart"
+					className=" relative h-full w-full overflow-x-auto overflow-y-hidden flex flex-col justify-stretch flex-grow"
 				>
-					<div
-						id="chart"
-						className=" pt-2 relative h-full pr-4 basis-full flex flex-col flex-grow"
-						style={{ width }}
-					>
-						<Legend
-							className="absolute left-8 top-0"
-							categories={legends}
-							colors={colors}
-						/>
-						{children}
+					<Legend
+						className=" w-full px-10"
+						categories={legends}
+						colors={colors}
+					/>
+					<div className=" relative pb-5 h-full w-full overflow-x-auto overflow-y-hidden flex flex-col justify-stretch flex-grow">
+						<div
+							className=" pt-2 h-full pr-4 basis-full flex flex-col flex-grow"
+							style={{ width }}
+						>
+							{children}
+						</div>
 					</div>
 				</div>
 			</Extensible>
