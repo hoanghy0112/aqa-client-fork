@@ -3,15 +3,15 @@
 import { GET_FACULTY_LIST } from "@/constants/api_endpoint";
 import { useFilter } from "@/contexts/FilterContext";
 import { defaultFetcher } from "@/utils/fetchers";
+import { Button } from "@nextui-org/button";
 import {
-	Button,
 	Modal,
 	ModalBody,
 	ModalContent,
 	ModalHeader,
-	Spinner,
 	useDisclosure,
-} from "@nextui-org/react";
+} from "@nextui-org/modal";
+import { Spinner } from "@nextui-org/spinner";
 import { useEffect, useRef } from "react";
 import useSWR from "swr";
 

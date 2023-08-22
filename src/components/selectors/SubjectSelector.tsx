@@ -1,28 +1,28 @@
 "use client";
 
 import { GET_SUBJECT_TABLE } from "@/constants/api_endpoint";
+import { FilterProvider, useFilter } from "@/contexts/FilterContext";
 import useIncrementalFetch from "@/hooks/useIncrementalFetch";
+import { Button } from "@nextui-org/button";
+import { Checkbox } from "@nextui-org/checkbox";
+import { Chip } from "@nextui-org/chip";
+import { Input } from "@nextui-org/input";
 import {
-	Button,
-	Checkbox,
-	Chip,
-	Input,
 	Modal,
 	ModalBody,
 	ModalContent,
 	ModalFooter,
 	ModalHeader,
-	Skeleton,
-	Spinner,
-	Tooltip,
-	cn,
 	useDisclosure,
-} from "@nextui-org/react";
+} from "@nextui-org/modal";
+import { cn } from "@nextui-org/react";
+import { Skeleton } from "@nextui-org/skeleton";
+import { Spinner } from "@nextui-org/spinner";
+import { Tooltip } from "@nextui-org/tooltip";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useDebounce } from "usehooks-ts";
 import { SortSelector } from "./SortSelector";
-import { FilterProvider, useFilter } from "@/contexts/FilterContext";
 
 export default function SubjectSelector() {
 	const { subjects: _subjects, setSubjects: _setSubjects, faculty } = useFilter();

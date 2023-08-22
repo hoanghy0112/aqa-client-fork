@@ -1,12 +1,8 @@
 "use client";
 
-import {
-	Button,
-	Modal,
-	ModalBody,
-	ModalContent,
-	useDisclosure,
-} from "@nextui-org/react";
+import { Button } from "@nextui-org/button";
+import { Modal, ModalBody, ModalContent, useDisclosure } from "@nextui-org/modal";
+
 import { ReactNode } from "react";
 
 import EXTEND_ICON from "@assets/extend.svg";

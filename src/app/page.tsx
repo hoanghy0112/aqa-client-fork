@@ -1,5 +1,3 @@
-// import FeatureCard from "@/components/FeatureCard";
-// import SearchBar from "@/components/SearchBar";
 import dynamic from "next/dynamic";
 const SearchBar = dynamic(() => import("@/components/SearchBar"));
 const FeatureCard = dynamic(() => import("@/components/FeatureCard"));

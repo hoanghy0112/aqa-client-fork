@@ -2,11 +2,11 @@
 
 import { Color, Legend } from "@tremor/react";
 
+import DownloadIcon from "@assets/DownloadIcon";
 import BaseChart from "@components/chart/BaseChart";
-import { Button } from "@nextui-org/react";
+import { Button } from "@nextui-org/button";
 import { ReactNode, useMemo, useRef } from "react";
 import Extensible from "../Extensible";
-import DownloadIcon from "@assets/DownloadIcon";
 
 //@ts-ignore
 import domtoimage from "dom-to-image";

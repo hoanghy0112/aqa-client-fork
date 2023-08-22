@@ -1,10 +1,11 @@
 "use client";
-import dynamic from "next/dynamic";
 
-import { Button, Card, CardBody } from "@nextui-org/react";
-// const { Button, Card, CardBody } = dynamic(() => import("@nextui-org/button"));
+import { Button } from "@nextui-org/button";
+import { Card, CardBody } from "@nextui-org/card";
+
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import {
 	FunctionComponent,
 	ReactNode,
@@ -14,11 +15,9 @@ import {
 	useRef,
 	useState,
 } from "react";
-import ThemeSwitcher from "./ThemeSwitcher";
 
 import NAV_ICON from "@assets/nav.svg";
-import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
+import ThemeSwitcher from "./ThemeSwitcher";
 
 export default function NavigationDrawer({ children }: { children?: ReactNode }) {
 	const [open, setOpen] = useState(false);

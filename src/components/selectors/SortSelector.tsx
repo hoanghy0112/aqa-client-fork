@@ -1,12 +1,12 @@
 "use client";
 import { useFilter } from "@/contexts/FilterContext";
+import { Button } from "@nextui-org/button";
 import {
-	Button,
 	Dropdown,
 	DropdownItem,
 	DropdownMenu,
 	DropdownTrigger,
-} from "@nextui-org/react";
+} from "@nextui-org/dropdown";
 import { useEffect } from "react";
 
 export function SortSelector({ defaultValue }: { defaultValue?: string }) {

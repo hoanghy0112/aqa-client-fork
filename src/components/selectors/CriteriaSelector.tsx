@@ -3,18 +3,18 @@
 import { GET_CRITERIA_NAME } from "@/constants/api_endpoint";
 import { useFilter } from "@/contexts/FilterContext";
 import withQuery from "@/utils/withQuery";
+import { Button } from "@nextui-org/button";
+import { Card } from "@nextui-org/card";
+import { Input } from "@nextui-org/input";
 import {
-	Button,
-	Card,
-	Input,
 	Modal,
 	ModalBody,
 	ModalContent,
 	ModalHeader,
-	Skeleton,
-	Tooltip,
 	useDisclosure,
-} from "@nextui-org/react";
+} from "@nextui-org/modal";
+import { Skeleton } from "@nextui-org/skeleton";
+import { Tooltip } from "@nextui-org/tooltip";
 import { motion } from "framer-motion";
 import { useMemo, useState } from "react";
 import useSWR from "swr";

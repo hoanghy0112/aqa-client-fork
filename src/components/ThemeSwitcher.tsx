@@ -3,7 +3,7 @@
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
-import { Switch } from "@nextui-org/react";
+import { Switch } from "@nextui-org/switch";
 
 import { MoonIcon } from "@assets/MoonIcon";
 import { SunIcon } from "@assets/SunIcon";

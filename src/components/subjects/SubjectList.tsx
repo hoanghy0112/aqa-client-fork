@@ -12,13 +12,14 @@ import {
 	TableColumn,
 	TableHeader,
 	TableRow,
-	Tooltip,
 	getKeyValue,
-} from "@nextui-org/react";
+} from "@nextui-org/table";
+import { Tooltip } from "@nextui-org/tooltip";
+
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import Loading from "../Loading";
 import TableSketon from "../TableSkeleton";
-import Link from "next/link";
 
 export default function SubjectList() {
 	const { semester, keyword, program, faculty } = useFilter();
@@ -80,7 +81,11 @@ export default function SubjectList() {
 				>
 					<TableHeader columns={columns}>
 						{(column) => (
-							<TableColumn id={column.key} key={column.key} allowsSorting>
+							<TableColumn
+								id={column.key}
+								key={column.key}
+								allowsSorting
+							>
 								<div
 									className={`min-w-fit inline-block ${
 										column.key == "subject_name" && " w-[500px]"

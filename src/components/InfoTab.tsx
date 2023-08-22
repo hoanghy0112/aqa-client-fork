@@ -1,6 +1,7 @@
 "use client";
 
-import { Card, Spinner } from "@nextui-org/react";
+import { Card } from "@nextui-org/card";
+import { Spinner } from "@nextui-org/spinner";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 

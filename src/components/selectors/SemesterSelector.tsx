@@ -2,14 +2,14 @@
 
 import { getSemesterList } from "@/api/semester";
 import { useFilter } from "@/contexts/FilterContext";
+import { Button } from "@nextui-org/button";
 import {
-	Button,
 	Dropdown,
 	DropdownItem,
 	DropdownMenu,
 	DropdownSection,
 	DropdownTrigger,
-} from "@nextui-org/react";
+} from "@nextui-org/dropdown";
 import { useEffect, useState } from "react";
 
 export default function SemesterSelector() {
