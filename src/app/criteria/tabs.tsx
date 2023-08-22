@@ -5,10 +5,8 @@ import { usePathname, useRouter } from "next/navigation";
 
 export default function CriteriaTabs({
 	tabs,
-	selectedTab,
 }: {
 	tabs: { link: string; title: string }[];
-	selectedTab: string;
 }) {
 	const router = useRouter();
 	const pathname = usePathname();

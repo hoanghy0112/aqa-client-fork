@@ -12,6 +12,7 @@ import {
 	createContext,
 	useCallback,
 	useContext,
+	useEffect,
 	useRef,
 	useState,
 } from "react";
@@ -68,6 +69,10 @@ export function NavItem({ title, link, icon: Icon, subItems }: INavItemProps) {
 	const [isHover, setIsHover] = useState(false);
 
 	const subRef = useRef<HTMLUListElement>(null);
+
+	useEffect(() => {
+		router.prefetch(link);
+	}, [link, router]);
 
 	return (
 		<div

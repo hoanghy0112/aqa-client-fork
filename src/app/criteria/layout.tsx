@@ -15,10 +15,9 @@ export default function Layout({ children }: { children: ReactNode }) {
 		<>
 			<h1 className="font-semibold text-3xl">Tiêu chí</h1>
 			<CriteriaTabs
-				selectedTab={tabName}
 				tabs={[
 					{
-						link: "criteria-by-criteria",
+						link: "",
 						title: "Biểu đồ từng tiêu chí",
 					},
 					{
