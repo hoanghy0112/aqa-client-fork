@@ -9,9 +9,8 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 
-	useEffect(() => {
-		console.log({ pathname, searchParams });
-	}, [pathname, searchParams]);
+	useEffect(() => {}, [pathname, searchParams]);
+
 	return (
 		<NextUIProvider>
 			<NextThemesProvider attribute="class" defaultTheme="dark">

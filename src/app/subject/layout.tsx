@@ -20,7 +20,10 @@ const tabs = [
 
 export default function Layout({ children }: { children: ReactNode }) {
 	const pathName = usePathname();
-	const tabName = useMemo(() => pathName.split("/").at(-1) || "", [pathName]);
+	const tabName = useMemo(
+		() => pathName.split("/").at(-1) || tabs[0].link,
+		[pathName]
+	);
 
 	const router = useRouter();
 

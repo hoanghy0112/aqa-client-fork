@@ -16,14 +16,15 @@ import SubjectSelector from "../selectors/SubjectSelector";
 import ChartLayout from "./ChartLayout";
 
 export default function CriteriaOverallChart() {
-	const { semester, sort, faculty, program } = useFilter();
+	const { semester, sort, faculty, program, subjects } = useFilter();
 
 	const { data: averageData, isLoading: isLoadingAverage } = useSWR<IChartData[]>(
 		withQuery(GET_CRITERIA_PER_SEMESTER, {
 			semester_id: semester?.semester_id,
+			subject_id: Array.from(subjects.values()).map((v) => v.subject_id),
 			type: sort,
 			faculty_name: faculty,
-			program_name: program,
+			program: program,
 		}),
 		(url: string) => fetch(url).then((r) => r.json())
 	);
@@ -31,7 +32,7 @@ export default function CriteriaOverallChart() {
 	return (
 		<ChartLayout
 			primaryTitle="Biểu đồ tiêu chí qua các kỳ"
-			secondaryTitle={"Tất cả các tiêu chí"}
+			secondaryTitle={""}
 			legends={[LEGEND]}
 			colors={["sky"]}
 			columnSize={150}
@@ -58,6 +59,7 @@ export default function CriteriaOverallChart() {
 										averageData?.map((d) => ({
 											x: `Tiêu chí ${d.index}`,
 											y: d.point,
+											tooltipTitle: d.display_name,
 										})) || [],
 								},
 						  ]

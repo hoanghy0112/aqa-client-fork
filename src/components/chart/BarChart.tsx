@@ -39,6 +39,12 @@ Tooltip.positioners.center = function (items, eventPosition) {
 	};
 };
 
+type IData = {
+	x: string;
+	y: number;
+	tooltipTitle?: string;
+};
+
 export function BarChart({
 	className,
 	data,
@@ -49,7 +55,7 @@ export function BarChart({
 	className?: React.ComponentProps<"div">["className"];
 	data?: {
 		label: string;
-		data: { x: string; y: number }[];
+		data: IData[];
 		backgroundColor?: string;
 	}[];
 	noDataText: ReactNode;
@@ -118,18 +124,26 @@ export function BarChart({
 						}
 						return label;
 					},
+					title(tooltipItems) {
+						return (
+							//@ts-ignore
+							tooltipItems.at(0)?.raw?.tooltipTitle ||
+							//@ts-ignore
+							tooltipItems.at(0)?.raw.x
+						);
+					},
 				},
 			},
 		},
 	};
 
-	const chartData: ChartData<"bar", { x: string; y: number }[], string> = {
+	const chartData: ChartData<"bar", IData[], string> = {
 		// labels,
 		datasets: (data || []).map(({ label, data, backgroundColor }) => ({
 			label: label || "No label",
 			data,
 			backgroundColor: backgroundColor || "#0ea5e9",
-		})) as ChartDataset<"bar", { x: string; y: number }[]>[],
+		})) as ChartDataset<"bar", IData[]>[],
 	};
 
 	return (
