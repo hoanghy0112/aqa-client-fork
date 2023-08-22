@@ -42,13 +42,11 @@ Tooltip.positioners.center = function (items, eventPosition) {
 export function BarChart({
 	className,
 	data,
-	labels,
 	noDataText,
 	valueFormatter = (d: number) => d,
 	onClick,
 }: {
 	className?: React.ComponentProps<"div">["className"];
-	labels: string[];
 	data?: {
 		label: string;
 		data: { x: string; y: number }[];
@@ -75,15 +73,16 @@ export function BarChart({
 				grid: {
 					display: false,
 				},
+				beginAtZero: false,
 			},
 			y: {
-				min: 0.6,
 				border: {
 					display: false,
 				},
 				grid: {
 					display: false,
 				},
+				beginAtZero: false,
 			},
 		},
 		plugins: {

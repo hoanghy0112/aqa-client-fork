@@ -1,27 +1,19 @@
 "use client";
 
-import { BarChart, Color } from "@tremor/react";
+import { BarChart } from "@components/chart/BarChart";
 
-import {
-	GET_CRITERIA_NAME,
-	GET_CRITERIA_PER_SEMESTER,
-	GET_CRITERIA_POINT_ACROSS_SEMESTER,
-} from "@/constants/api_endpoint";
-import { COLORS } from "@/constants/colors";
-import useMultipleFetch from "@/hooks/useMultipleFetch";
-import { chartMapper } from "@/utils/arrayManipulate";
+import { GET_CRITERIA_PER_SEMESTER } from "@/constants/api_endpoint";
+import { useFilter } from "@/contexts/FilterContext";
 import withQuery from "@/utils/withQuery";
-import { useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
-import ChartLayout from "./ChartLayout";
 import Loading from "../Loading";
 import NoData from "../NoData";
-import SemesterSelector from "../selectors/SemesterSelector";
-import ProgramSelector from "../selectors/ProgramSelector";
 import FacultySelector from "../selectors/FacultySelector";
-import SubjectSelector from "../selectors/SubjectSelector";
+import ProgramSelector from "../selectors/ProgramSelector";
+import SemesterSelector from "../selectors/SemesterSelector";
 import { SortSelector } from "../selectors/SortSelector";
-import { useFilter } from "@/contexts/FilterContext";
+import SubjectSelector from "../selectors/SubjectSelector";
+import ChartLayout from "./ChartLayout";
 
 export default function CriteriaOverallChart() {
 	const { semester, sort, faculty, program } = useFilter();
@@ -29,7 +21,7 @@ export default function CriteriaOverallChart() {
 	const { data: averageData, isLoading: isLoadingAverage } = useSWR<IChartData[]>(
 		withQuery(GET_CRITERIA_PER_SEMESTER, {
 			semester_id: semester?.semester_id,
-			type: sort || "desc",
+			type: sort,
 			faculty_name: faculty,
 			program_name: program,
 		}),
@@ -51,27 +43,27 @@ export default function CriteriaOverallChart() {
 					<ProgramSelector />
 					<FacultySelector />
 					<SubjectSelector />
-					<SortSelector />
+					<SortSelector defaultValue="" />
 				</>
 			}
 		>
 			<BarChart
 				className=" h-full mt-4"
 				data={
-					averageData?.map((d) => ({
-						...d,
-						[LEGEND]: d.point,
-						display_name: `Tiêu chí ${d.index}`,
-					})) || []
+					averageData
+						? [
+								{
+									label: "Độ hài lòng",
+									data:
+										averageData?.map((d) => ({
+											x: `Tiêu chí ${d.index}`,
+											y: d.point,
+										})) || [],
+								},
+						  ]
+						: undefined
 				}
-				index="display_name"
-				categories={[LEGEND]}
-				colors={["sky"]}
-				yAxisWidth={80}
-				autoMinValue
 				valueFormatter={dataFormatter}
-				showLegend={false}
-				//@ts-ignore
 				noDataText={isLoadingAverage ? <Loading /> : <NoData />}
 			/>
 		</ChartLayout>

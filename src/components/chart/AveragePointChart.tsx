@@ -65,7 +65,6 @@ export default function AveragePointChart() {
 							  ]
 							: undefined
 					}
-					labels={data?.map((d) => d.display_name) || []}
 					valueFormatter={dataFormatter}
 					noDataText={isLoading ? <Loading /> : <NoData />}
 					onClick={(index: number) => console.log({ index })}
