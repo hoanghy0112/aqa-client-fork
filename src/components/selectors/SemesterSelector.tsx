@@ -9,7 +9,7 @@ import {
 	DropdownMenu,
 	DropdownSection,
 	DropdownTrigger,
-} from "@nextui-org/dropdown";
+} from "@nextui-org/react";
 import { useEffect, useState } from "react";
 
 export default function SemesterSelector() {
@@ -28,28 +28,28 @@ export default function SemesterSelector() {
 			<DropdownTrigger>
 				<Button variant="bordered" className="w-fit">
 					<p className="font-medium w-fit">
-						{semester?.display_name || "Tất cả học kỳ"}
+						{semester?.semester_name || "Tất cả học kỳ"}
 					</p>
 				</Button>
 			</DropdownTrigger>
 			<DropdownMenu
 				variant="faded"
-				aria-label="Static Actions"
+				aria-label="Semester dropwdown"
 				selectionMode="single"
 				selectedKeys={new Set([semester?.semester_id || ""])}
 				onAction={(key) => {
 					if (key === "all")
 						setSemester?.({
-							display_name: "Tất cả học kỳ",
+							semester_name: "Tất cả học kỳ",
 							semester_id: "all",
 						});
 					else setSemester(semesters.find((v) => v.semester_id === key));
 				}}
 			>
 				<DropdownSection title="Chọn học kỳ">
-					{semesters.map(({ display_name, semester_id }) => (
+					{semesters.map(({ semester_name, semester_id }) => (
 						<DropdownItem className={`py-2`} key={semester_id}>
-							<p className="font-medium"> {display_name}</p>
+							<p className="font-medium"> {semester_name}</p>
 						</DropdownItem>
 					))}
 				</DropdownSection>

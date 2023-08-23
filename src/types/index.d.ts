@@ -1,5 +1,5 @@
 declare type Semester = {
-	display_name: string;
+	semester_name: string;
 	semester_id: string;
 };
 
