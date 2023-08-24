@@ -1,13 +1,8 @@
 import SubjectPointAcrossSemesterChart from "@/components/chart/SubjectPointAcrossSemesterChart";
-import { FilterProvider } from "@/contexts/FilterContext";
 import { Metadata } from "next";
 
 export default function Page() {
-	return (
-		<FilterProvider>
-			<SubjectPointAcrossSemesterChart />
-		</FilterProvider>
-	);
+	return <SubjectPointAcrossSemesterChart />;
 }
 
 export const metadata: Metadata = {

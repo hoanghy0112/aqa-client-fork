@@ -19,7 +19,7 @@ export default function CommentQuantityInfo() {
 		withQuery(GET_COMMENT_QUANTITY, {
 			semester_id: semester?.semester_id || "all",
 			program,
-			faculty_name: faculty,
+			faculty_name: faculty?.faculty_name,
 			keyword,
 		}),
 		(...args) => fetch(...args).then((r) => r.json())

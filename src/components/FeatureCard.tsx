@@ -1,16 +1,9 @@
 "use client";
 
-import React from "react";
-import {
-	Card,
-	CardHeader,
-	CardBody,
-	CardFooter,
-	Divider,
-	Link,
-	Image,
-} from "@nextui-org/react";
 import { IFeatureIntroduction } from "@/constants/home_introduction";
+import { Card, CardBody, CardFooter, CardHeader } from "@nextui-org/card";
+
+import NextLink from "next/link";
 
 export default function FeatureCard({
 	introduction: { title, description, navigation_links },
@@ -38,9 +31,7 @@ export default function FeatureCard({
 				</CardBody>
 			) : null}
 			<CardFooter>
-				<Link isExternal={false} showAnchorIcon href={title.link}>
-					Xem chi tiết
-				</Link>
+				<NextLink href={title.link}>Xem chi tiết</NextLink>
 			</CardFooter>
 		</Card>
 	);

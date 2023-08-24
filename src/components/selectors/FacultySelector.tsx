@@ -3,15 +3,15 @@
 import { GET_FACULTY_LIST } from "@/constants/api_endpoint";
 import { useFilter } from "@/contexts/FilterContext";
 import { defaultFetcher } from "@/utils/fetchers";
+import { Button } from "@nextui-org/button";
 import {
-	Button,
 	Modal,
 	ModalBody,
 	ModalContent,
 	ModalHeader,
-	Spinner,
 	useDisclosure,
-} from "@nextui-org/react";
+} from "@nextui-org/modal";
+import { Spinner } from "@nextui-org/spinner";
 import { useEffect, useRef } from "react";
 import useSWR from "swr";
 
@@ -20,10 +20,7 @@ export default function FacultySelector() {
 
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-	const { data, isLoading } = useSWR<Faculty[]>(
-		GET_FACULTY_LIST,
-		defaultFetcher
-	);
+	const { data, isLoading } = useSWR<Faculty[]>(GET_FACULTY_LIST, defaultFetcher);
 
 	const currentSelectedRef = useRef<any>();
 
@@ -43,7 +40,9 @@ export default function FacultySelector() {
 	return (
 		<>
 			<Button onPress={onOpen} variant="bordered" className="w-fit">
-				<p className="font-medium w-fit">{faculty || "Chọn khoa"}</p>
+				<p className="font-medium w-fit">
+					{faculty?.faculty_name || "Chọn khoa"}
+				</p>
 			</Button>
 			<Modal
 				isOpen={isOpen}
@@ -59,37 +58,49 @@ export default function FacultySelector() {
 							</ModalHeader>
 							<ModalBody className="pb-8 pt-3">
 								{data && !isLoading ? (
-									data.map(({ faculty_name = "" }) => (
-										<Button
-											ref={
-												faculty_name == faculty
-													? currentSelectedRef
-													: null
-											}
-											onPress={() => {
-												setFaculty?.(faculty_name as string);
-												onClose();
-											}}
-											variant={
-												faculty_name == faculty ? "shadow" : "flat"
-											}
-											color={
-												faculty_name == faculty
-													? "primary"
-													: "default"
-											}
-											className={`py-5`}
-											key={faculty_name}
-										>
-											<p className="font-medium">
-												{faculty_name || "Tất cả"}
-											</p>
-										</Button>
-									))
+									data.map(
+										({ faculty_name = "", faculty_id = "" }) => (
+											<Button
+												ref={
+													faculty_name ==
+													faculty?.faculty_name
+														? currentSelectedRef
+														: null
+												}
+												onPress={() => {
+													setFaculty?.({
+														faculty_id,
+														faculty_name,
+													});
+													onClose();
+												}}
+												variant={
+													faculty_name ==
+													faculty?.faculty_name
+														? "shadow"
+														: "flat"
+												}
+												color={
+													faculty_name ==
+													faculty?.faculty_name
+														? "primary"
+														: "default"
+												}
+												className={`py-5`}
+												key={faculty_name}
+											>
+												<p className="font-medium">
+													{faculty_name || "Tất cả"}
+												</p>
+											</Button>
+										)
+									)
 								) : (
 									<div className=" flex flex-row gap-3">
 										<Spinner size="sm" />
-										<p className=" text-sm font-medium">Đang tải</p>
+										<p className=" text-sm font-medium">
+											Đang tải
+										</p>
 									</div>
 								)}
 							</ModalBody>

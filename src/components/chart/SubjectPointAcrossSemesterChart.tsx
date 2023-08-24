@@ -21,9 +21,7 @@ import ChartLayout from "./ChartLayout";
 export default function SubjectPointAcrossSemesterChart() {
 	const { criteria, subjects, program, faculty } = useFilter();
 
-	const { data: averageData, isLoading: isLoadingAverage } = useSWR<
-		IChartData[]
-	>(
+	const { data: averageData, isLoading: isLoadingAverage } = useSWR<IChartData[]>(
 		withQuery(GET_SUBJECT_POINT_ACROSS_SEMESTER, {
 			criteria_id: criteria?.criteria_id,
 			program,
@@ -38,7 +36,7 @@ export default function SubjectPointAcrossSemesterChart() {
 				criteria_id: criteria?.criteria_id,
 				subject_id: subject_id,
 				program,
-				faculty_name: faculty,
+				faculty_name: faculty?.faculty_name,
 			})
 		)
 	);

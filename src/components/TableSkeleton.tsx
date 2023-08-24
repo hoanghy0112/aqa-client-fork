@@ -7,7 +7,8 @@ import {
 	TableColumn,
 	TableHeader,
 	TableRow,
-} from "@nextui-org/react";
+} from "@nextui-org/table";
+
 import StringSkeleteton from "./StringSkeleteton";
 
 export default function TableSketon({ lines = 3 }: { lines?: number }) {

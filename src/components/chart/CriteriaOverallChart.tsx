@@ -1,129 +1,86 @@
 "use client";
 
-import { Color } from "@tremor/react";
+import { BarChart } from "@components/chart/BarChart";
 
-import { GET_CRITERIA_POINT_ACROSS_SEMESTER } from "@/constants/api_endpoint";
-import { COLORS } from "@/constants/colors";
-import useMultipleFetch from "@/hooks/useMultipleFetch";
-import { chartMapper } from "@/utils/arrayManipulate";
+import { GET_CRITERIA_PER_SEMESTER } from "@/constants/api_endpoint";
+import { useFilter } from "@/contexts/FilterContext";
 import withQuery from "@/utils/withQuery";
-import { useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
+import Loading from "../Loading";
+import NoData from "../NoData";
+import FacultySelector from "../selectors/FacultySelector";
+import ProgramSelector from "../selectors/ProgramSelector";
+import SemesterSelector from "../selectors/SemesterSelector";
+import { SortSelector } from "../selectors/SortSelector";
+import SubjectSelector from "../selectors/SubjectSelector";
+import ChartLayout from "./ChartLayout";
 
 export default function CriteriaOverallChart() {
-	const [isClient, setIsClient] = useState(false);
+	const { semester, sort, faculty, program, subjects } = useFilter();
 
-	useEffect(() => {
-		setIsClient(true);
-	}, []);
-
-	const [criteria, setCriteria] = useState<Criteria | undefined>();
-	const [subjects, setSubjects] = useState<Map<string, Subject>>(new Map());
-
-	const { data: averageData, isLoading: isLoadingAverage } = useSWR<
-		IChartData[]
-	>(
-		withQuery(GET_CRITERIA_POINT_ACROSS_SEMESTER, {
-			criteria_id: criteria?.criteria_id,
+	const { data: averageData, isLoading: isLoadingAverage } = useSWR<IChartData[]>(
+		withQuery(GET_CRITERIA_PER_SEMESTER, {
+			semester_id: semester?.semester_id,
+			subject_id: Array.from(subjects.values()).map((v) => v.subject_id),
+			type: sort,
+			faculty_name: faculty?.faculty_name,
+			program: program,
 		}),
 		(url: string) => fetch(url).then((r) => r.json())
 	);
 
-	const { data, isLoading } = useMultipleFetch<IChartData[]>(
-		Array.from(subjects.entries()).map(([_, { subject_id }]) =>
-			withQuery(GET_CRITERIA_POINT_ACROSS_SEMESTER, {
-				criteria_id: criteria?.criteria_id,
-				subject_id: subject_id,
-			})
-		)
-	);
-
-	const subjectNames = useMemo(
-		() => [
-			AVG_LEGEND,
-			...Array.from(subjects.entries()).map(([_, sub]) => sub.subject_name),
-		],
-		[data, averageData]
-	);
-
-	const chartData = useMemo(
-		() =>
-			chartMapper(
-				subjectNames,
-				data,
-				averageData || [],
-				AVG_LEGEND,
-				"display_name",
-				(d: IChartData) => d.avg
-			),
-		[data, averageData, subjectNames]
-	);
-
-	const colors = useMemo(
-		() =>
-			[
-				"sky",
-				...Object.values(COLORS).slice(0, subjectNames.length - 1),
-			] as Color[],
-		[data, averageData]
-	);
-
 	return (
-		<>
-			{/* {isClient && (
-				<ChartLayout
-					primaryTitle="Biểu đồ điểm trung bình các môn học qua các kỳ"
-					secondaryTitle={criteria?.display_name || "Tất cả các tiêu chí"}
-					legends={subjectNames}
-					colors={colors}
-					columnSize={150}
-					columnNum={data?.length || 0}
-					isFullWidth
-					handlerButtons={
-						<>
-							<SubjectSelector
-								subjects={subjects}
-								setSubjects={(d: any) => setSubjects(d)}
-							/>
-							<CriteriaSelector
-								criteria={criteria}
-								setCriteria={setCriteria}
-							/>
-						</>
-					}
-				>
-					<LineChart
-						className=" h-full mt-4"
-						data={chartData}
-						index="semester_name"
-						categories={subjectNames}
-						colors={colors}
-						yAxisWidth={80}
-						autoMinValue
-						valueFormatter={dataFormatter}
-						showLegend={false}
-						//@ts-ignore
-						noDataText={
-							isLoading && isLoadingAverage ? <Loading /> : <NoData />
-						}
-					/>
-				</ChartLayout>
-			)} */}
-		</>
+		<ChartLayout
+			primaryTitle="Biểu đồ tiêu chí qua các kỳ"
+			secondaryTitle={""}
+			legends={[LEGEND]}
+			colors={["sky"]}
+			isFullWidth
+			handlerButtons={
+				<>
+					<SemesterSelector />
+					<ProgramSelector />
+					<FacultySelector />
+					<SubjectSelector />
+					<SortSelector defaultValue="" />
+				</>
+			}
+		>
+			<BarChart
+				className=" h-full mt-4"
+				data={
+					averageData
+						? [
+								{
+									label: "Độ hài lòng",
+									data:
+										averageData?.map((d) => ({
+											x: `Tiêu chí ${d.index}`,
+											y: d.point * 100,
+											tooltipTitle: d.display_name,
+										})) || [],
+								},
+						  ]
+						: undefined
+				}
+				valueFormatter={dataFormatter}
+				noDataText={isLoadingAverage ? <Loading /> : <NoData />}
+			/>
+		</ChartLayout>
 	);
 }
 
 const dataFormatter = (number: number) => {
 	// return "$ " + Intl.NumberFormat("us").format(number).toString();
-	return `${Math.round(number * 100)}%`;
+	return `${number.toFixed(2)}%`;
 };
 
 interface IChartData {
 	display_name: string;
-	semester_id: string;
-	avg: number;
-	type: string;
-	year: string;
+	criteria_id: string;
+	point: number;
+	index: number;
+	num: number;
 }
 
-const AVG_LEGEND = "Điểm trung bình";
+const LEGEND = "Độ hài lòng";

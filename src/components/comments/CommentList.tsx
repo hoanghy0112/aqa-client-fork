@@ -23,7 +23,7 @@ export default function CommentList({ type }: { type: string }) {
 			q: keyword,
 			semester_id: semester?.semester_id || "all",
 			program,
-			faculty_name: faculty,
+			faculty_name: faculty?.faculty_name,
 		},
 	});
 

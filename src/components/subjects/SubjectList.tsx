@@ -12,9 +12,11 @@ import {
 	TableColumn,
 	TableHeader,
 	TableRow,
-	Tooltip,
 	getKeyValue,
-} from "@nextui-org/react";
+} from "@nextui-org/table";
+import { Tooltip } from "@nextui-org/tooltip";
+
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import Loading from "../Loading";
 import TableSketon from "../TableSkeleton";
@@ -33,7 +35,7 @@ export default function SubjectList() {
 			semester_id: semester?.semester_id,
 			keyword,
 			program,
-			faculty_name: faculty,
+			faculty_name: faculty?.faculty_name,
 			page_size: 20,
 			filter_field: sortDescriptor.column,
 			direction: sortDescriptor.direction === "ascending" ? "asc" : "desc",
@@ -92,7 +94,9 @@ export default function SubjectList() {
 									{column.index ? (
 										<Tooltip
 											content={
-												<p className=" max-w-xs">{column.label}</p>
+												<p className=" max-w-xs">
+													{column.label}
+												</p>
 											}
 										>
 											<p className="">{`Tiêu chí ${column.index}`}</p>
@@ -120,13 +124,27 @@ export default function SubjectList() {
 					>
 						{(item) => (
 							<TableRow key={item.subject_id}>
-								{(columnKey) => (
-									<TableCell>
-										<div className="py-3">
-											{getKeyValue(item, columnKey)}
-										</div>
-									</TableCell>
-								)}
+								{(columnKey) => {
+									if (columnKey === "subject_name") {
+										return (
+											<TableCell>
+												<Link
+													href={`/detail/subject/${item.subject_id}`}
+													className="py-3"
+												>
+													{getKeyValue(item, columnKey)}
+												</Link>
+											</TableCell>
+										);
+									}
+									return (
+										<TableCell>
+											<div className="py-3">
+												{getKeyValue(item, columnKey)}
+											</div>
+										</TableCell>
+									);
+								}}
 							</TableRow>
 						)}
 					</TableBody>

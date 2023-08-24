@@ -3,24 +3,21 @@
 import { GET_PROGRAM_LIST } from "@/constants/api_endpoint";
 import { useFilter } from "@/contexts/FilterContext";
 import { defaultFetcher } from "@/utils/fetchers";
+import { Button } from "@nextui-org/button";
 import {
-	Button,
 	Dropdown,
 	DropdownItem,
 	DropdownMenu,
 	DropdownSection,
 	DropdownTrigger,
-	Spinner,
 } from "@nextui-org/react";
+import { Spinner } from "@nextui-org/spinner";
 import useSWR from "swr";
 
 export default function ProgramSelector() {
 	const { program, setProgram } = useFilter();
 
-	const { data, isLoading } = useSWR<string[]>(
-		GET_PROGRAM_LIST,
-		defaultFetcher
-	);
+	const { data, isLoading } = useSWR<string[]>(GET_PROGRAM_LIST, defaultFetcher);
 
 	return (
 		<Dropdown backdrop="blur" shouldBlockScroll={false}>

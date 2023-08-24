@@ -1,8 +1,6 @@
 "use client";
 
-import { BarChart } from "@tremor/react";
-
-import { Spinner } from "@nextui-org/react";
+import { BarChart } from "@components/chart/BarChart";
 
 import { GET_SUBJECT_AVERAGE_POINT } from "@/constants/api_endpoint";
 import { useFilter } from "@/contexts/FilterContext";
@@ -11,9 +9,11 @@ import CriteriaSelector from "@components/selectors/CriteriaSelector";
 import SemesterSelector from "@components/selectors/SemesterSelector";
 import { SortSelector } from "@components/selectors/SortSelector";
 import useSWR from "swr";
-import ChartLayout from "./ChartLayout";
-import ProgramSelector from "../selectors/ProgramSelector";
+import Loading from "../Loading";
+import NoData from "../NoData";
 import FacultySelector from "../selectors/FacultySelector";
+import ProgramSelector from "../selectors/ProgramSelector";
+import ChartLayout from "./ChartLayout";
 
 export default function AveragePointChart() {
 	const { semester, criteria, sort, faculty, program } = useFilter();
@@ -23,7 +23,7 @@ export default function AveragePointChart() {
 			semester_id: semester?.semester_id,
 			criteria_id: criteria?.criteria_id,
 			program,
-			faculty_name: faculty,
+			faculty_name: faculty?.faculty_name,
 			sort,
 		}),
 		(url: string) => fetch(url).then((r) => r.json())
@@ -50,31 +50,22 @@ export default function AveragePointChart() {
 				<BarChart
 					className=" h-full mt-4"
 					data={
-						data?.map((d) => ({
-							...d,
-							[LEGEND_NAME]: d.average_point / d.max_point,
-						})) || []
+						data
+							? [
+									{
+										label: LEGEND_NAME,
+										data:
+											data?.map((d) => ({
+												x: d.display_name,
+												y: d.average_point / d.max_point,
+											})) || [],
+									},
+							  ]
+							: undefined
 					}
-					index="display_name"
-					categories={[LEGEND_NAME]}
-					colors={["sky"]}
-					yAxisWidth={80}
-					autoMinValue
 					valueFormatter={dataFormatter}
-					showLegend={false}
-					//@ts-ignore
-					noDataText={
-						isLoading ? (
-							<div className=" flex flex-row items-center gap-4">
-								<Spinner size="sm" />
-								<p className=" text-medium font-medium">Đang tải</p>
-							</div>
-						) : (
-							<p className=" text-medium font-medium">
-								Không có dữ liệu
-							</p>
-						)
-					}
+					noDataText={isLoading ? <Loading /> : <NoData />}
+					onClick={(index: number) => console.log({ index })}
 				/>
 			</ChartLayout>
 		</>

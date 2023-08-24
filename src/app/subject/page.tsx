@@ -1,7 +1,5 @@
-"use client";
-
-import { redirect } from "next/navigation";
+import Page from "./average-point/page";
 
 export default function SubjectPage() {
-	redirect("/subject/average-point");
+	return <Page />;
 }

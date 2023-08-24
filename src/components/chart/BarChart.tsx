@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode, useRef } from "react";
 import {
 	Chart as ChartJS,
 	CategoryScale,
@@ -11,17 +11,11 @@ import {
 	ChartData,
 	TooltipPositionerFunction,
 	ChartType,
+	ChartDataset,
 } from "chart.js";
-import { Bar } from "react-chartjs-2";
+import { Bar, getElementAtEvent } from "react-chartjs-2";
 
-ChartJS.register(
-	CategoryScale,
-	LinearScale,
-	BarElement,
-	Title,
-	Tooltip,
-	Legend
-);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 declare module "chart.js" {
 	interface TooltipPositionerMap {
@@ -45,80 +39,132 @@ Tooltip.positioners.center = function (items, eventPosition) {
 	};
 };
 
-export const options: ChartOptions = {
-	responsive: true,
-	maintainAspectRatio: false,
-	interaction: {
-		mode: "index" as const,
-		intersect: false,
-	},
-	plugins: {
-		legend: {
-			position: "top" as const,
-		},
-		title: {
-			display: true,
-			text: "Chart.js Bar Chart",
-		},
-		tooltip: {
-			position: "center",
-			caretSize: 0,
-			titleFont: {
-				size: 15,
-				family:
-					"ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'",
-				// weight: "medium",
-			},
-			bodyFont: {
-				size: 14,
-				family:
-					"ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'",
-				weight: "normal",
-			},
-		},
-	},
+type IData = {
+	x: string;
+	y: number;
+	tooltipTitle?: string;
 };
 
-const labels = [
-	"January",
-	"February",
-	"March",
-	"April",
-	"May",
-	"June",
-	"July",
-	"January",
-	"February",
-	"March",
-	"April",
-	"May",
-	"June",
-	"July",
-];
-
-export function BarChart<T>({
+export function BarChart({
 	className,
 	data,
-	title,
+	noDataText,
+	valueFormatter = (d: number) => d,
+	onClick,
 }: {
 	className?: React.ComponentProps<"div">["className"];
-	data: T[];
-	title: string;
+	data?: {
+		label: string;
+		data: IData[];
+		backgroundColor?: string;
+	}[];
+	noDataText: ReactNode;
+	valueFormatter?: (d: number) => string | number;
+	onClick?: (d: number) => any;
 }) {
-	const chartData: ChartData<"bar", number[], string> = {
-		labels,
-		datasets: [
-			{
-				label: "Dataset 1",
-				data: labels.map(() => Math.random()),
-				backgroundColor: "#0ea5e9",
+	const ref = useRef<any>();
+
+	const options: ChartOptions = {
+		responsive: true,
+		maintainAspectRatio: false,
+		interaction: {
+			mode: "index" as const,
+			intersect: false,
+		},
+		scales: {
+			x: {
+				border: {
+					display: false,
+				},
+				grid: {
+					display: false,
+				},
+				beginAtZero: false,
 			},
-		],
+			y: {
+				border: {
+					display: false,
+				},
+				grid: {
+					display: false,
+				},
+				beginAtZero: false,
+			},
+		},
+		plugins: {
+			legend: {
+				display: false,
+				position: "top" as const,
+			},
+			title: {
+				display: false,
+				text: "Chart.js Bar Chart",
+			},
+			tooltip: {
+				position: "center",
+				caretSize: 0,
+				titleFont: {
+					size: 15,
+					family: "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'",
+				},
+				bodyFont: {
+					size: 14,
+					family: "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'",
+					weight: "normal",
+				},
+				callbacks: {
+					label: function (context) {
+						let label = context.dataset.label || "";
+
+						if (label) {
+							label += ": ";
+						}
+						if (context.parsed.y !== null) {
+							label += valueFormatter(context.parsed.y);
+						}
+						return label;
+					},
+					title(tooltipItems) {
+						return (
+							//@ts-ignore
+							tooltipItems.at(0)?.raw?.tooltipTitle ||
+							//@ts-ignore
+							tooltipItems.at(0)?.raw.x
+						);
+					},
+				},
+			},
+		},
+	};
+
+	const chartData: ChartData<"bar", IData[], string> = {
+		// labels,
+		datasets: (data || []).map(({ label, data, backgroundColor }) => ({
+			label: label || "No label",
+			data,
+			backgroundColor: backgroundColor || "#0ea5e9",
+		})) as ChartDataset<"bar", IData[]>[],
 	};
 
 	return (
-		<div className={className || ""}>
-			<Bar options={options} data={chartData} />
+		<div className={`pl-5 w-full h-full flex items-center ${className || ""}`}>
+			{data ? (
+				<Bar
+					ref={ref}
+					//@ts-ignore
+					options={options}
+					data={chartData}
+					onClick={(event) => {
+						const eventList = getElementAtEvent(ref.current, event);
+						if (eventList.length > 0) {
+							const index = eventList[0].index;
+							onClick?.(index);
+						}
+					}}
+				/>
+			) : (
+				noDataText
+			)}
 		</div>
 	);
 }

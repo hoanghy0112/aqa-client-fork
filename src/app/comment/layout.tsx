@@ -1,5 +1,3 @@
-"use client";
-
 import SemesterSelector from "@/components/selectors/SemesterSelector";
 import { ReactNode } from "react";
 
@@ -8,7 +6,7 @@ import CommentSearchBar from "@/components/comments/CommentSearchBar";
 import FacultySelector from "@/components/selectors/FacultySelector";
 import ProgramSelector from "@/components/selectors/ProgramSelector";
 import { FilterProvider } from "@/contexts/FilterContext";
-import { Card } from "@nextui-org/react";
+import { Card } from "@nextui-org/card";
 
 export default function CommentLayout({ children }: { children: ReactNode }) {
 	return (

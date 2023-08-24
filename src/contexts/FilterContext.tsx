@@ -1,12 +1,6 @@
 "use client";
 
-import {
-	ReactNode,
-	createContext,
-	useContext,
-	useEffect,
-	useState,
-} from "react";
+import { ReactNode, createContext, useContext, useEffect, useState } from "react";
 
 export const FilterContext = createContext<IFilterContext>({
 	setKeyword: (d: string) => {},
@@ -15,7 +9,7 @@ export const FilterContext = createContext<IFilterContext>({
 	setSubjects: (d: Map<string, Subject>) => {},
 	setCriteria: (d: Criteria) => {},
 	setProgram: (d: string) => {},
-	setFaculty: (d: string) => {},
+	setFaculty: (d: Faculty) => {},
 	setSemester: (d: Semester | undefined) => {},
 	setSort: (d: string) => {},
 });
@@ -32,9 +26,12 @@ export function FilterProvider({
 	subjects: default_subjects = new Map<string, Subject>(),
 	criteria: default_criteria,
 	program: default_program,
-	faculty: default_faculty = "",
+	faculty: default_faculty = {
+		faculty_id: "",
+		faculty_name: "",
+	},
 	semester: default_semester = {
-		display_name: "",
+		semester_name: "",
 		semester_id: "",
 	} as Semester,
 	sort: default_sort = "desc",
@@ -46,7 +43,7 @@ export function FilterProvider({
 	subjects?: Map<string, Subject>;
 	criteria?: Criteria;
 	program?: string;
-	faculty?: string;
+	faculty?: Faculty;
 	semester?: Semester;
 	sort?: string;
 	setSort?: (d: string) => any;
@@ -81,8 +78,7 @@ export function FilterProvider({
 				faculty,
 				setFaculty,
 				semester,
-				setSemester: (d: Semester | undefined) =>
-					setSemester(d as Semester),
+				setSemester: (d: Semester | undefined) => setSemester(d as Semester),
 				sort,
 				setSort,
 			}}
@@ -103,8 +99,8 @@ export interface IFilterContext {
 	setCriteria: (d: Criteria) => any;
 	program?: string;
 	setProgram: (d: string) => any;
-	faculty?: string;
-	setFaculty: (d: string) => any;
+	faculty?: Faculty;
+	setFaculty: (d: Faculty) => any;
 	semester?: Semester;
 	setSemester: (d: Semester | undefined) => any;
 	sort?: string;
