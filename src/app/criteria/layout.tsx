@@ -1,11 +1,10 @@
 "use client";
 
-import { Card, CardBody } from "@nextui-org/react";
+import CriteriaList from "@/components/criteria/CriteriaList";
+import { FilterProvider } from "@/contexts/FilterContext";
 import { usePathname } from "next/navigation";
 import { ReactNode, useMemo } from "react";
 import CriteriaTabs from "./tabs";
-import { FilterProvider } from "@/contexts/FilterContext";
-import CriteriaList from "@/components/criteria/CriteriaList";
 
 export default function Layout({ children }: { children: ReactNode }) {
 	const pathName = usePathname();
