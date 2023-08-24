@@ -1,13 +1,8 @@
 import CriteriaOverallChart from "@/components/chart/CriteriaOverallChart";
-import { FilterProvider } from "@/contexts/FilterContext";
 import { Metadata } from "next";
 
 export default function CriteriaPage() {
-	return (
-		<FilterProvider>
-			<CriteriaOverallChart />
-		</FilterProvider>
-	);
+	return <CriteriaOverallChart />;
 }
 
 export const metadata: Metadata = {

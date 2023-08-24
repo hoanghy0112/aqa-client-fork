@@ -23,7 +23,7 @@ export default function CriteriaOverallChart() {
 			semester_id: semester?.semester_id,
 			subject_id: Array.from(subjects.values()).map((v) => v.subject_id),
 			type: sort,
-			faculty_name: faculty,
+			faculty_name: faculty?.faculty_name,
 			program: program,
 		}),
 		(url: string) => fetch(url).then((r) => r.json())
@@ -35,8 +35,6 @@ export default function CriteriaOverallChart() {
 			secondaryTitle={""}
 			legends={[LEGEND]}
 			colors={["sky"]}
-			columnSize={150}
-			columnNum={averageData?.length || 0}
 			isFullWidth
 			handlerButtons={
 				<>
@@ -58,7 +56,7 @@ export default function CriteriaOverallChart() {
 									data:
 										averageData?.map((d) => ({
 											x: `Tiêu chí ${d.index}`,
-											y: d.point,
+											y: d.point * 100,
 											tooltipTitle: d.display_name,
 										})) || [],
 								},
@@ -74,7 +72,7 @@ export default function CriteriaOverallChart() {
 
 const dataFormatter = (number: number) => {
 	// return "$ " + Intl.NumberFormat("us").format(number).toString();
-	return `${Math.round(number * 100)}%`;
+	return `${number.toFixed(2)}%`;
 };
 
 interface IChartData {
@@ -85,4 +83,4 @@ interface IChartData {
 	num: number;
 }
 
-const LEGEND = "Tiêu chí";
+const LEGEND = "Độ hài lòng";

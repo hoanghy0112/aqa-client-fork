@@ -36,7 +36,7 @@ export default function SubjectPointAcrossSemesterChart() {
 				criteria_id: criteria?.criteria_id,
 				subject_id: subject_id,
 				program,
-				faculty_name: faculty,
+				faculty_name: faculty?.faculty_name,
 			})
 		)
 	);

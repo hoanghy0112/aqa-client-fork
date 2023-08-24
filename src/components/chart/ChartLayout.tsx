@@ -21,6 +21,8 @@ export default function ChartLayout({
 	handlerButtons,
 	children,
 	isFullWidth = false,
+	height,
+	showLegend = false,
 }: {
 	primaryTitle: string;
 	secondaryTitle: string;
@@ -31,6 +33,8 @@ export default function ChartLayout({
 	handlerButtons: ReactNode;
 	children: ReactNode;
 	isFullWidth?: boolean;
+	height?: number;
+	showLegend?: boolean;
 }) {
 	const containerRef = useRef<HTMLDivElement>(null);
 
@@ -45,13 +49,13 @@ export default function ChartLayout({
 			return columnNum * columnSize;
 		}
 		return "100%";
-	}, [columnNum, columnSize, isFullWidth]);
+	}, [columnNum, columnSize, isFullWidth, containerRef]);
 
 	return (
-		<BaseChart>
+		<BaseChart height={height}>
 			<Extensible>
 				<div className="w-full px-8">
-					<div className="  w-full mb-6 px-8 pt-5 flex flex-col xl:flex-row gap-5 justify-end items-start xl:items-center">
+					<div className="  w-full mb-6 pl-2 pr-8 pt-5 flex flex-col xl:flex-row gap-5 justify-end items-start xl:items-center">
 						<div className=" w-3/4 mt-2">
 							<p>{primaryTitle}</p>
 							<p className="w-full mt-2 font-normal text-sm">
@@ -88,11 +92,13 @@ export default function ChartLayout({
 					id="chart"
 					className=" relative h-full w-full overflow-x-auto overflow-y-hidden flex flex-col justify-stretch flex-grow"
 				>
-					<Legend
-						className=" w-full px-10"
-						categories={legends}
-						colors={colors}
-					/>
+					{showLegend ? (
+						<Legend
+							className=" w-full px-10"
+							categories={legends}
+							colors={colors}
+						/>
+					) : null}
 					<div className=" relative pb-5 h-full w-full overflow-x-auto overflow-y-hidden flex flex-col justify-stretch flex-grow">
 						<div
 							className=" pt-2 h-full pr-4 basis-full flex flex-col flex-grow"

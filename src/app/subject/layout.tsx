@@ -35,11 +35,9 @@ export default function Layout({ children }: { children: ReactNode }) {
 		<>
 			<h1 className="font-semibold text-3xl">Môn học</h1>
 			<SubjectTabs selectedTab={tabName} tabs={tabs} />
-			<Card className=" w-full mt-5 p-0 h-[420px]">
-				<CardBody className="p-0">
-					<FilterProvider>{children}</FilterProvider>
-				</CardBody>
-			</Card>
+			<div className=" w-full mt-5 p-0 h-[420px]">
+				<FilterProvider>{children}</FilterProvider>
+			</div>
 			<FilterProvider>
 				<SubjectTable />
 			</FilterProvider>

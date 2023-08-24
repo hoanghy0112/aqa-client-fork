@@ -12,7 +12,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 	const tabName = useMemo(() => pathName.split("/").at(-1) || "", [pathName]);
 
 	return (
-		<>
+		<FilterProvider>
 			<h1 className="font-semibold text-3xl">Tiêu chí</h1>
 			<CriteriaTabs
 				tabs={[
@@ -26,10 +26,8 @@ export default function Layout({ children }: { children: ReactNode }) {
 					},
 				]}
 			/>
-			<Card className=" w-full mt-5 p-0 h-[420px]">
-				<CardBody className="p-0">{children}</CardBody>
-			</Card>
-			<FilterProvider>{/* <CriteriaList /> */}</FilterProvider>
-		</>
+			<div className=" w-full mt-5 p-0 h-[420px]">{children}</div>
+			<CriteriaList />
+		</FilterProvider>
 	);
 }

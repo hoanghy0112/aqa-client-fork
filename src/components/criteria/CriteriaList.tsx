@@ -1,5 +1,6 @@
+"use client";
+
 import { GET_CRITERIA_NAME } from "@/constants/api_endpoint";
-import React from "react";
 import useSWR from "swr";
 import SpecificCriteriaChart from "../chart/SpecificCriteriaChart";
 

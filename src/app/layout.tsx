@@ -8,6 +8,7 @@ import Providers from "./providers";
 import CommentIcon from "@assets/CommentIcon";
 import HomeIcon from "@assets/HomeIcon";
 import SubjectIcon from "@assets/SubjectIcon";
+import CriteriaIcon from "@assets/CriteriaIcon";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -59,14 +60,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 								]}
 							/>
 							<NavItem
-								title="Lớp học"
-								link="/class"
-								icon={SubjectIcon}
-							/>
-							<NavItem
 								title="Tiêu chí"
 								link="/criteria"
-								icon={SubjectIcon}
+								icon={CriteriaIcon}
 							/>
 						</NavigationDrawer>
 						<main className="w-full px-20 pt-12 pb-10 overflow-y-scroll overflow-x-hidden">

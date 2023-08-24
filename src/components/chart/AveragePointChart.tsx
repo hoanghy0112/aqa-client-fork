@@ -23,7 +23,7 @@ export default function AveragePointChart() {
 			semester_id: semester?.semester_id,
 			criteria_id: criteria?.criteria_id,
 			program,
-			faculty_name: faculty,
+			faculty_name: faculty?.faculty_name,
 			sort,
 		}),
 		(url: string) => fetch(url).then((r) => r.json())

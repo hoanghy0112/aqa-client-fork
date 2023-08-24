@@ -35,7 +35,7 @@ export default function SubjectList() {
 			semester_id: semester?.semester_id,
 			keyword,
 			program,
-			faculty_name: faculty,
+			faculty_name: faculty?.faculty_name,
 			page_size: 20,
 			filter_field: sortDescriptor.column,
 			direction: sortDescriptor.direction === "ascending" ? "asc" : "desc",
