@@ -2,12 +2,11 @@
 
 import SubjectTable from "@/components/subjects/SubjectTable";
 import { FilterProvider } from "@/contexts/FilterContext";
-import { Card, CardBody } from "@nextui-org/card";
 import { usePathname, useRouter } from "next/navigation";
 import { ReactNode, useEffect, useMemo } from "react";
 import SubjectTabs from "../tabs";
 
-const tabs = [
+export const tabs = [
 	{
 		link: "average-point",
 		title: "Biểu đồ điểm trung bình",

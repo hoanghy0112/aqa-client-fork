@@ -42,6 +42,7 @@ Tooltip.positioners.center = function (items, eventPosition) {
 type IData = {
 	x: string;
 	y: number;
+	id?: string;
 	tooltipTitle?: string;
 };
 
@@ -60,7 +61,7 @@ export function BarChart({
 	}[];
 	noDataText: ReactNode;
 	valueFormatter?: (d: number) => string | number;
-	onClick?: (d: number) => any;
+	onClick?: (d: IClickData) => any;
 }) {
 	const ref = useRef<any>();
 
@@ -158,7 +159,13 @@ export function BarChart({
 						const eventList = getElementAtEvent(ref.current, event);
 						if (eventList.length > 0) {
 							const index = eventList[0].index;
-							onClick?.(index);
+							const clickData = chartData.datasets.map((d) =>
+								d.data.at(index)
+							);
+							onClick?.({
+								index,
+								data: clickData,
+							});
 						}
 					}}
 				/>
@@ -167,4 +174,9 @@ export function BarChart({
 			)}
 		</div>
 	);
+}
+
+interface IClickData {
+	index: number;
+	data: (IData | undefined)[];
 }

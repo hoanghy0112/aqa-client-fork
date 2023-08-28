@@ -9,6 +9,7 @@ import CommentIcon from "@assets/CommentIcon";
 import HomeIcon from "@assets/HomeIcon";
 import SubjectIcon from "@assets/SubjectIcon";
 import CriteriaIcon from "@assets/CriteriaIcon";
+import { Suspense } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -66,7 +67,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 							/>
 						</NavigationDrawer>
 						<main className="w-full px-20 pt-12 pb-10 overflow-y-scroll overflow-x-hidden">
-							{children}
+							<Suspense fallback={<p>Loading</p>}>{children}</Suspense>
 						</main>
 					</div>
 				</Providers>

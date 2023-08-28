@@ -14,8 +14,12 @@ import NoData from "../NoData";
 import FacultySelector from "../selectors/FacultySelector";
 import ProgramSelector from "../selectors/ProgramSelector";
 import ChartLayout from "./ChartLayout";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function AveragePointChart() {
+	const router = useRouter();
+
 	const { semester, criteria, sort, faculty, program } = useFilter();
 
 	const { data, isLoading } = useSWR<IChartData[]>(
@@ -58,6 +62,7 @@ export default function AveragePointChart() {
 											data?.map((d) => ({
 												x: d.display_name,
 												y: d.average_point / d.max_point,
+												id: d.subject_id,
 											})) || [],
 									},
 							  ]
@@ -65,7 +70,9 @@ export default function AveragePointChart() {
 					}
 					valueFormatter={dataFormatter}
 					noDataText={isLoading ? <Loading /> : <NoData />}
-					onClick={(index: number) => console.log({ index })}
+					onClick={({ index, data }) =>
+						router.push(`/subject/${data[0]?.id}`)
+					}
 				/>
 			</ChartLayout>
 		</>
@@ -73,7 +80,6 @@ export default function AveragePointChart() {
 }
 
 const dataFormatter = (number: number) => {
-	// return "$ " + Intl.NumberFormat("us").format(number).toString();
 	return `${Math.round(number * 100)}%`;
 };
 
