@@ -28,7 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 							<NavItem title="Trang chủ" link="/" icon={HomeIcon} />
 							<NavItem
 								title="Bình luận"
-								link="/comment/all"
+								link="/comment"
 								icon={CommentIcon}
 								subItems={[
 									{

@@ -2,6 +2,8 @@
 
 import { getSemesterList } from "@/api/semester";
 import { useFilter } from "@/contexts/FilterContext";
+import useNavigate from "@/hooks/useNavigate";
+import withQuery from "@/utils/withQuery";
 import { Button } from "@nextui-org/button";
 import {
 	Dropdown,
@@ -10,19 +12,18 @@ import {
 	DropdownSection,
 	DropdownTrigger,
 } from "@nextui-org/react";
-import { useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
-export default function SemesterSelector() {
-	const { semester, setSemester } = useFilter();
-	const [semesters, setSemesters] = useState<Semester[]>([]);
-
-	useEffect(() => {
-		(async () => {
-			const semesterList = await getSemesterList();
-			setSemesters(semesterList);
-		})();
-	}, []);
-
+function SemesterSelector_({
+	semester,
+	setSemester,
+	semesters,
+}: {
+	semester?: Semester;
+	setSemester: (d?: Semester) => any;
+	semesters: Semester[];
+}) {
 	return (
 		<Dropdown backdrop="blur" shouldBlockScroll={false}>
 			<DropdownTrigger>
@@ -38,7 +39,7 @@ export default function SemesterSelector() {
 				selectionMode="single"
 				selectedKeys={new Set([semester?.semester_id || ""])}
 				onAction={(key) => {
-					if (key === "all")
+					if (key === "")
 						setSemester?.({
 							semester_name: "Tất cả học kỳ",
 							semester_id: "all",
@@ -60,5 +61,73 @@ export default function SemesterSelector() {
 				</DropdownSection>
 			</DropdownMenu>
 		</Dropdown>
+	);
+}
+
+export default function SemesterSelector() {
+	const { semester, setSemester } = useFilter();
+	const [semesters, setSemesters] = useState<Semester[]>([]);
+
+	useEffect(() => {
+		(async () => {
+			const semesterList = await getSemesterList();
+			setSemesters(semesterList);
+		})();
+	}, []);
+
+	return (
+		<SemesterSelector_
+			semester={semester}
+			setSemester={setSemester}
+			semesters={semesters}
+		/>
+	);
+}
+
+export function SemesterSelectorWithSearchParam() {
+	const searchParams = useSearchParams();
+	const navigate = useNavigate();
+
+	const [semesters, setSemesters] = useState<Semester[]>([]);
+
+	const semester = useMemo<Semester | undefined>(() => {
+		if (semesters.length > 0) {
+			if (searchParams.has("semester")) {
+				const semesterId = searchParams.get("semester");
+				return semesters.find((v) => v.semester_id == semesterId);
+			} else {
+				if (searchParams.get("semester") == "") {
+					return {
+						semester_id: "",
+						semester_name: "",
+					};
+				}
+			}
+		}
+		return undefined;
+	}, [searchParams, semesters]);
+
+	const setSemester = useCallback(
+		(semester: Semester | undefined) => {
+			console.log({ semester });
+			if (semester)
+				navigate.replace({ semester: semester?.semester_id || "" });
+		},
+		[navigate]
+	);
+
+	useEffect(() => {
+		(async () => {
+			const semesterList = await getSemesterList();
+			setSemesters(semesterList);
+		})();
+	}, []);
+
+	return (
+		<SemesterSelector_
+			semester={semester}
+			setSemester={setSemester}
+			semesters={semesters}
+		/>
 	);
 }

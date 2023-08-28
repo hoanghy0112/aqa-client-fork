@@ -2,7 +2,9 @@
 
 import { GET_PROGRAM_LIST } from "@/constants/api_endpoint";
 import { useFilter } from "@/contexts/FilterContext";
+import useNavigate from "@/hooks/useNavigate";
 import { defaultFetcher } from "@/utils/fetchers";
+import withQuery from "@/utils/withQuery";
 import { Button } from "@nextui-org/button";
 import {
 	Dropdown,
@@ -12,11 +14,17 @@ import {
 	DropdownTrigger,
 } from "@nextui-org/react";
 import { Spinner } from "@nextui-org/spinner";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useMemo } from "react";
 import useSWR from "swr";
 
-export default function ProgramSelector() {
-	const { program, setProgram } = useFilter();
-
+function ProgramSelector_({
+	program,
+	setProgram,
+}: {
+	program?: string;
+	setProgram?: (d: string) => any;
+}) {
 	const { data, isLoading } = useSWR<string[]>(GET_PROGRAM_LIST, defaultFetcher);
 
 	return (
@@ -65,4 +73,27 @@ export default function ProgramSelector() {
 			</DropdownMenu>
 		</Dropdown>
 	);
+}
+
+export default function ProgramSelector() {
+	const { program, setProgram } = useFilter();
+
+	return <ProgramSelector_ program={program} setProgram={setProgram} />;
+}
+
+export function ProgramSelectorWithSearchParam() {
+	const searchParams = useSearchParams();
+	const navigate = useNavigate();
+
+	const program = useMemo(
+		() => searchParams.get("program") || undefined,
+		[searchParams]
+	);
+
+	const setProgram = useCallback(
+		(program: string) => navigate.replace({ program }),
+		[navigate]
+	);
+
+	return <ProgramSelector_ program={program} setProgram={setProgram} />;
 }

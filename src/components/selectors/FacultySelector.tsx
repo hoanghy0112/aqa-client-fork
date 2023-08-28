@@ -2,6 +2,7 @@
 
 import { GET_FACULTY_LIST } from "@/constants/api_endpoint";
 import { useFilter } from "@/contexts/FilterContext";
+import useNavigate from "@/hooks/useNavigate";
 import { defaultFetcher } from "@/utils/fetchers";
 import { Button } from "@nextui-org/button";
 import {
@@ -12,15 +13,24 @@ import {
 	useDisclosure,
 } from "@nextui-org/modal";
 import { Spinner } from "@nextui-org/spinner";
-import { useEffect, useRef } from "react";
+import { useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import useSWR from "swr";
 
-export default function FacultySelector() {
-	const { faculty, setFaculty, setSubjects } = useFilter();
+function FacultySelector_({
+	faculty,
+	setFaculty,
+	data,
+	isLoading,
+}: {
+	faculty?: Faculty;
+	setFaculty?: (d: Faculty) => any;
+	data?: Faculty[];
+	isLoading: boolean;
+}) {
+	const { setSubjects } = useFilter();
 
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
-	const { data, isLoading } = useSWR<Faculty[]>(GET_FACULTY_LIST, defaultFetcher);
 
 	const currentSelectedRef = useRef<any>();
 
@@ -109,5 +119,49 @@ export default function FacultySelector() {
 				</ModalContent>
 			</Modal>
 		</>
+	);
+}
+
+export default function FacultySelector() {
+	const { faculty, setFaculty } = useFilter();
+
+	const { data, isLoading } = useSWR<Faculty[]>(GET_FACULTY_LIST, defaultFetcher);
+
+	return (
+		<FacultySelector_
+			faculty={faculty}
+			setFaculty={setFaculty}
+			data={data}
+			isLoading={isLoading}
+		/>
+	);
+}
+
+export function FacultySelectorWithSearchParams() {
+	const searchParams = useSearchParams();
+	const navigate = useNavigate();
+
+	const { data, isLoading } = useSWR<Faculty[]>(GET_FACULTY_LIST, defaultFetcher);
+
+	const faculty = useMemo(() => {
+		const facultyId = searchParams.get("faculty") || undefined;
+		if (!facultyId) return undefined;
+		return data?.find((v) => v.faculty_id === facultyId);
+	}, [searchParams, data]);
+
+	const setFaculty = useCallback(
+		(faculty: Faculty) => {
+			navigate.replace({ faculty: faculty.faculty_name });
+		},
+		[navigate]
+	);
+
+	return (
+		<FacultySelector_
+			faculty={faculty}
+			setFaculty={setFaculty}
+			data={data}
+			isLoading={isLoading}
+		/>
 	);
 }

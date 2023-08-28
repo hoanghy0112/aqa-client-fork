@@ -7,9 +7,22 @@ import { GET_COMMENT_LIST } from "@/constants/api_endpoint";
 import { useFilter } from "@/contexts/FilterContext";
 import useIncrementalFetch from "@/hooks/useIncrementalFetch";
 import Loading from "../Loading";
+import { usePathname } from "next/navigation";
 
-export default function CommentList({ type }: { type: string }) {
-	const { semester, keyword, setIsLoading, faculty, program } = useFilter();
+export default function CommentList({
+	type,
+	semester,
+	keyword,
+	faculty,
+	program,
+}: {
+	type: string;
+	semester?: string;
+	keyword?: string;
+	faculty?: string;
+	program?: string;
+}) {
+	const { setIsLoading } = useFilter();
 
 	const {
 		items: comments,
@@ -21,9 +34,9 @@ export default function CommentList({ type }: { type: string }) {
 		query: {
 			type,
 			q: keyword,
-			semester_id: semester?.semester_id || "all",
+			semester_id: semester,
 			program,
-			faculty_name: faculty?.faculty_name,
+			faculty_name: faculty,
 		},
 	});
 
