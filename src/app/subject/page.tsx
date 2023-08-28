@@ -1,4 +1,4 @@
-import Page from "./average-point/page";
+import Page from "./(main)/average-point/page";
 
 export default function SubjectPage() {
 	return <Page />;

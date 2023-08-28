@@ -3,7 +3,7 @@
 import { useTheme } from "next-themes";
 import { useEffect, useMemo, useState } from "react";
 
-export default function SubjectIcon({
+export default function DownloadIcon({
 	width = 20,
 	color: defaultColor,
 }: {

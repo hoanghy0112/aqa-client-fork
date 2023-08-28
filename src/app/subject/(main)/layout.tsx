@@ -5,7 +5,7 @@ import { FilterProvider } from "@/contexts/FilterContext";
 import { Card, CardBody } from "@nextui-org/card";
 import { usePathname, useRouter } from "next/navigation";
 import { ReactNode, useEffect, useMemo } from "react";
-import SubjectTabs from "./tabs";
+import SubjectTabs from "../tabs";
 
 const tabs = [
 	{

@@ -51,7 +51,7 @@ export default function SubjectSelector() {
 			debouncedKeyword,
 			page_size: 20,
 			filter_field: "subject_name",
-			faculty_name: faculty,
+			faculty_name: faculty?.faculty_name,
 			direction: sort,
 		},
 	});
@@ -203,7 +203,7 @@ export default function SubjectSelector() {
 								)}
 								{hasMore ? (
 									<div
-										ref={bottomRef}
+										// ref={bottomRef}
 										className=" w-full py-4 flex flex-row justify-center gap-2 items-center"
 									>
 										<Spinner size="sm" />
@@ -213,7 +213,7 @@ export default function SubjectSelector() {
 									</div>
 								) : (
 									<div
-										ref={bottomRef}
+										// ref={bottomRef}
 										className=" w-full py-4 flex flex-row justify-center gap-2 items-center"
 									>
 										<p className=" text-md font-semibold">
@@ -221,6 +221,7 @@ export default function SubjectSelector() {
 										</p>
 									</div>
 								)}
+								<div ref={bottomRef} />
 							</ModalBody>
 							<ModalFooter>
 								<Button
