@@ -24,8 +24,8 @@ export default function ChartLayout({
 	height,
 	showLegend = false,
 }: {
-	primaryTitle: string;
-	secondaryTitle: string;
+	primaryTitle?: string;
+	secondaryTitle?: string;
 	columnSize?: number;
 	columnNum?: number;
 	legends: string[];

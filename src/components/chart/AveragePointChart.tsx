@@ -8,14 +8,13 @@ import withQuery from "@/utils/withQuery";
 import CriteriaSelector from "@components/selectors/CriteriaSelector";
 import SemesterSelector from "@components/selectors/SemesterSelector";
 import { SortSelector } from "@components/selectors/SortSelector";
+import { useRouter } from "next/navigation";
 import useSWR from "swr";
 import Loading from "../Loading";
 import NoData from "../NoData";
 import FacultySelector from "../selectors/FacultySelector";
 import ProgramSelector from "../selectors/ProgramSelector";
 import ChartLayout from "./ChartLayout";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 export default function AveragePointChart() {
 	const router = useRouter();

@@ -16,3 +16,5 @@ export const GET_CRITERIA_POINT_ACROSS_SEMESTER = `${API_BASE_URL}/criterias/poi
 
 export const GET_PROGRAM_LIST = `${API_BASE_URL}/programs`;
 export const GET_FACULTY_LIST = `${API_BASE_URL}/faculties`;
+
+export const GET_CLASSES = `${API_BASE_URL}/classes`;
