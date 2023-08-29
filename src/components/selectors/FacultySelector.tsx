@@ -144,9 +144,9 @@ export function FacultySelectorWithSearchParams() {
 	const { data, isLoading } = useSWR<Faculty[]>(GET_FACULTY_LIST, defaultFetcher);
 
 	const faculty = useMemo(() => {
-		const facultyId = searchParams.get("faculty") || undefined;
-		if (!facultyId) return undefined;
-		return data?.find((v) => v.faculty_id === facultyId);
+		const facultyName = searchParams.get("faculty") || undefined;
+		if (!facultyName) return undefined;
+		return data?.find((v) => v.faculty_name === facultyName);
 	}, [searchParams, data]);
 
 	const setFaculty = useCallback(

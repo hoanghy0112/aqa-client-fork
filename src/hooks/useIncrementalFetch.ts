@@ -31,8 +31,9 @@ export default function useIncrementalFetch<T>({
 			} = onFetch(response);
 			setLoading(false);
 			setHasNext(newHasNext);
-			if (page == 0) setItems(newData);
-			else setItems((prev) => [...prev, ...newData]);
+			// if (page == 0) setItems(newData);
+			// else 
+			setItems((prev) => [...prev, ...newData]);
 		})();
 	}, [page, ...Object.values(query)]);
 
@@ -40,7 +41,7 @@ export default function useIncrementalFetch<T>({
 		setItems([]);
 		setPage(0);
 		setHasNext(true);
-	}, [...Object.values(query)]);
+	}, [url, ...Object.values(query)]);
 
 	useEffect(() => {
 		if (!bottomRef?.current) return;
