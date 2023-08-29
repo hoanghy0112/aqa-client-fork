@@ -56,7 +56,7 @@ export default function CommentList({
 					isLast={false}
 				/>
 			))}
-			{hasMore ? <Loading ref={bottomRef} /> : null}
+			{hasMore ? <Loading /> : null}
 			{!hasMore && !isLoading ? (
 				<div className="w-full flex flex-col pt-6 pb-4 items-center">
 					<p className="w-fit text-lg font-semibold">
@@ -64,6 +64,7 @@ export default function CommentList({
 					</p>
 				</div>
 			) : null}
+			<div ref={bottomRef} />
 		</>
 	);
 }
