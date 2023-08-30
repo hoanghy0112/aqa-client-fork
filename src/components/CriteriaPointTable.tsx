@@ -114,7 +114,7 @@ export default function CriteriaPointTable({
 											<p
 												key={`${item.id} ${columnKey}`}
 												className=" font-semibold text-md"
-											>{`${Math.floor(
+											>{`${Math.round(
 												getKeyValue(item, columnKey) * 100
 											)}%`}</p>
 										) : (

@@ -28,6 +28,9 @@ import {
 } from "@nextui-org/react";
 import TableSketon from "@/components/TableSkeleton";
 import CriteriaPointTable from "@/components/CriteriaPointTable";
+import CriteriaSelector, {
+	CriteriaSelectorWithSearchParam,
+} from "@/components/selectors/CriteriaSelector";
 
 function Page_({ subject_id }: { subject_id: string }) {
 	const router = useRouter();
@@ -48,6 +51,29 @@ function Page_({ subject_id }: { subject_id: string }) {
 		}),
 		(url: string) => fetch(url).then((r) => r.json())
 	);
+
+	const criteria = useMemo(() => searchParams.get("criteria"), [searchParams]);
+
+	const chartData = useMemo(() => {
+		const index = data?.data[0].points.find(
+			(v) => v.criteria_id == criteria
+		)?.index;
+		if (index) {
+			return data.data.map((v) => ({
+				...v,
+				point: v.points.find((v) => v.index === index)?.point || 0,
+			}));
+		}
+		if (!criteria) {
+			return data?.data.map((v) => ({
+				...v,
+				point:
+					v.points.reduce((total, { point }) => (total += point), 0) /
+					v.points.length,
+			}));
+		}
+		return [];
+	}, [data, criteria]);
 
 	const columns = useMemo(
 		() =>
@@ -75,7 +101,7 @@ function Page_({ subject_id }: { subject_id: string }) {
 				handlerButtons={
 					<>
 						<SemesterSelectorWithSearchParam />
-						{/* <CriteriaSelector /> */}
+						<CriteriaSelectorWithSearchParam />
 						<ProgramSelectorWithSearchParam />
 						<SortSelector />
 					</>
@@ -89,9 +115,9 @@ function Page_({ subject_id }: { subject_id: string }) {
 									{
 										label: LEGEND_NAME,
 										data:
-											data?.data?.map((d) => ({
+											chartData?.map((d) => ({
 												x: d.class_name,
-												y: d.points[0].point * 100,
+												y: d.point * 100,
 												id: d.class_id,
 											})) || [],
 										sort: sort,

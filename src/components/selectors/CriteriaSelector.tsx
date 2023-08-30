@@ -1,7 +1,8 @@
 "use client";
 
 import { GET_CRITERIA_NAME } from "@/constants/api_endpoint";
-import { useFilter } from "@/contexts/FilterContext";
+import { FilterProvider, useFilter } from "@/contexts/FilterContext";
+import useNavigate from "@/hooks/useNavigate";
 import withQuery from "@/utils/withQuery";
 import { Button } from "@nextui-org/button";
 import { Card } from "@nextui-org/card";
@@ -16,21 +17,26 @@ import {
 import { Skeleton } from "@nextui-org/skeleton";
 import { Tooltip } from "@nextui-org/tooltip";
 import { motion } from "framer-motion";
-import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useCallback, useMemo, useState } from "react";
 import useSWR from "swr";
 
-export default function CriteriaSelector() {
-	const { criteria, setCriteria } = useFilter();
+type Props = {
+	criteria?: Criteria;
+	setCriteria: (d: Criteria) => any;
+	data?: Criteria[];
+	isLoading: boolean;
+	error: any;
+};
+
+function CriteriaSelector_({
+	criteria,
+	setCriteria,
+	data,
+	isLoading,
+	error,
+}: Props) {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
-	const { semester } = useFilter();
-
-	const { data, isLoading, error } = useSWR<Criteria[]>(
-		withQuery(GET_CRITERIA_NAME, {
-			semester_id: semester?.semester_id,
-		}),
-		(url: string) => fetch(url).then((r) => r.json())
-	);
 
 	const [keyword, setKeyword] = useState("");
 
@@ -172,5 +178,61 @@ export default function CriteriaSelector() {
 				</ModalContent>
 			</Modal>
 		</>
+	);
+}
+
+export default function CriteriaSelector() {
+	const { criteria, setCriteria, semester } = useFilter();
+
+	const { data, isLoading, error } = useSWR<Criteria[]>(
+		withQuery(GET_CRITERIA_NAME, {
+			semester_id: semester?.semester_id,
+		}),
+		(url: string) => fetch(url).then((r) => r.json())
+	);
+
+	return (
+		<FilterProvider>
+			<CriteriaSelector_
+				criteria={criteria}
+				setCriteria={setCriteria}
+				data={data}
+				isLoading={isLoading}
+				error={error}
+			/>
+		</FilterProvider>
+	);
+}
+
+export function CriteriaSelectorWithSearchParam() {
+	const navigate = useNavigate();
+	const searchParams = useSearchParams();
+
+	const setCriteria = useCallback(
+		(d: Criteria) => {
+			navigate.push({ criteria: d.criteria_id });
+		},
+		[navigate]
+	);
+
+	const { data, isLoading, error } = useSWR<Criteria[]>(
+		withQuery(GET_CRITERIA_NAME, {
+			semester_id: searchParams.get("semester"),
+		}),
+		(url: string) => fetch(url).then((r) => r.json())
+	);
+
+	return (
+		<FilterProvider>
+			<CriteriaSelector_
+				criteria={data?.find(
+					(v) => v.criteria_id === searchParams.get("criteria")
+				)}
+				setCriteria={setCriteria}
+				data={data}
+				isLoading={isLoading}
+				error={error}
+			/>
+		</FilterProvider>
 	);
 }
