@@ -42,7 +42,7 @@ export default function CriteriaOverallChart() {
 					<ProgramSelector />
 					<FacultySelector />
 					<SubjectSelector />
-					<SortSelector defaultValue="" />
+					<SortSelector />
 				</>
 			}
 		>
