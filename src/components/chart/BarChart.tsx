@@ -58,6 +58,7 @@ export function BarChart({
 		label: string;
 		data: IData[];
 		backgroundColor?: string;
+		sort?: "asc" | "desc";
 	}[];
 	noDataText: ReactNode;
 	valueFormatter?: (d: number) => string | number;
@@ -140,9 +141,11 @@ export function BarChart({
 
 	const chartData: ChartData<"bar", IData[], string> = {
 		// labels,
-		datasets: (data || []).map(({ label, data, backgroundColor }) => ({
+		datasets: (data || []).map(({ label, data, backgroundColor, sort }) => ({
 			label: label || "No label",
-			data,
+			data: sort
+				? data.sort((a, b) => (sort === "asc" ? a.y - b.y : b.y - a.y))
+				: data,
 			backgroundColor: backgroundColor || "#0ea5e9",
 		})) as ChartDataset<"bar", IData[]>[],
 	};

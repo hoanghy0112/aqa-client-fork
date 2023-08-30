@@ -42,7 +42,7 @@ function SemesterSelector_({
 					if (key === "")
 						setSemester?.({
 							semester_name: "Tất cả học kỳ",
-							semester_id: "all",
+							semester_id: "",
 						});
 					else setSemester(semesters.find((v) => v.semester_id === key));
 				}}
@@ -109,7 +109,6 @@ export function SemesterSelectorWithSearchParam() {
 
 	const setSemester = useCallback(
 		(semester: Semester | undefined) => {
-			console.log({ semester });
 			if (semester)
 				navigate.replace({ semester: semester?.semester_id || "" });
 		},

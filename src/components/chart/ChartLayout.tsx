@@ -5,7 +5,7 @@ import { Color, Legend } from "@tremor/react";
 import DownloadIcon from "@assets/DownloadIcon";
 import BaseChart from "@components/chart/BaseChart";
 import { Button } from "@nextui-org/button";
-import { ReactNode, useMemo, useRef } from "react";
+import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import Extensible from "../Extensible";
 
 //@ts-ignore
@@ -37,19 +37,23 @@ export default function ChartLayout({
 	showLegend?: boolean;
 }) {
 	const containerRef = useRef<HTMLDivElement>(null);
+	const [containerWidth, setContainerWidth] = useState(0);
+
+	useEffect(() => {
+		if (containerRef?.current?.getBoundingClientRect().width !== 0) {
+			setContainerWidth(
+				containerRef?.current?.getBoundingClientRect().width || 0
+			);
+		}
+	}, [columnNum, columnSize, isFullWidth, containerRef]);
 
 	const width: string | number = useMemo(() => {
 		if (isFullWidth) return "100%";
-		if (containerRef?.current && columnNum > 0) {
-			return Math.max(
-				columnNum * columnSize,
-				containerRef.current.getBoundingClientRect().width
-			);
-		} else if (columnNum > 0) {
-			return columnNum * columnSize;
+		if (columnNum > 0) {
+			return Math.max(columnNum * columnSize, containerWidth);
 		}
 		return "100%";
-	}, [columnNum, columnSize, isFullWidth, containerRef]);
+	}, [columnNum, columnSize, isFullWidth, containerWidth]);
 
 	return (
 		<BaseChart height={height}>
