@@ -32,7 +32,7 @@ export default function SubjectSelector() {
 	const [keyword, setKeyword] = useState<string | undefined>();
 	const debouncedKeyword = useDebounce<string>(keyword || "", 500);
 
-	const [sort, setSort] = useState("asc");
+	const [sort, setSort] = useState<ISortOptions>("asc");
 
 	useEffect(() => {
 		setSubjects(_subjects);
