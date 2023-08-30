@@ -28,6 +28,7 @@ type Props = {
 	} & { [key: string]: any })[];
 	itemHref: string;
 	key_name: string;
+	isSort: boolean;
 };
 
 export default function CriteriaPointTable({
@@ -37,6 +38,7 @@ export default function CriteriaPointTable({
 	items,
 	itemHref,
 	key_name,
+	isSort,
 }: Props) {
 	return (
 		<>
@@ -74,18 +76,26 @@ export default function CriteriaPointTable({
 					)}
 				</TableHeader>
 				<TableBody
-					items={items.map((v) => ({
-						...v,
-						...Object.fromEntries(
-							v.points.map((p) => [
-								p.criteria_id,
-								<p
-									key={p.criteria_id}
-									className=" font-semibold text-md"
-								>{`${Math.floor(p.point * 100)}%`}</p>,
-							])
-						),
-					}))}
+					items={items
+						.map((v) => ({
+							...v,
+							...Object.fromEntries(
+								v.points.map((p) => [p.criteria_id, p.point])
+							),
+						}))
+						.sort((a, b) =>
+							isSort && sortDescriptor.column
+								? sortDescriptor.direction === "descending"
+									? a[sortDescriptor.column] >
+									  b[sortDescriptor.column]
+										? 1
+										: -1
+									: b[sortDescriptor.column] >
+									  a[sortDescriptor.column]
+									? 1
+									: -1
+								: 0
+						)}
 				>
 					{(item) => (
 						<TableRow key={item.id}>
@@ -99,7 +109,17 @@ export default function CriteriaPointTable({
 										}
 										className="py-3 hover:underline text-black dark:text-white"
 									>
-										{getKeyValue(item, columnKey)}
+										{typeof getKeyValue(item, columnKey) ===
+										"number" ? (
+											<p
+												key={`${item.id} ${columnKey}`}
+												className=" font-semibold text-md"
+											>{`${Math.floor(
+												getKeyValue(item, columnKey) * 100
+											)}%`}</p>
+										) : (
+											getKeyValue(item, columnKey)
+										)}
 									</Link>
 								</TableCell>
 							)}

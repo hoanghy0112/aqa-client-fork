@@ -106,5 +106,3 @@ export interface IFilterContext {
 	sort?: ISortOptions;
 	setSort: (d: ISortOptions) => any;
 }
-
-export type ISortOptions = "asc" | "desc" | undefined;

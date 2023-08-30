@@ -106,11 +106,13 @@ function Page_({ subject_id }: { subject_id: string }) {
 					}
 				/>
 			</ChartLayout>
+
 			<div className="pt-10">
 				{columns.length > 2 || !isLoading ? (
 					<CriteriaPointTable
 						sortDescriptor={sortDescriptor}
 						setSortDescriptor={setSortDescriptor}
+						isSort
 						columns={columns}
 						items={
 							data?.data.map((v) => ({ ...v, id: v.class_id })) || []

@@ -9,7 +9,7 @@ import {
 } from "@nextui-org/dropdown";
 import { useEffect } from "react";
 
-export function SortSelector({ defaultValue }: { defaultValue?: string }) {
+export function SortSelector({ defaultValue }: { defaultValue?: ISortOptions }) {
 	const { sort, setSort } = useFilter();
 
 	useEffect(() => {
