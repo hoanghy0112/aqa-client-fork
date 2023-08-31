@@ -60,7 +60,7 @@ function CriteriaSelector_({
 					</div>
 				}
 			>
-				<Button onPress={onOpen} className="">
+				<Button onPress={onOpen} variant="bordered" className="">
 					<p className="">
 						{criteria?.index
 							? `Tiêu chí ${criteria.index}`

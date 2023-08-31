@@ -27,7 +27,7 @@ function SemesterSelector_({
 	return (
 		<Dropdown backdrop="blur" shouldBlockScroll={false}>
 			<DropdownTrigger>
-				<Button variant="bordered" className="w-fit">
+				<Button variant="bordered" className="">
 					<p className="font-medium w-fit">
 						{semester?.semester_name || "Tất cả học kỳ"}
 					</p>

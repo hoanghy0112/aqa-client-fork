@@ -49,7 +49,7 @@ function FacultySelector_({
 
 	return (
 		<>
-			<Button onPress={onOpen} variant="bordered" className="w-fit">
+			<Button onPress={onOpen} variant="bordered" className="">
 				<p className="font-medium w-fit">
 					{faculty?.faculty_name || "Chọn khoa"}
 				</p>

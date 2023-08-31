@@ -8,8 +8,22 @@ import { Button } from "@nextui-org/button";
 import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import Extensible from "../Extensible";
 
+import MediaQuery, { useMediaQuery } from "react-responsive";
+
 //@ts-ignore
 import domtoimage from "dom-to-image";
+import {
+	Dropdown,
+	DropdownItem,
+	DropdownMenu,
+	DropdownTrigger,
+	Modal,
+	ModalBody,
+	ModalContent,
+	ModalFooter,
+	ModalHeader,
+	useDisclosure,
+} from "@nextui-org/react";
 
 export default function ChartLayout({
 	primaryTitle,
@@ -40,6 +54,8 @@ export default function ChartLayout({
 	const [isOpen, setIsOpen] = useState(false);
 	const [containerWidth, setContainerWidth] = useState(0);
 
+	const { isOpen: open, onOpen, onOpenChange } = useDisclosure();
+
 	useEffect(() => {
 		if (containerRef?.current?.getBoundingClientRect().width != 0) {
 			setContainerWidth(
@@ -60,15 +76,43 @@ export default function ChartLayout({
 		<BaseChart height={height}>
 			<Extensible isOpen={isOpen} setIsOpen={setIsOpen}>
 				<div className="w-full px-8">
-					<div className="  w-full mb-6 pl-2 pr-8 pt-5 flex flex-col xl:flex-row gap-5 justify-end items-start xl:items-center">
+					<div className="  w-full mb-6 pl-2 pr-8 pt-5 flex flex-row gap-5 justify-between items-start xl:items-center">
 						<div className=" w-3/4 mt-2">
 							<p>{primaryTitle}</p>
 							<p className="w-full mt-2 font-normal text-sm">
 								{secondaryTitle}
 							</p>
 						</div>
-						<div className="w-full xl:w-fit flex flex-row flex-wrap xl:flex-nowrap gap-4 pr-5">
-							{handlerButtons}
+						<div className="w-fit flex flex-row flex-nowrap gap-4 pr-5">
+							<MediaQuery maxWidth={1280}>
+								<Button variant="bordered" onPress={onOpen}>
+									Tùy chọn
+								</Button>
+								<Modal isOpen={open} onOpenChange={onOpenChange}>
+									<ModalContent>
+										{(onClose) => (
+											<>
+												<ModalHeader className="flex flex-col gap-1">
+													Chọn các tùy chỉnh cho biểu đồ
+												</ModalHeader>
+												<ModalBody>
+													{handlerButtons}
+												</ModalBody>
+												<ModalFooter>
+													<Button
+														color="danger"
+														variant="light"
+														onPress={onClose}
+													>
+														Đóng
+													</Button>
+												</ModalFooter>
+											</>
+										)}
+									</ModalContent>
+								</Modal>
+							</MediaQuery>
+							<MediaQuery minWidth={1280}>{handlerButtons}</MediaQuery>
 							<Button
 								isIconOnly
 								color="primary"
@@ -81,7 +125,9 @@ export default function ChartLayout({
 										})
 										.then(function (dataUrl: string) {
 											var link = document.createElement("a");
-											link.download = "chart.jpeg";
+											link.download = `${
+												primaryTitle || "chart"
+											}.jpeg`;
 											link.href = dataUrl;
 											link.click();
 										});
@@ -94,7 +140,6 @@ export default function ChartLayout({
 				</div>
 				<div
 					ref={containerRef}
-					id="chart"
 					className=" relative h-full w-full overflow-x-auto overflow-y-hidden flex flex-col justify-stretch flex-grow"
 				>
 					{showLegend ? (
@@ -106,6 +151,7 @@ export default function ChartLayout({
 					) : null}
 					<div className=" relative pb-5 h-full w-full overflow-x-auto overflow-y-hidden flex flex-col justify-stretch flex-grow">
 						<div
+							id="chart"
 							className=" pt-2 h-full pr-4 basis-full flex flex-col flex-grow"
 							style={{ width }}
 						>

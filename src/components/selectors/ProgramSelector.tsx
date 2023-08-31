@@ -30,7 +30,7 @@ function ProgramSelector_({
 	return (
 		<Dropdown backdrop="blur" shouldBlockScroll={false}>
 			<DropdownTrigger>
-				<Button variant="bordered" className="w-fit">
+				<Button variant="bordered" className="">
 					<p className="font-medium w-fit">
 						{program || "Chọn chương trình"}
 					</p>
