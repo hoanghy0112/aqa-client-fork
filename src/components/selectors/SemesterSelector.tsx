@@ -15,6 +15,7 @@ import {
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import OptionButton from "../OptionButton";
+import SemesterIcon from "@/assets/SemesterIcon";
 
 function SemesterSelector_({
 	semester,
@@ -34,6 +35,12 @@ function SemesterSelector_({
 				<Button
 					variant={hasValue ? "shadow" : "ghost"}
 					color={hasValue ? "primary" : "default"}
+					startContent={
+						<SemesterIcon
+							color={hasValue ? "white" : undefined}
+							width={20}
+						/>
+					}
 				>
 					{buttonText}
 				</Button>

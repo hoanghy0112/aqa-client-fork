@@ -21,6 +21,8 @@ import { useSearchParams } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
 import useSWR from "swr";
 import OptionButton from "../OptionButton";
+import ProgramIcon from "@/assets/ProgramIcon";
+import CriteriaIcon from "@/assets/CriteriaIcon";
 
 type Props = {
 	criteria?: Criteria;
@@ -61,6 +63,12 @@ function CriteriaSelector_({
 				}
 				hasValue={hasValue}
 				onPress={onOpen}
+				startContent={
+					<CriteriaIcon
+						color={hasValue ? "white" : undefined}
+						width={20}
+					/>
+				}
 			>
 				{buttonText}
 			</OptionButton>

@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
-import { Button } from "@nextui-org/button";
+import { Button, ButtonProps } from "@nextui-org/button";
 import { Tooltip } from "@nextui-org/tooltip";
 import { ButtonVariantProps } from "@nextui-org/react";
 
@@ -20,7 +20,7 @@ export default function OptionButton({
 	hasValue = false,
 	tooltip,
 	...props
-}: Props & ButtonVariantProps) {
+}: Props & ButtonProps) {
 	return (
 		<Tooltip
 			isDisabled={!Boolean(tooltip)}

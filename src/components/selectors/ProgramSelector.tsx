@@ -18,6 +18,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo } from "react";
 import useSWR from "swr";
 import OptionButton from "../OptionButton";
+import ProgramIcon from "@/assets/ProgramIcon";
 
 function ProgramSelector_({
 	program,
@@ -37,6 +38,12 @@ function ProgramSelector_({
 				<Button
 					variant={hasValue ? "shadow" : "ghost"}
 					color={hasValue ? "primary" : "default"}
+					startContent={
+						<ProgramIcon
+							color={hasValue ? "white" : undefined}
+							width={20}
+						/>
+					}
 				>
 					{buttonText}
 				</Button>

@@ -9,6 +9,7 @@ import {
 } from "@nextui-org/dropdown";
 import { useEffect } from "react";
 import OptionButton from "../OptionButton";
+import SortIcon from "@/assets/SortIcon";
 
 export function SortSelector({ defaultValue }: { defaultValue?: ISortOptions }) {
 	const { sort, setSort } = useFilter();
@@ -27,6 +28,12 @@ export function SortSelector({ defaultValue }: { defaultValue?: ISortOptions }) 
 				<Button
 					variant={hasValue ? "shadow" : "ghost"}
 					color={hasValue ? "primary" : "default"}
+					startContent={
+						<SortIcon
+							color={hasValue ? "white" : undefined}
+							width={20}
+						/>
+					}
 				>
 					{buttonText}
 				</Button>
