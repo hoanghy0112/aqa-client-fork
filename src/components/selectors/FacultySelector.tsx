@@ -16,6 +16,7 @@ import { Spinner } from "@nextui-org/spinner";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import useSWR from "swr";
+import OptionButton from "../OptionButton";
 
 function FacultySelector_({
 	faculty,
@@ -34,6 +35,9 @@ function FacultySelector_({
 
 	const currentSelectedRef = useRef<any>();
 
+	const hasValue = Boolean(faculty?.faculty_name);
+	const buttonText = hasValue ? faculty?.faculty_name : "Chọn khoa";
+
 	useEffect(() => {
 		if (currentSelectedRef.current) {
 			currentSelectedRef.current.scrollIntoView({
@@ -49,11 +53,9 @@ function FacultySelector_({
 
 	return (
 		<>
-			<Button onPress={onOpen} variant="bordered" className="">
-				<p className="font-medium w-fit">
-					{faculty?.faculty_name || "Chọn khoa"}
-				</p>
-			</Button>
+			<OptionButton onPress={onOpen} hasValue={hasValue}>
+				{buttonText}
+			</OptionButton>
 			<Modal
 				isOpen={isOpen}
 				onOpenChange={onOpenChange}

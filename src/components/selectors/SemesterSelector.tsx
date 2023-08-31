@@ -14,6 +14,7 @@ import {
 } from "@nextui-org/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import OptionButton from "../OptionButton";
 
 function SemesterSelector_({
 	semester,
@@ -24,13 +25,17 @@ function SemesterSelector_({
 	setSemester: (d?: Semester) => any;
 	semesters: Semester[];
 }) {
+	const hasValue = Boolean(semester?.semester_name);
+	const buttonText = semester?.semester_name || "Tất cả học kỳ";
+
 	return (
 		<Dropdown backdrop="blur" shouldBlockScroll={false}>
 			<DropdownTrigger>
-				<Button variant="bordered" className="">
-					<p className="font-medium w-fit">
-						{semester?.semester_name || "Tất cả học kỳ"}
-					</p>
+				<Button
+					variant={hasValue ? "shadow" : "ghost"}
+					color={hasValue ? "primary" : "default"}
+				>
+					{buttonText}
 				</Button>
 			</DropdownTrigger>
 			<DropdownMenu

@@ -57,12 +57,13 @@ export default function ChartLayout({
 	const { isOpen: open, onOpen, onOpenChange } = useDisclosure();
 
 	useEffect(() => {
-		if (containerRef?.current?.getBoundingClientRect().width != 0) {
+		const currentWidth = containerRef?.current?.getBoundingClientRect().width;
+		if (currentWidth && currentWidth != 0) {
 			setContainerWidth(
 				containerRef?.current?.getBoundingClientRect().width || 0
 			);
 		}
-	}, [columnNum, columnSize, isFullWidth, containerRef]);
+	}, []);
 
 	const width: string | number = useMemo(() => {
 		if (isFullWidth) return "100%";

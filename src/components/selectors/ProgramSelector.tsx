@@ -17,6 +17,7 @@ import { Spinner } from "@nextui-org/spinner";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo } from "react";
 import useSWR from "swr";
+import OptionButton from "../OptionButton";
 
 function ProgramSelector_({
 	program,
@@ -27,13 +28,17 @@ function ProgramSelector_({
 }) {
 	const { data, isLoading } = useSWR<string[]>(GET_PROGRAM_LIST, defaultFetcher);
 
+	const hasValue = Boolean(program);
+	const buttonText = program || "Chọn chương trình";
+
 	return (
 		<Dropdown backdrop="blur" shouldBlockScroll={false}>
 			<DropdownTrigger>
-				<Button variant="bordered" className="">
-					<p className="font-medium w-fit">
-						{program || "Chọn chương trình"}
-					</p>
+				<Button
+					variant={hasValue ? "shadow" : "ghost"}
+					color={hasValue ? "primary" : "default"}
+				>
+					{buttonText}
 				</Button>
 			</DropdownTrigger>
 			<DropdownMenu

@@ -23,6 +23,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useDebounce } from "usehooks-ts";
 import { SortSelector } from "./SortSelector";
+import OptionButton from "../OptionButton";
 
 export default function SubjectSelector() {
 	const { subjects: _subjects, setSubjects: _setSubjects, faculty } = useFilter();
@@ -33,6 +34,9 @@ export default function SubjectSelector() {
 	const debouncedKeyword = useDebounce<string>(keyword || "", 500);
 
 	const [sort, setSort] = useState<ISortOptions>("asc");
+
+	const hasValue = Boolean(subjects.size);
+	const buttonText = hasValue ? `Đã chọn ${_subjects.size} môn` : "Tất cả các môn";
 
 	useEffect(() => {
 		setSubjects(_subjects);
@@ -58,23 +62,13 @@ export default function SubjectSelector() {
 
 	return (
 		<>
-			<Tooltip
-				content={
-					<div className="">
-						<p className=" max-w-md h-auto">
-							Chọn các môn để hiển thị trên biểu đồ
-						</p>
-					</div>
-				}
+			<OptionButton
+				tooltip="Chọn các môn để hiển thị trên biểu đồ"
+				onPress={onOpen}
+				hasValue={hasValue}
 			>
-				<Button onPress={onOpen} className="">
-					<p className="">
-						{subjects.size == 0
-							? "Tất cả các môn"
-							: `Đã chọn ${_subjects.size} môn`}
-					</p>
-				</Button>
-			</Tooltip>
+				{buttonText}
+			</OptionButton>
 			<Modal
 				isOpen={isOpen}
 				className="h-full"

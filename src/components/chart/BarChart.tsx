@@ -46,13 +46,7 @@ type IData = {
 	tooltipTitle?: string;
 };
 
-export function BarChart({
-	className,
-	data,
-	noDataText,
-	valueFormatter = (d: number) => d,
-	onClick,
-}: {
+type Props = {
 	className?: React.ComponentProps<"div">["className"];
 	data?: {
 		label: string;
@@ -63,7 +57,15 @@ export function BarChart({
 	noDataText: ReactNode;
 	valueFormatter?: (d: number) => string | number;
 	onClick?: (d: IClickData) => any;
-}) {
+};
+
+export function BarChart({
+	className,
+	data,
+	noDataText,
+	valueFormatter = (d: number) => d,
+	onClick,
+}: Props) {
 	const ref = useRef<any>();
 
 	const options: ChartOptions = {
