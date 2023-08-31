@@ -33,15 +33,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 								subItems={[
 									{
 										title: "Tất cả",
-										link: "/comment/all",
+										link: "/comment",
 									},
 									{
 										title: "Tích cực",
-										link: "/comment/positive",
+										link: "/comment?type=positive",
 									},
 									{
 										title: "Tiêu cực",
-										link: "/comment/negative",
+										link: "/comment?type=negative",
 									},
 								]}
 							/>

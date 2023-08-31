@@ -67,7 +67,7 @@ export default function AveragePointChart() {
 							  ]
 							: undefined
 					}
-					valueFormatter={dataFormatter}
+					valueFormatter={[dataFormatter]}
 					noDataText={isLoading ? <Loading /> : <NoData />}
 					onClick={({ index, data }) =>
 						router.push(`/subject/${data[0]?.id}`)

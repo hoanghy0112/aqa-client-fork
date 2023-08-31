@@ -113,7 +113,7 @@ function Page_({ subject_id }: { subject_id: string }) {
 							  ]
 							: undefined
 					}
-					valueFormatter={dataFormatter}
+					valueFormatter={[dataFormatter]}
 					noDataText={isLoading ? <Loading /> : <NoData />}
 					onClick={({ index, data }) =>
 						router.push(`/class/${data[0]?.id}`)

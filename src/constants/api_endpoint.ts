@@ -1,4 +1,5 @@
-export const API_BASE_URL = "https://aqa-api.hoanghy.tech";
+// export const API_BASE_URL = "https://aqa-api.hoanghy.tech";
+export const API_BASE_URL = "http://127.0.0.1:5001";
 
 export const GET_SEMESTER_LIST = `${API_BASE_URL}/semesters`;
 
@@ -9,6 +10,7 @@ export const GET_SUBJECT_AVERAGE_POINT = `${API_BASE_URL}/subjects`;
 export const GET_SUBJECT_INFO = `${API_BASE_URL}/subjects`;
 export const GET_SUBJECT_POINT_ACROSS_SEMESTER = `${API_BASE_URL}/subjects/semesters`;
 export const GET_SUBJECT_TABLE = `${API_BASE_URL}/subjects/list`;
+export const GET_SUBJECT_LECTURER_POINT = `${API_BASE_URL}/lecturers/points`;
 
 export const GET_CRITERIA_PER_SEMESTER = `${API_BASE_URL}/criterias`;
 export const GET_CRITERIA_NAME = `${API_BASE_URL}/criterias/name`;

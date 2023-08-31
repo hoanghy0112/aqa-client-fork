@@ -63,7 +63,7 @@ export default function CriteriaOverallChart() {
 						  ]
 						: undefined
 				}
-				valueFormatter={dataFormatter}
+				valueFormatter={[dataFormatter]}
 				noDataText={isLoadingAverage ? <Loading /> : <NoData />}
 			/>
 		</ChartLayout>

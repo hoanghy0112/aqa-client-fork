@@ -44,6 +44,7 @@ type IData = {
 	y: number;
 	id?: string;
 	tooltipTitle?: string;
+	yAxisID?: string;
 };
 
 type Props = {
@@ -53,9 +54,10 @@ type Props = {
 		data: IData[];
 		backgroundColor?: string;
 		sort?: "asc" | "desc";
+		yAxisID?: string;
 	}[];
 	noDataText: ReactNode;
-	valueFormatter?: (d: number) => string | number;
+	valueFormatter?: ((d: number) => string | number)[];
 	onClick?: (d: IClickData) => any;
 };
 
@@ -63,7 +65,7 @@ export function BarChart({
 	className,
 	data,
 	noDataText,
-	valueFormatter = (d: number) => d,
+	valueFormatter = [(d: number) => d],
 	onClick,
 }: Props) {
 	const ref = useRef<any>();
@@ -93,6 +95,17 @@ export function BarChart({
 					display: false,
 				},
 				beginAtZero: false,
+			},
+			y1: {
+				border: {
+					display: false,
+				},
+				beginAtZero: true,
+				display: true,
+				position: "right" as const,
+				grid: {
+					drawOnChartArea: false,
+				},
 			},
 		},
 		plugins: {
@@ -124,7 +137,9 @@ export function BarChart({
 							label += ": ";
 						}
 						if (context.parsed.y !== null) {
-							label += valueFormatter(context.parsed.y);
+							label += valueFormatter[context.datasetIndex](
+								context.parsed.y
+							);
 						}
 						return label;
 					},
@@ -143,13 +158,16 @@ export function BarChart({
 
 	const chartData: ChartData<"bar", IData[], string> = {
 		// labels,
-		datasets: (data || []).map(({ label, data, backgroundColor, sort }) => ({
-			label: label || "No label",
-			data: sort
-				? data.sort((a, b) => (sort === "asc" ? a.y - b.y : b.y - a.y))
-				: data,
-			backgroundColor: backgroundColor || "#0ea5e9",
-		})) as ChartDataset<"bar", IData[]>[],
+		datasets: (data || []).map(
+			({ label, data, backgroundColor, sort, yAxisID }) => ({
+				label: label || "No label",
+				data: sort
+					? data.sort((a, b) => (sort === "asc" ? a.y - b.y : b.y - a.y))
+					: data,
+				backgroundColor: backgroundColor || "#0ea5e9dd",
+				yAxisID: yAxisID || "y",
+			})
+		) as ChartDataset<"bar", IData[]>[],
 	};
 
 	return (

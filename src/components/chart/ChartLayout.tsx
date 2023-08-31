@@ -86,7 +86,7 @@ export default function ChartLayout({
 						</div>
 						<div className="w-fit flex flex-row flex-nowrap gap-4 pr-5">
 							<MediaQuery maxWidth={1280}>
-								<Button variant="bordered" onPress={onOpen}>
+								<Button variant="ghost" color="primary" onPress={onOpen}>
 									Tùy chọn
 								</Button>
 								<Modal isOpen={open} onOpenChange={onOpenChange}>
