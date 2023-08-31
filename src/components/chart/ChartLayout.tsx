@@ -37,10 +37,11 @@ export default function ChartLayout({
 	showLegend?: boolean;
 }) {
 	const containerRef = useRef<HTMLDivElement>(null);
+	const [isOpen, setIsOpen] = useState(false);
 	const [containerWidth, setContainerWidth] = useState(0);
 
 	useEffect(() => {
-		if (containerRef?.current?.getBoundingClientRect().width !== 0) {
+		if (containerRef?.current?.getBoundingClientRect().width != 0) {
 			setContainerWidth(
 				containerRef?.current?.getBoundingClientRect().width || 0
 			);
@@ -57,7 +58,7 @@ export default function ChartLayout({
 
 	return (
 		<BaseChart height={height}>
-			<Extensible>
+			<Extensible isOpen={isOpen} setIsOpen={setIsOpen}>
 				<div className="w-full px-8">
 					<div className="  w-full mb-6 pl-2 pr-8 pt-5 flex flex-col xl:flex-row gap-5 justify-end items-start xl:items-center">
 						<div className=" w-3/4 mt-2">

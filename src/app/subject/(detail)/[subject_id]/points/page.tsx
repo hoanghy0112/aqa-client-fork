@@ -2,6 +2,9 @@
 
 import { BarChart } from "@components/chart/BarChart";
 
+import CriteriaPointTable from "@/components/CriteriaPointTable";
+import TableSketon from "@/components/TableSkeleton";
+import { CriteriaSelectorWithSearchParam } from "@/components/selectors/CriteriaSelector";
 import { GET_CLASSES } from "@/constants/api_endpoint";
 import { FilterProvider, useFilter } from "@/contexts/FilterContext";
 import withQuery from "@/utils/withQuery";
@@ -10,27 +13,11 @@ import NoData from "@components/NoData";
 import ChartLayout from "@components/chart/ChartLayout";
 import { ProgramSelectorWithSearchParam } from "@components/selectors/ProgramSelector";
 import { SemesterSelectorWithSearchParam } from "@components/selectors/SemesterSelector";
-import { SortSelector } from "@components/selectors/SortSelector";
+import { SortSelector } from "@/components/selectors/SortSelector";
+import { SortDescriptor } from "@nextui-org/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import useSWR from "swr";
 import { useMemo, useState } from "react";
-import {
-	Link,
-	SortDescriptor,
-	Table,
-	TableBody,
-	TableCell,
-	TableColumn,
-	TableHeader,
-	TableRow,
-	Tooltip,
-	getKeyValue,
-} from "@nextui-org/react";
-import TableSketon from "@/components/TableSkeleton";
-import CriteriaPointTable from "@/components/CriteriaPointTable";
-import CriteriaSelector, {
-	CriteriaSelectorWithSearchParam,
-} from "@/components/selectors/CriteriaSelector";
+import useSWR from "swr";
 
 function Page_({ subject_id }: { subject_id: string }) {
 	const router = useRouter();
@@ -55,6 +42,7 @@ function Page_({ subject_id }: { subject_id: string }) {
 	const criteria = useMemo(() => searchParams.get("criteria"), [searchParams]);
 
 	const chartData = useMemo(() => {
+		if (data?.data.length === 0) return [];
 		const index = data?.data[0].points.find(
 			(v) => v.criteria_id == criteria
 		)?.index;
@@ -77,7 +65,7 @@ function Page_({ subject_id }: { subject_id: string }) {
 
 	const columns = useMemo(
 		() =>
-			data?.data
+			data?.data && data.data.length > 0
 				? [
 						...defaultColumns,
 						...data.data[0].points.map((v) => ({
@@ -110,7 +98,7 @@ function Page_({ subject_id }: { subject_id: string }) {
 				<BarChart
 					className=" h-full mt-4"
 					data={
-						data
+						data?.data && data.data.length
 							? [
 									{
 										label: LEGEND_NAME,
