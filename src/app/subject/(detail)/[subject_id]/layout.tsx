@@ -40,6 +40,10 @@ export const tabs = [
 		link: "lecturers",
 		title: "Điểm các giảng viên",
 	},
+	{
+		link: "comments",
+		title: "Bình luận",
+	},
 ];
 
 interface ISubjectInfo {

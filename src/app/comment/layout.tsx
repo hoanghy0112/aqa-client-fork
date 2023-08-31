@@ -1,45 +1,16 @@
 "use client";
 
-import SemesterSelector, {
-	SemesterSelectorWithSearchParam,
-} from "@/components/selectors/SemesterSelector";
-import { ReactNode, useEffect } from "react";
+import { SemesterSelectorWithSearchParam } from "@/components/selectors/SemesterSelector";
+import { ReactNode } from "react";
 
 import CommentQuantityInfo from "@/components/comments/CommentQuantityInfo";
 import CommentSearchBar from "@/components/comments/CommentSearchBar";
-import FacultySelector, {
-	FacultySelectorWithSearchParams,
-} from "@/components/selectors/FacultySelector";
-import ProgramSelector, {
-	ProgramSelectorWithSearchParam,
-} from "@/components/selectors/ProgramSelector";
-import { FilterProvider, useFilter } from "@/contexts/FilterContext";
+import { FacultySelectorWithSearchParams } from "@/components/selectors/FacultySelector";
+import { ProgramSelectorWithSearchParam } from "@/components/selectors/ProgramSelector";
+import { FilterProvider } from "@/contexts/FilterContext";
 import { Card } from "@nextui-org/card";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import withQuery from "@/utils/withQuery";
 
 function CommentLayout_({ children }: { children: ReactNode }) {
-	// const { semester, faculty, program, setSemester, setFaculty, setProgram } =
-	// 	useFilter();
-	// const pathname = usePathname();
-	// const searchParams = useSearchParams();
-	// const router = useRouter();
-
-	// useEffect(() => {
-	// 	router.push(
-	// 		withQuery(pathname, {
-	// 			semester: semester?.semester_id,
-	// 			faculty: faculty?.faculty_id,
-	// 			program,
-	// 		})
-	// 	);
-	// }, [semester, faculty, program, router, pathname]);
-
-	// useEffect(() => {
-	// 	// const { semester, faculty, program } = searchParams;
-	// 	// setSemester(semester);
-	// }, [pathname, searchParams]);
-
 	return (
 		<>
 			<h1 className="font-semibold text-3xl">Bình luận</h1>

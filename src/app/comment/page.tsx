@@ -8,9 +8,6 @@ type Props = {
 };
 
 export default function Page({ searchParams }: Props) {
-	// if (!["all", "positive", "negative"].includes(searchParams.type || ""))
-	// 	notFound();
-
 	const { semester, keyword, faculty, program, type } = searchParams;
 
 	return (

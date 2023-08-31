@@ -12,11 +12,16 @@ import { GET_COMMENT_QUANTITY } from "@/constants/api_endpoint";
 import withQuery from "@/utils/withQuery";
 import { useSearchParams } from "next/navigation";
 
-export default function CommentQuantityInfo() {
+type Props = {
+	subject_id?: string;
+};
+
+export default function CommentQuantityInfo({ subject_id }: Props) {
 	const searchParams = useSearchParams();
 
 	const { data, isLoading, error } = useSWR(
 		withQuery(GET_COMMENT_QUANTITY, {
+			subject_id,
 			semester_id: searchParams.get("semester"),
 			program: searchParams.get("program"),
 			faculty_name: searchParams.get("faculty"),

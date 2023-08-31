@@ -7,7 +7,6 @@ import { GET_COMMENT_LIST } from "@/constants/api_endpoint";
 import { useFilter } from "@/contexts/FilterContext";
 import useIncrementalFetch from "@/hooks/useIncrementalFetch";
 import Loading from "../Loading";
-import { usePathname } from "next/navigation";
 
 export default function CommentList({
 	type,
