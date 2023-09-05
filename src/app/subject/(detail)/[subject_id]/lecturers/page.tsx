@@ -197,4 +197,4 @@ const defaultColumns: {
 ];
 
 const CHART_COLORS = ["sky", "pink"] as Color[];
-const LEGEND_NAMES = ["Độn hài lòng", "Số lớp đã dạy"];
+const LEGEND_NAMES = ["Độ hài lòng", "Số lớp đã dạy"];

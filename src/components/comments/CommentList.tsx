@@ -8,19 +8,23 @@ import { useFilter } from "@/contexts/FilterContext";
 import useIncrementalFetch from "@/hooks/useIncrementalFetch";
 import Loading from "../Loading";
 
+type Props = {
+	type: string;
+	semester?: string;
+	keyword?: string;
+	faculty?: string;
+	program?: string;
+	subjectId?: string;
+};
+
 export default function CommentList({
 	type,
 	semester,
 	keyword,
 	faculty,
 	program,
-}: {
-	type: string;
-	semester?: string;
-	keyword?: string;
-	faculty?: string;
-	program?: string;
-}) {
+	subjectId,
+}: Props) {
 	const { setIsLoading } = useFilter();
 
 	const {
@@ -36,6 +40,7 @@ export default function CommentList({
 			semester_id: semester,
 			program,
 			faculty_name: faculty,
+			subject_id: subjectId,
 		},
 	});
 

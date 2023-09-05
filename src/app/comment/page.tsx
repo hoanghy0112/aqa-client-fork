@@ -8,10 +8,11 @@ type Props = {
 };
 
 export default function Page({ searchParams }: Props) {
-	const { semester, keyword, faculty, program, type } = searchParams;
+	const { semester, keyword, faculty, program, type, subject_id } = searchParams;
 
 	return (
 		<CommentList
+			subjectId={subject_id}
 			semester={semester}
 			faculty={faculty}
 			program={program}

@@ -18,12 +18,11 @@ import {
 import { cn } from "@nextui-org/react";
 import { Skeleton } from "@nextui-org/skeleton";
 import { Spinner } from "@nextui-org/spinner";
-import { Tooltip } from "@nextui-org/tooltip";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useDebounce } from "usehooks-ts";
-import { SortSelector } from "./SortSelector";
 import OptionButton from "../OptionButton";
+import { SortSelector } from "./SortSelector";
 
 export default function SubjectSelector() {
 	const { subjects: _subjects, setSubjects: _setSubjects, faculty } = useFilter();

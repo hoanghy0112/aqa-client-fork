@@ -13,7 +13,7 @@ import withQuery from "@/utils/withQuery";
 import { useSearchParams } from "next/navigation";
 
 type Props = {
-	subject_id?: string;
+	subject_id?: string | null;
 };
 
 export default function CommentQuantityInfo({ subject_id }: Props) {

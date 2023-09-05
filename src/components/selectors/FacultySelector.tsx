@@ -153,7 +153,7 @@ export function FacultySelectorWithSearchParams() {
 
 	const setFaculty = useCallback(
 		(faculty: Faculty) => {
-			navigate.replace({ faculty: faculty.faculty_name });
+			navigate.replace({ faculty: faculty.faculty_name, subject_id: "" });
 		},
 		[navigate]
 	);
