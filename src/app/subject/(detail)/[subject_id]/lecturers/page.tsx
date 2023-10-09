@@ -27,11 +27,6 @@ function Page_({ subject_id }: { subject_id: string }) {
 	const searchParams = useSearchParams();
 	const { sort } = useFilter();
 
-	const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
-		column: "subject_name",
-		direction: "ascending",
-	});
-
 	const { data: chartData, isLoading } = useSWR<IChartData>(
 		withQuery(GET_SUBJECT_LECTURER_POINT, {
 			subject_id,
@@ -42,45 +37,6 @@ function Page_({ subject_id }: { subject_id: string }) {
 		}),
 		(url: string) => fetch(url).then((r) => r.json())
 	);
-
-	const criteria = useMemo(() => searchParams.get("criteria"), [searchParams]);
-
-	// const chartData = useMemo(() => {
-	// 	if (data?.data.length === 0) return [];
-	// 	const index = data?.data[0].points.find(
-	// 		(v) => v.criteria_id == criteria
-	// 	)?.index;
-	// 	if (index) {
-	// 		return data.data.map((v) => ({
-	// 			...v,
-	// 			point: v.points.find((v) => v.index === index)?.point || 0,
-	// 		}));
-	// 	}
-	// 	if (!criteria) {
-	// 		return data?.data.map((v) => ({
-	// 			...v,
-	// 			point:
-	// 				v.points.reduce((total, { point }) => (total += point), 0) /
-	// 				v.points.length,
-	// 		}));
-	// 	}
-	// 	return [];
-	// }, [data, criteria]);
-
-	// const columns = useMemo(
-	// 	() =>
-	// 		data?.data && data.data.length > 0
-	// 			? [
-	// 					...defaultColumns,
-	// 					...data.data[0].points.map((v) => ({
-	// 						key: v.criteria_id,
-	// 						index: v.index,
-	// 						label: v.criteria_name,
-	// 					})),
-	// 			  ]
-	// 			: defaultColumns,
-	// 	[data]
-	// );
 
 	return (
 		<>
@@ -135,24 +91,6 @@ function Page_({ subject_id }: { subject_id: string }) {
 					}
 				/>
 			</ChartLayout>
-
-			{/* <div className="pt-10">
-				{columns.length > 2 || !isLoading ? (
-					<CriteriaPointTable
-						sortDescriptor={sortDescriptor}
-						setSortDescriptor={setSortDescriptor}
-						isSort
-						columns={columns}
-						items={
-							data?.data.map((v) => ({ ...v, id: v.class_id })) || []
-						}
-						itemHref="/class"
-						key_name="class_name"
-					/>
-				) : (
-					<TableSketon lines={6} />
-				)}
-			</div> */}
 		</>
 	);
 }

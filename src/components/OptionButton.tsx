@@ -30,7 +30,7 @@ export default function OptionButton({
 				onPress={onPress}
 				variant={hasValue ? "shadow" : "ghost"}
 				color={hasValue ? "primary" : "default"}
-				className={className}
+				className={`${className} ${hasValue ? "" : "bg-white"}`}
 				{...props}
 			>
 				{children}
