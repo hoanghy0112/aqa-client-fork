@@ -1,7 +1,9 @@
 "use client";
 
+import ProgramIcon from "@/assets/ProgramIcon";
 import { GET_PROGRAM_LIST } from "@/constants/api_endpoint";
 import { useFilter } from "@/contexts/FilterContext";
+import useNavigate from "@/hooks/useNavigate";
 import { defaultFetcher } from "@/utils/fetchers";
 import { Button } from "@nextui-org/button";
 import {
@@ -12,20 +14,37 @@ import {
 	DropdownTrigger,
 } from "@nextui-org/react";
 import { Spinner } from "@nextui-org/spinner";
+import { useSearchParams } from "next/navigation";
+import { useCallback, useMemo } from "react";
 import useSWR from "swr";
 
-export default function ProgramSelector() {
-	const { program, setProgram } = useFilter();
-
+function ProgramSelector_({
+	program,
+	setProgram,
+}: {
+	program?: string;
+	setProgram?: (d: string) => any;
+}) {
 	const { data, isLoading } = useSWR<string[]>(GET_PROGRAM_LIST, defaultFetcher);
+
+	const hasValue = Boolean(program);
+	const buttonText = program || "Chương trình";
 
 	return (
 		<Dropdown backdrop="blur" shouldBlockScroll={false}>
 			<DropdownTrigger>
-				<Button variant="bordered" className="w-fit">
-					<p className="font-medium w-fit">
-						{program || "Chọn chương trình"}
-					</p>
+				<Button
+					variant={hasValue ? "shadow" : "ghost"}
+					color={hasValue ? "primary" : "default"}
+					startContent={
+						<ProgramIcon
+							color={hasValue ? "white" : undefined}
+							width={20}
+						/>
+					}
+					className={hasValue ? "" : "bg-white"}
+				>
+					{buttonText}
 				</Button>
 			</DropdownTrigger>
 			<DropdownMenu
@@ -65,4 +84,27 @@ export default function ProgramSelector() {
 			</DropdownMenu>
 		</Dropdown>
 	);
+}
+
+export default function ProgramSelector() {
+	const { program, setProgram } = useFilter();
+
+	return <ProgramSelector_ program={program} setProgram={setProgram} />;
+}
+
+export function ProgramSelectorWithSearchParam() {
+	const searchParams = useSearchParams();
+	const navigate = useNavigate();
+
+	const program = useMemo(
+		() => searchParams.get("program") || undefined,
+		[searchParams]
+	);
+
+	const setProgram = useCallback(
+		(program: string) => navigate.replace({ program }),
+		[navigate]
+	);
+
+	return <ProgramSelector_ program={program} setProgram={setProgram} />;
 }

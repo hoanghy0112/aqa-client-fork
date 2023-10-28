@@ -1,43 +1,47 @@
 "use client";
 
+import useNavigate from "@/hooks/useNavigate";
 import { Card } from "@nextui-org/card";
 import { Spinner } from "@nextui-org/spinner";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export default function InfoTab({
 	icon,
 	title,
-	link,
+	type,
 	number,
 	isLoading,
-	defaultChecked = false,
 }: {
 	icon: string;
 	title: string;
-	link: string;
+	type: string;
 	number: number;
 	isLoading: boolean;
 	defaultChecked?: boolean;
 }) {
-	const { push } = useRouter();
-	const pathName = usePathname();
+	const navigate = useNavigate();
+	const searchParams = useSearchParams();
 
 	return (
 		<Card radius="none" shadow="none" isPressable>
 			<label
 				htmlFor={title}
 				className="w-fit hover:bg-slate-200 dark:hover:bg-slate-700 hover:cursor-pointer transition-all rounded-md pt-2"
+				onClick={() => {
+					navigate.push({ type });
+				}}
 			>
 				<input
 					id={title}
 					name="comment_tab"
 					className="peer hidden"
 					type="radio"
-					checked={pathName.split("/").at(-1) === link}
-					onChange={() => {
-						push(`/comment/${link}`);
-					}}
+					checked={
+						searchParams.get("type") === type ||
+						(type === "all" && !searchParams.has("type"))
+					}
+					onChange={() => {}}
 				/>
 				<div className="flex flex-row items-start gap-2 px-6">
 					<Image src={icon} width={15} height={15} alt="icon" />

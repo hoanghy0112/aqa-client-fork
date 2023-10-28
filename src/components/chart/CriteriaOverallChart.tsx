@@ -42,7 +42,7 @@ export default function CriteriaOverallChart() {
 					<ProgramSelector />
 					<FacultySelector />
 					<SubjectSelector />
-					<SortSelector defaultValue="" />
+					<SortSelector />
 				</>
 			}
 		>
@@ -63,7 +63,7 @@ export default function CriteriaOverallChart() {
 						  ]
 						: undefined
 				}
-				valueFormatter={dataFormatter}
+				valueFormatter={[dataFormatter]}
 				noDataText={isLoadingAverage ? <Loading /> : <NoData />}
 			/>
 		</ChartLayout>
@@ -71,7 +71,6 @@ export default function CriteriaOverallChart() {
 }
 
 const dataFormatter = (number: number) => {
-	// return "$ " + Intl.NumberFormat("us").format(number).toString();
 	return `${number.toFixed(2)}%`;
 };
 

@@ -9,6 +9,8 @@ import CommentIcon from "@assets/CommentIcon";
 import HomeIcon from "@assets/HomeIcon";
 import SubjectIcon from "@assets/SubjectIcon";
 import CriteriaIcon from "@assets/CriteriaIcon";
+import { Suspense } from "react";
+import LecturerNavIcon from "@/assets/LecturerNavIcon";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,20 +29,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 							<NavItem title="Trang chủ" link="/" icon={HomeIcon} />
 							<NavItem
 								title="Bình luận"
-								link="/comment/all"
+								link="/comment"
 								icon={CommentIcon}
 								subItems={[
 									{
 										title: "Tất cả",
-										link: "/comment/all",
+										link: "/comment",
 									},
 									{
 										title: "Tích cực",
-										link: "/comment/positive",
+										link: "/comment?type=positive",
 									},
 									{
 										title: "Tiêu cực",
-										link: "/comment/negative",
+										link: "/comment?type=negative",
 									},
 								]}
 							/>
@@ -60,13 +62,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 								]}
 							/>
 							<NavItem
+								title="Giảng viên"
+								link="/lecturer"
+								icon={LecturerNavIcon}
+							/>
+							<NavItem
 								title="Tiêu chí"
 								link="/criteria"
 								icon={CriteriaIcon}
 							/>
 						</NavigationDrawer>
 						<main className="w-full px-20 pt-12 pb-10 overflow-y-scroll overflow-x-hidden">
-							{children}
+							<Suspense fallback={<p>Loading</p>}>{children}</Suspense>
 						</main>
 					</div>
 				</Providers>

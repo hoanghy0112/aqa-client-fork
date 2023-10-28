@@ -42,26 +42,32 @@ Tooltip.positioners.center = function (items, eventPosition) {
 type IData = {
 	x: string;
 	y: number;
+	id?: string;
 	tooltipTitle?: string;
+	yAxisID?: string;
+};
+
+type Props = {
+	className?: React.ComponentProps<"div">["className"];
+	data?: {
+		label: string;
+		data: IData[];
+		backgroundColor?: string;
+		sort?: "asc" | "desc";
+		yAxisID?: string;
+	}[];
+	noDataText: ReactNode;
+	valueFormatter?: ((d: number) => string | number)[];
+	onClick?: (d: IClickData) => any;
 };
 
 export function BarChart({
 	className,
 	data,
 	noDataText,
-	valueFormatter = (d: number) => d,
+	valueFormatter = [(d: number) => d],
 	onClick,
-}: {
-	className?: React.ComponentProps<"div">["className"];
-	data?: {
-		label: string;
-		data: IData[];
-		backgroundColor?: string;
-	}[];
-	noDataText: ReactNode;
-	valueFormatter?: (d: number) => string | number;
-	onClick?: (d: number) => any;
-}) {
+}: Props) {
 	const ref = useRef<any>();
 
 	const options: ChartOptions = {
@@ -89,6 +95,17 @@ export function BarChart({
 					display: false,
 				},
 				beginAtZero: false,
+			},
+			y1: {
+				border: {
+					display: false,
+				},
+				beginAtZero: true,
+				display: true,
+				position: "right" as const,
+				grid: {
+					drawOnChartArea: false,
+				},
 			},
 		},
 		plugins: {
@@ -120,7 +137,9 @@ export function BarChart({
 							label += ": ";
 						}
 						if (context.parsed.y !== null) {
-							label += valueFormatter(context.parsed.y);
+							label += valueFormatter[context.datasetIndex](
+								context.parsed.y
+							);
 						}
 						return label;
 					},
@@ -139,11 +158,16 @@ export function BarChart({
 
 	const chartData: ChartData<"bar", IData[], string> = {
 		// labels,
-		datasets: (data || []).map(({ label, data, backgroundColor }) => ({
-			label: label || "No label",
-			data,
-			backgroundColor: backgroundColor || "#0ea5e9",
-		})) as ChartDataset<"bar", IData[]>[],
+		datasets: (data || []).map(
+			({ label, data, backgroundColor, sort, yAxisID }) => ({
+				label: label || "No label",
+				data: sort
+					? data.sort((a, b) => (sort === "asc" ? a.y - b.y : b.y - a.y))
+					: data,
+				backgroundColor: backgroundColor || "#0ea5e9dd",
+				yAxisID: yAxisID || "y",
+			})
+		) as ChartDataset<"bar", IData[]>[],
 	};
 
 	return (
@@ -158,7 +182,13 @@ export function BarChart({
 						const eventList = getElementAtEvent(ref.current, event);
 						if (eventList.length > 0) {
 							const index = eventList[0].index;
-							onClick?.(index);
+							const clickData = chartData.datasets.map((d) =>
+								d.data.at(index)
+							);
+							onClick?.({
+								index,
+								data: clickData,
+							});
 						}
 					}}
 				/>
@@ -167,4 +197,9 @@ export function BarChart({
 			)}
 		</div>
 	);
+}
+
+interface IClickData {
+	index: number;
+	data: (IData | undefined)[];
 }

@@ -28,3 +28,5 @@ declare type Faculty = {
 	faculty_id: string;
 	faculty_name: string;
 };
+
+declare type ISortOptions = "asc" | "desc" | undefined;

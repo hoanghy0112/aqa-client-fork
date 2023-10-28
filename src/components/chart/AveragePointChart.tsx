@@ -7,15 +7,18 @@ import { useFilter } from "@/contexts/FilterContext";
 import withQuery from "@/utils/withQuery";
 import CriteriaSelector from "@components/selectors/CriteriaSelector";
 import SemesterSelector from "@components/selectors/SemesterSelector";
-import { SortSelector } from "@components/selectors/SortSelector";
+import { useRouter } from "next/navigation";
 import useSWR from "swr";
 import Loading from "../Loading";
 import NoData from "../NoData";
 import FacultySelector from "../selectors/FacultySelector";
 import ProgramSelector from "../selectors/ProgramSelector";
 import ChartLayout from "./ChartLayout";
+import { SortSelector } from "../selectors/SortSelector";
 
 export default function AveragePointChart() {
+	const router = useRouter();
+
 	const { semester, criteria, sort, faculty, program } = useFilter();
 
 	const { data, isLoading } = useSWR<IChartData[]>(
@@ -41,9 +44,9 @@ export default function AveragePointChart() {
 					<>
 						<SemesterSelector />
 						<CriteriaSelector />
-						<ProgramSelector />
 						<FacultySelector />
 						<SortSelector />
+						<ProgramSelector />
 					</>
 				}
 			>
@@ -58,14 +61,17 @@ export default function AveragePointChart() {
 											data?.map((d) => ({
 												x: d.display_name,
 												y: d.average_point / d.max_point,
+												id: d.subject_id,
 											})) || [],
 									},
 							  ]
 							: undefined
 					}
-					valueFormatter={dataFormatter}
+					valueFormatter={[dataFormatter]}
 					noDataText={isLoading ? <Loading /> : <NoData />}
-					onClick={(index: number) => console.log({ index })}
+					onClick={({ index, data }) =>
+						router.push(`/subject/${data[0]?.id}`)
+					}
 				/>
 			</ChartLayout>
 		</>
@@ -73,7 +79,6 @@ export default function AveragePointChart() {
 }
 
 const dataFormatter = (number: number) => {
-	// return "$ " + Intl.NumberFormat("us").format(number).toString();
 	return `${Math.round(number * 100)}%`;
 };
 

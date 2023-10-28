@@ -1,5 +1,5 @@
-import Page from "./average-point/page";
+import { redirect } from "next/navigation";
 
 export default function SubjectPage() {
-	return <Page />;
+	redirect("/subject/average-point");
 }

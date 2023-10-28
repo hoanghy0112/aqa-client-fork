@@ -29,7 +29,7 @@ export default function NavigationDrawer({ children }: { children?: ReactNode })
 
 	return (
 		<NavigationDrawerContext.Provider value={{ isOpen: open }}>
-			<nav className="w-fit group py-5 px-5 flex flex-col shadow-none transition-all hover:shadow-2xl">
+			<nav className="w-fit group px-5 pt-12 flex flex-col shadow-none transition-all hover:shadow-2xl">
 				<div className="flex flex-row items-center">
 					<Button className="ml-1" isIconOnly onPress={toggleDrawer}>
 						<Image
@@ -78,7 +78,7 @@ export function NavItem({ title, link, icon: Icon, subItems }: INavItemProps) {
 		<div
 			className="group/nav h-fit w-fit"
 			onMouseOver={() => setIsHover(true)}
-			onMouseLeave={() => setIsHover(false)}
+			onMouseLeave={() => setTimeout(() => setIsHover(false), 0)}
 		>
 			<Card
 				isPressable
@@ -121,8 +121,8 @@ export function NavItem({ title, link, icon: Icon, subItems }: INavItemProps) {
 			</Card>
 			{subItems ? (
 				<div
-					className={` opacity-0 pl-3 ${
-						isOpen ? "group-hover/nav:opacity-100" : "w-0"
+					className={`  pl-3 ${
+						isOpen ? "" : "w-0"
 					} overflow-hidden transition-all`}
 					style={{
 						height:

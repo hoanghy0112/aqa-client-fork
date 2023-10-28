@@ -2,6 +2,7 @@
 
 import { GET_FACULTY_LIST } from "@/constants/api_endpoint";
 import { useFilter } from "@/contexts/FilterContext";
+import useNavigate from "@/hooks/useNavigate";
 import { defaultFetcher } from "@/utils/fetchers";
 import { Button } from "@nextui-org/button";
 import {
@@ -12,17 +13,30 @@ import {
 	useDisclosure,
 } from "@nextui-org/modal";
 import { Spinner } from "@nextui-org/spinner";
-import { useEffect, useRef } from "react";
+import { useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import useSWR from "swr";
+import OptionButton from "../OptionButton";
 
-export default function FacultySelector() {
-	const { faculty, setFaculty, setSubjects } = useFilter();
+function FacultySelector_({
+	faculty,
+	setFaculty,
+	data,
+	isLoading,
+}: {
+	faculty?: Faculty;
+	setFaculty?: (d: Faculty) => any;
+	data?: Faculty[];
+	isLoading: boolean;
+}) {
+	const { setSubjects } = useFilter();
 
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-	const { data, isLoading } = useSWR<Faculty[]>(GET_FACULTY_LIST, defaultFetcher);
-
 	const currentSelectedRef = useRef<any>();
+
+	const hasValue = Boolean(faculty?.faculty_name);
+	const buttonText = hasValue ? faculty?.faculty_name : "Chọn khoa";
 
 	useEffect(() => {
 		if (currentSelectedRef.current) {
@@ -39,11 +53,9 @@ export default function FacultySelector() {
 
 	return (
 		<>
-			<Button onPress={onOpen} variant="bordered" className="w-fit">
-				<p className="font-medium w-fit">
-					{faculty?.faculty_name || "Chọn khoa"}
-				</p>
-			</Button>
+			<OptionButton onPress={onOpen} hasValue={hasValue}>
+				{buttonText}
+			</OptionButton>
 			<Modal
 				isOpen={isOpen}
 				onOpenChange={onOpenChange}
@@ -109,5 +121,49 @@ export default function FacultySelector() {
 				</ModalContent>
 			</Modal>
 		</>
+	);
+}
+
+export default function FacultySelector() {
+	const { faculty, setFaculty } = useFilter();
+
+	const { data, isLoading } = useSWR<Faculty[]>(GET_FACULTY_LIST, defaultFetcher);
+
+	return (
+		<FacultySelector_
+			faculty={faculty}
+			setFaculty={setFaculty}
+			data={data}
+			isLoading={isLoading}
+		/>
+	);
+}
+
+export function FacultySelectorWithSearchParams() {
+	const searchParams = useSearchParams();
+	const navigate = useNavigate();
+
+	const { data, isLoading } = useSWR<Faculty[]>(GET_FACULTY_LIST, defaultFetcher);
+
+	const faculty = useMemo(() => {
+		const facultyName = searchParams.get("faculty") || undefined;
+		if (!facultyName) return undefined;
+		return data?.find((v) => v.faculty_name === facultyName);
+	}, [searchParams, data]);
+
+	const setFaculty = useCallback(
+		(faculty: Faculty) => {
+			navigate.replace({ faculty: faculty.faculty_name, subject_id: "" });
+		},
+		[navigate]
+	);
+
+	return (
+		<FacultySelector_
+			faculty={faculty}
+			setFaculty={setFaculty}
+			data={data}
+			isLoading={isLoading}
+		/>
 	);
 }

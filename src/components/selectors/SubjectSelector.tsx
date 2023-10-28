@@ -18,10 +18,10 @@ import {
 import { cn } from "@nextui-org/react";
 import { Skeleton } from "@nextui-org/skeleton";
 import { Spinner } from "@nextui-org/spinner";
-import { Tooltip } from "@nextui-org/tooltip";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useDebounce } from "usehooks-ts";
+import OptionButton from "../OptionButton";
 import { SortSelector } from "./SortSelector";
 
 export default function SubjectSelector() {
@@ -32,7 +32,10 @@ export default function SubjectSelector() {
 	const [keyword, setKeyword] = useState<string | undefined>();
 	const debouncedKeyword = useDebounce<string>(keyword || "", 500);
 
-	const [sort, setSort] = useState("asc");
+	const [sort, setSort] = useState<ISortOptions>("asc");
+
+	const hasValue = Boolean(subjects.size);
+	const buttonText = hasValue ? `Đã chọn ${_subjects.size} môn` : "Tất cả các môn";
 
 	useEffect(() => {
 		setSubjects(_subjects);
@@ -51,30 +54,20 @@ export default function SubjectSelector() {
 			debouncedKeyword,
 			page_size: 20,
 			filter_field: "subject_name",
-			faculty_name: faculty,
+			faculty_name: faculty?.faculty_name,
 			direction: sort,
 		},
 	});
 
 	return (
 		<>
-			<Tooltip
-				content={
-					<div className="">
-						<p className=" max-w-md h-auto">
-							Chọn các môn để hiển thị trên biểu đồ
-						</p>
-					</div>
-				}
+			<OptionButton
+				tooltip="Chọn các môn để hiển thị trên biểu đồ"
+				onPress={onOpen}
+				hasValue={hasValue}
 			>
-				<Button onPress={onOpen} className="">
-					<p className="">
-						{subjects.size == 0
-							? "Tất cả các môn"
-							: `Đã chọn ${_subjects.size} môn`}
-					</p>
-				</Button>
-			</Tooltip>
+				{buttonText}
+			</OptionButton>
 			<Modal
 				isOpen={isOpen}
 				className="h-full"
@@ -203,7 +196,7 @@ export default function SubjectSelector() {
 								)}
 								{hasMore ? (
 									<div
-										ref={bottomRef}
+										// ref={bottomRef}
 										className=" w-full py-4 flex flex-row justify-center gap-2 items-center"
 									>
 										<Spinner size="sm" />
@@ -213,7 +206,7 @@ export default function SubjectSelector() {
 									</div>
 								) : (
 									<div
-										ref={bottomRef}
+										// ref={bottomRef}
 										className=" w-full py-4 flex flex-row justify-center gap-2 items-center"
 									>
 										<p className=" text-md font-semibold">
@@ -221,6 +214,7 @@ export default function SubjectSelector() {
 										</p>
 									</div>
 								)}
+								<div ref={bottomRef} />
 							</ModalBody>
 							<ModalFooter>
 								<Button

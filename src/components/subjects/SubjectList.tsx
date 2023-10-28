@@ -66,6 +66,7 @@ export default function SubjectList() {
 					aria-label="Subject table"
 					sortDescriptor={sortDescriptor}
 					onSortChange={onSortChange}
+					className=" max-h-[90vh]"
 					bottomContent={
 						isLoading ? (
 							<div>
@@ -129,7 +130,7 @@ export default function SubjectList() {
 										return (
 											<TableCell>
 												<Link
-													href={`/detail/subject/${item.subject_id}`}
+													href={`/subject/${item.subject_id}`}
 													className="py-3"
 												>
 													{getKeyValue(item, columnKey)}

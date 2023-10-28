@@ -8,8 +8,24 @@ import { useFilter } from "@/contexts/FilterContext";
 import useIncrementalFetch from "@/hooks/useIncrementalFetch";
 import Loading from "../Loading";
 
-export default function CommentList({ type }: { type: string }) {
-	const { semester, keyword, setIsLoading, faculty, program } = useFilter();
+type Props = {
+	type: string;
+	semester?: string;
+	keyword?: string;
+	faculty?: string;
+	program?: string;
+	subjectId?: string;
+};
+
+export default function CommentList({
+	type,
+	semester,
+	keyword,
+	faculty,
+	program,
+	subjectId,
+}: Props) {
+	const { setIsLoading } = useFilter();
 
 	const {
 		items: comments,
@@ -21,9 +37,10 @@ export default function CommentList({ type }: { type: string }) {
 		query: {
 			type,
 			q: keyword,
-			semester_id: semester?.semester_id || "all",
+			semester_id: semester,
 			program,
-			faculty_name: faculty?.faculty_name,
+			faculty_name: faculty,
+			subject_id: subjectId,
 		},
 	});
 
@@ -43,7 +60,7 @@ export default function CommentList({ type }: { type: string }) {
 					isLast={false}
 				/>
 			))}
-			{hasMore ? <Loading ref={bottomRef} /> : null}
+			{hasMore ? <Loading /> : null}
 			{!hasMore && !isLoading ? (
 				<div className="w-full flex flex-col pt-6 pb-4 items-center">
 					<p className="w-fit text-lg font-semibold">
@@ -51,6 +68,7 @@ export default function CommentList({ type }: { type: string }) {
 					</p>
 				</div>
 			) : null}
+			<div ref={bottomRef} />
 		</>
 	);
 }
