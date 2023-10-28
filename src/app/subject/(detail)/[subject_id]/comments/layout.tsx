@@ -3,7 +3,8 @@ import { ReactNode } from "react";
 
 type Props = {
 	params: { subject_id: string };
-	searchParams: { [key: string]: string | undefined };
+	// searchParams: { [key: string]: string | undefined };
+	searchParams: any;
 	children: ReactNode;
 };
 
