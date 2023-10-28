@@ -34,6 +34,7 @@ export function SortSelector({ defaultValue }: { defaultValue?: ISortOptions }) 
 							width={20}
 						/>
 					}
+					className={hasValue ? "" : "bg-white"}
 				>
 					{buttonText}
 				</Button>

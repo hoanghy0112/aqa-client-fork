@@ -41,6 +41,7 @@ function SemesterSelector_({
 							width={20}
 						/>
 					}
+					className={hasValue ? "" : "bg-white"}
 				>
 					{buttonText}
 				</Button>

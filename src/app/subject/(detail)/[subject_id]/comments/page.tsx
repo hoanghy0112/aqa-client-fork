@@ -6,7 +6,13 @@ import { GET_COMMENT_LIST } from "@/constants/api_endpoint";
 import useIncrementalFetch from "@/hooks/useIncrementalFetch";
 import Loading from "@components/Loading";
 import { Card } from "@nextui-org/card";
-import { Metadata } from "next";
+
+import CommentQuantityInfo from "@/components/comments/CommentQuantityInfo";
+import CommentSearchBar from "@/components/comments/CommentSearchBar";
+import { ProgramSelectorWithSearchParam } from "@/components/selectors/ProgramSelector";
+import { SemesterSelectorWithSearchParam } from "@/components/selectors/SemesterSelector";
+import { SingleSubjectSelectorWithProps } from "@/components/selectors/SingleSubjectSelector";
+import { FilterProvider } from "@/contexts/FilterContext";
 import { useRouter } from "next/navigation";
 
 type Props = {
@@ -37,7 +43,23 @@ export default function Page({ params: { subject_id }, searchParams }: Props) {
 	});
 
 	return (
-		<>
+		<FilterProvider>
+			<div className="mt-14 flex flex-row items-center ">
+				<div className="rounded-md flex flex-row overflow-hidden">
+					<CommentQuantityInfo subject_id={subject_id} />
+				</div>
+				<div className=" flex flex-row gap-3 ml-auto mr-10">
+					<SemesterSelectorWithSearchParam />
+					<ProgramSelectorWithSearchParam />
+					<SingleSubjectSelectorWithProps
+						subjectId={subject_id}
+						setSubjectId={(d) => {
+							router.push(`/subject/${d}/comments`);
+						}}
+					/>
+				</div>
+			</div>
+			<CommentSearchBar />
 			<Card className="mt-8 mb-20 w-full p-5">
 				{comments.map(
 					({ content, type, comment_id, teach_id }: IComment) => (
@@ -55,10 +77,6 @@ export default function Page({ params: { subject_id }, searchParams }: Props) {
 				{!hasMore && !isLoading ? <NoData /> : null}
 				<div ref={bottomRef} />
 			</Card>
-		</>
+		</FilterProvider>
 	);
 }
-
-export const metadata: Metadata = {
-	title: "Thống kê bình luận",
-};

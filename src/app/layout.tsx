@@ -10,6 +10,7 @@ import HomeIcon from "@assets/HomeIcon";
 import SubjectIcon from "@assets/SubjectIcon";
 import CriteriaIcon from "@assets/CriteriaIcon";
 import { Suspense } from "react";
+import LecturerNavIcon from "@/assets/LecturerNavIcon";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -59,6 +60,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 										link: "/subject/point-per-year",
 									},
 								]}
+							/>
+							<NavItem
+								title="Giảng viên"
+								link="/lecturer"
+								icon={LecturerNavIcon}
 							/>
 							<NavItem
 								title="Tiêu chí"

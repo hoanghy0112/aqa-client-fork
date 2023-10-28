@@ -1,10 +1,10 @@
 "use client";
 
+import ProgramIcon from "@/assets/ProgramIcon";
 import { GET_PROGRAM_LIST } from "@/constants/api_endpoint";
 import { useFilter } from "@/contexts/FilterContext";
 import useNavigate from "@/hooks/useNavigate";
 import { defaultFetcher } from "@/utils/fetchers";
-import withQuery from "@/utils/withQuery";
 import { Button } from "@nextui-org/button";
 import {
 	Dropdown,
@@ -14,11 +14,9 @@ import {
 	DropdownTrigger,
 } from "@nextui-org/react";
 import { Spinner } from "@nextui-org/spinner";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useCallback, useMemo } from "react";
 import useSWR from "swr";
-import OptionButton from "../OptionButton";
-import ProgramIcon from "@/assets/ProgramIcon";
 
 function ProgramSelector_({
 	program,
@@ -30,7 +28,7 @@ function ProgramSelector_({
 	const { data, isLoading } = useSWR<string[]>(GET_PROGRAM_LIST, defaultFetcher);
 
 	const hasValue = Boolean(program);
-	const buttonText = program || "Chọn chương trình";
+	const buttonText = program || "Chương trình";
 
 	return (
 		<Dropdown backdrop="blur" shouldBlockScroll={false}>
@@ -44,6 +42,7 @@ function ProgramSelector_({
 							width={20}
 						/>
 					}
+					className={hasValue ? "" : "bg-white"}
 				>
 					{buttonText}
 				</Button>

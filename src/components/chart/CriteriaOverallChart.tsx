@@ -71,7 +71,6 @@ export default function CriteriaOverallChart() {
 }
 
 const dataFormatter = (number: number) => {
-	// return "$ " + Intl.NumberFormat("us").format(number).toString();
 	return `${number.toFixed(2)}%`;
 };
 

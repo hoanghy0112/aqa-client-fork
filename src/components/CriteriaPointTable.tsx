@@ -50,6 +50,7 @@ export default function CriteriaPointTable({
 				bottomContent={
 					<div className=" w-full py-4 flex flex-row justify-center gap-2 items-center" />
 				}
+				className=" max-h-[90vh]"
 			>
 				<TableHeader columns={columns}>
 					{(column) => (

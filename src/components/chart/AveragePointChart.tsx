@@ -44,9 +44,9 @@ export default function AveragePointChart() {
 					<>
 						<SemesterSelector />
 						<CriteriaSelector />
-						<ProgramSelector />
 						<FacultySelector />
 						<SortSelector />
+						<ProgramSelector />
 					</>
 				}
 			>

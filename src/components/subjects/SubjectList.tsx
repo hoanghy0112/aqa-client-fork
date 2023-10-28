@@ -66,6 +66,7 @@ export default function SubjectList() {
 					aria-label="Subject table"
 					sortDescriptor={sortDescriptor}
 					onSortChange={onSortChange}
+					className=" max-h-[90vh]"
 					bottomContent={
 						isLoading ? (
 							<div>

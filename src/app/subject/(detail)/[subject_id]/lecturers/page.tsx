@@ -2,10 +2,9 @@
 
 import { BarChart } from "@components/chart/BarChart";
 
-import CriteriaPointTable from "@/components/CriteriaPointTable";
-import TableSketon from "@/components/TableSkeleton";
 import { CriteriaSelectorWithSearchParam } from "@/components/selectors/CriteriaSelector";
-import { GET_CLASSES, GET_SUBJECT_LECTURER_POINT } from "@/constants/api_endpoint";
+import { SortSelector } from "@/components/selectors/SortSelector";
+import { GET_SUBJECT_LECTURER_POINT } from "@/constants/api_endpoint";
 import { FilterProvider, useFilter } from "@/contexts/FilterContext";
 import withQuery from "@/utils/withQuery";
 import Loading from "@components/Loading";
@@ -13,13 +12,9 @@ import NoData from "@components/NoData";
 import ChartLayout from "@components/chart/ChartLayout";
 import { ProgramSelectorWithSearchParam } from "@components/selectors/ProgramSelector";
 import { SemesterSelectorWithSearchParam } from "@components/selectors/SemesterSelector";
-import { SortSelector } from "@/components/selectors/SortSelector";
-import { SortDescriptor } from "@nextui-org/react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
-import useSWR from "swr";
-import { COLORS } from "@/constants/colors";
 import { Color } from "@tremor/react";
+import { useRouter, useSearchParams } from "next/navigation";
+import useSWR from "swr";
 
 function Page_({ subject_id }: { subject_id: string }) {
 	const router = useRouter();

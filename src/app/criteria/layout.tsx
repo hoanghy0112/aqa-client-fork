@@ -2,14 +2,10 @@
 
 import CriteriaList from "@/components/criteria/CriteriaList";
 import { FilterProvider } from "@/contexts/FilterContext";
-import { usePathname } from "next/navigation";
-import { ReactNode, useMemo } from "react";
+import { ReactNode } from "react";
 import CriteriaTabs from "./tabs";
 
 export default function Layout({ children }: { children: ReactNode }) {
-	const pathName = usePathname();
-	const tabName = useMemo(() => pathName.split("/").at(-1) || "", [pathName]);
-
 	return (
 		<FilterProvider>
 			<h1 className="font-semibold text-3xl">Tiêu chí</h1>

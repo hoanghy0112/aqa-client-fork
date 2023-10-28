@@ -44,7 +44,7 @@ function CriteriaSelector_({
 	const [keyword, setKeyword] = useState("");
 
 	const hasValue = Boolean(criteria?.index);
-	const buttonText = hasValue ? `Tiêu chí ${criteria?.index}` : "Tất cả tiêu chí";
+	const buttonText = hasValue ? `Tiêu chí ${criteria?.index}` : "Tiêu chí";
 
 	const criterias = useMemo<Criteria[]>(
 		() =>
