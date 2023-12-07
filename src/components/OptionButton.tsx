@@ -11,6 +11,7 @@ type Props = {
 	onPress?: (e: any) => any;
 	hasValue?: boolean;
 	tooltip?: ReactNode;
+	isNoBorder?: boolean;
 };
 
 export default function OptionButton({
@@ -19,6 +20,7 @@ export default function OptionButton({
 	onPress,
 	hasValue = false,
 	tooltip,
+	isNoBorder = false,
 	...props
 }: Props & ButtonProps) {
 	return (
@@ -30,7 +32,13 @@ export default function OptionButton({
 				onPress={onPress}
 				variant={hasValue ? "shadow" : "ghost"}
 				color={hasValue ? "primary" : "default"}
-				className={`${className} ${hasValue ? "" : "bg-white"}`}
+				className={`${
+					hasValue
+						? ""
+						: isNoBorder
+						? " bg-white border-0 hover:!bg-zinc-100"
+						: " border-0 bg-slate-100 hover:!bg-slate-200"
+				} rounded-lg`}
 				{...props}
 			>
 				{children}

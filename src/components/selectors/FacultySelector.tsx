@@ -23,12 +23,13 @@ function FacultySelector_({
 	setFaculty,
 	data,
 	isLoading,
+	isNoBorder = false,
 }: {
 	faculty?: Faculty;
 	setFaculty?: (d: Faculty) => any;
 	data?: Faculty[];
 	isLoading: boolean;
-}) {
+} & FacultySelectorPropTypes) {
 	const { setSubjects } = useFilter();
 
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -53,7 +54,11 @@ function FacultySelector_({
 
 	return (
 		<>
-			<OptionButton onPress={onOpen} hasValue={hasValue}>
+			<OptionButton
+				onPress={onOpen}
+				hasValue={hasValue}
+				isNoBorder={isNoBorder}
+			>
 				{buttonText}
 			</OptionButton>
 			<Modal
@@ -124,7 +129,7 @@ function FacultySelector_({
 	);
 }
 
-export default function FacultySelector() {
+export default function FacultySelector(props: FacultySelectorPropTypes) {
 	const { faculty, setFaculty } = useFilter();
 
 	const { data, isLoading } = useSWR<Faculty[]>(GET_FACULTY_LIST, defaultFetcher);
@@ -135,11 +140,12 @@ export default function FacultySelector() {
 			setFaculty={setFaculty}
 			data={data}
 			isLoading={isLoading}
+			{...props}
 		/>
 	);
 }
 
-export function FacultySelectorWithSearchParams() {
+export function FacultySelectorWithSearchParams(props: FacultySelectorPropTypes) {
 	const searchParams = useSearchParams();
 	const navigate = useNavigate();
 
@@ -164,6 +170,11 @@ export function FacultySelectorWithSearchParams() {
 			setFaculty={setFaculty}
 			data={data}
 			isLoading={isLoading}
+			{...props}
 		/>
 	);
 }
+
+type FacultySelectorPropTypes = {
+	isNoBorder?: boolean;
+};

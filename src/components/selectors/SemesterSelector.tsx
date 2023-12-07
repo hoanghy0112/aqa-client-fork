@@ -21,11 +21,12 @@ function SemesterSelector_({
 	semester,
 	setSemester,
 	semesters,
+	isNoBorder = false,
 }: {
 	semester?: Semester;
 	setSemester: (d?: Semester) => any;
 	semesters: Semester[];
-}) {
+} & SemesterPropType) {
 	const hasValue = Boolean(semester?.semester_name);
 	const buttonText = semester?.semester_name || "Tất cả học kỳ";
 
@@ -41,7 +42,13 @@ function SemesterSelector_({
 							width={20}
 						/>
 					}
-					className={hasValue ? "" : "bg-white"}
+					className={`${
+						hasValue
+							? ""
+							: isNoBorder
+							? " bg-white border-0 hover:!bg-zinc-100"
+							: " border-0 bg-slate-100 hover:!bg-slate-200"
+					} rounded-lg`}
 				>
 					{buttonText}
 				</Button>
@@ -77,7 +84,7 @@ function SemesterSelector_({
 	);
 }
 
-export default function SemesterSelector() {
+export default function SemesterSelector(props: SemesterPropType) {
 	const { semester, setSemester } = useFilter();
 	const [semesters, setSemesters] = useState<Semester[]>([]);
 
@@ -93,11 +100,12 @@ export default function SemesterSelector() {
 			semester={semester}
 			setSemester={setSemester}
 			semesters={semesters}
+			{...props}
 		/>
 	);
 }
 
-export function SemesterSelectorWithSearchParam() {
+export function SemesterSelectorWithSearchParam(props: SemesterPropType) {
 	const searchParams = useSearchParams();
 	const navigate = useNavigate();
 
@@ -140,6 +148,11 @@ export function SemesterSelectorWithSearchParam() {
 			semester={semester}
 			setSemester={setSemester}
 			semesters={semesters}
+			{...props}
 		/>
 	);
 }
+
+type SemesterPropType = {
+	isNoBorder?: boolean;
+};

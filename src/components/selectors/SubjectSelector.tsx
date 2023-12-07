@@ -24,7 +24,7 @@ import { useDebounce } from "usehooks-ts";
 import OptionButton from "../OptionButton";
 import { SortSelector } from "./SortSelector";
 
-export default function SubjectSelector() {
+export default function SubjectSelector({ isNoBorder }: SubjectSelectorPropTypes) {
 	const { subjects: _subjects, setSubjects: _setSubjects, faculty } = useFilter();
 
 	const [subjects, setSubjects] = useState<Map<string, Subject>>(_subjects);
@@ -65,6 +65,7 @@ export default function SubjectSelector() {
 				tooltip="Chọn các môn để hiển thị trên biểu đồ"
 				onPress={onOpen}
 				hasValue={hasValue}
+				isNoBorder={isNoBorder}
 			>
 				{buttonText}
 			</OptionButton>
@@ -286,3 +287,7 @@ export default function SubjectSelector() {
 		</>
 	);
 }
+
+type SubjectSelectorPropTypes = {
+	isNoBorder?: boolean;
+};

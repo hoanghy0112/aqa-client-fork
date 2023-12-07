@@ -21,10 +21,11 @@ import useSWR from "swr";
 function ProgramSelector_({
 	program,
 	setProgram,
+	isNoBorder = false,
 }: {
 	program?: string;
 	setProgram?: (d: string) => any;
-}) {
+} & ProgramSelectorPropTypes) {
 	const { data, isLoading } = useSWR<string[]>(GET_PROGRAM_LIST, defaultFetcher);
 
 	const hasValue = Boolean(program);
@@ -42,7 +43,13 @@ function ProgramSelector_({
 							width={20}
 						/>
 					}
-					className={hasValue ? "" : "bg-white"}
+					className={`${
+						hasValue
+							? ""
+							: isNoBorder
+							? " bg-white border-0 hover:!bg-zinc-100"
+							: " border-0 bg-slate-100 hover:!bg-slate-200"
+					} rounded-lg`}
 				>
 					{buttonText}
 				</Button>
@@ -86,13 +93,13 @@ function ProgramSelector_({
 	);
 }
 
-export default function ProgramSelector() {
+export default function ProgramSelector(props: ProgramSelectorPropTypes) {
 	const { program, setProgram } = useFilter();
 
-	return <ProgramSelector_ program={program} setProgram={setProgram} />;
+	return <ProgramSelector_ program={program} setProgram={setProgram} {...props} />;
 }
 
-export function ProgramSelectorWithSearchParam() {
+export function ProgramSelectorWithSearchParam(props: ProgramSelectorPropTypes) {
 	const searchParams = useSearchParams();
 	const navigate = useNavigate();
 
@@ -106,5 +113,9 @@ export function ProgramSelectorWithSearchParam() {
 		[navigate]
 	);
 
-	return <ProgramSelector_ program={program} setProgram={setProgram} />;
+	return <ProgramSelector_ program={program} setProgram={setProgram} {...props} />;
 }
+
+type ProgramSelectorPropTypes = {
+	isNoBorder?: boolean;
+};

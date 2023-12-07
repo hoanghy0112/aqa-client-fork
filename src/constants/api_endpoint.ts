@@ -12,6 +12,8 @@ export const GET_SUBJECT_POINT_ACROSS_SEMESTER = `${API_BASE_URL}/subjects/semes
 export const GET_SUBJECT_TABLE = `${API_BASE_URL}/subjects/list`;
 export const GET_SUBJECT_LECTURER_POINT = `${API_BASE_URL}/lecturers/points`;
 
+export const GET_LECTURER_WITH_POINTS = `${API_BASE_URL}/lecturers/withPoints`;
+
 export const GET_CRITERIA_PER_SEMESTER = `${API_BASE_URL}/criterias`;
 export const GET_CRITERIA_NAME = `${API_BASE_URL}/criterias/name`;
 export const GET_CRITERIA_POINT_ACROSS_SEMESTER = `${API_BASE_URL}/criterias/points`;

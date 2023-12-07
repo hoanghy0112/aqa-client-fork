@@ -31,6 +31,8 @@ type Props = {
 };
 
 function SingleSubjectSelector_({ subjectId, setSubject }: Props) {
+	const searchParams = useSearchParams();
+
 	const [faculty, setFaculty] = useState<string>();
 
 	const [keyword, setKeyword] = useState<string | undefined>();
@@ -57,10 +59,7 @@ function SingleSubjectSelector_({ subjectId, setSubject }: Props) {
 		},
 	});
 
-	const subject =
-		items.find((v) => v.subject_id == subjectId) || isClient
-			? JSON.parse(localStorage.getItem("single_subject") || "{}")
-			: undefined;
+	const subject = items.find((v) => v.subject_id == subjectId) || undefined;
 
 	const hasValue = Boolean(subject);
 	const buttonText = hasValue ? subject?.subject_name : "Chọn môn học";
