@@ -46,8 +46,8 @@ function SemesterSelector_({
 						hasValue
 							? ""
 							: isNoBorder
-							? " bg-white border-0 hover:!bg-zinc-100"
-							: " border-0 bg-slate-100 hover:!bg-slate-200"
+							? " bg-white dark:bg-zinc-800 border-0 hover:!bg-zinc-700"
+							: " border-0 bg-slate-100 dark:bg-slate-800 hover:!bg-slate-700"
 					} rounded-lg`}
 				>
 					{buttonText}
