@@ -70,10 +70,11 @@ export default function LecturerList() {
 			{columns.length > 2 || !isLoading ? (
 				<Table
 					isStriped
+					isHeaderSticky
 					aria-label="Subject table"
 					sortDescriptor={sortDescriptor}
 					onSortChange={onSortChange}
-					className=" max-h-[90vh]"
+					className=" max-h-[90vh] "
 					bottomContent={
 						isLoading ? (
 							<div>
