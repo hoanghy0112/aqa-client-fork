@@ -47,8 +47,8 @@ function ProgramSelector_({
 						hasValue
 							? ""
 							: isNoBorder
-							? " bg-white dark:bg-zinc-800 border-0 hover:!bg-zinc-700"
-							: " border-0 bg-slate-100 dark:bg-slate-800 hover:!bg-slate-700"
+							? " bg-white dark:bg-zinc-800 border-0 dark:hover:!bg-zinc-700 hover:!bg-zinc-100"
+							: " border-0 bg-slate-100 dark:bg-slate-800 dark:hover:!bg-slate-700 hover:!bg-slate-200"
 					} rounded-lg`}
 				>
 					{buttonText}

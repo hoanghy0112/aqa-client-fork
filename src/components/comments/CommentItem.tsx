@@ -26,32 +26,32 @@ export default function CommentItem({
 					ease: "easeOut",
 					duration: 0.6,
 				}}
-				className="w-full px-3 py-4 flex flex-row items-center border-b-1 border-b-slate-400 dark:border-b-slate-600"
+				className="w-full px-3 py-3 flex flex-row items-center border-b-1 border-b-slate-400 dark:border-b-slate-600"
 			>
-				<p className="font-medium text-md">{content}</p>
+				<p className="font-medium text-sm">{content}</p>
 				<div className="ml-auto w-56 pl-5 flex shrink-0 flex-row gap-5">
 					<Card
 						isPressable
 						shadow="sm"
-						className="p-3 w-12 flex flex-row items-center"
+						className="p-3 flex flex-row justify-center items-center"
 					>
 						<Image
 							src={COPY_ICON}
-							width={24}
-							height={24}
+							width={18}
+							height={18}
 							alt="Copy comment"
 						/>
 					</Card>
 					<Card
 						isPressable
 						shadow="sm"
-						className={`p-2 w-28 grid items-center ${
+						className={`px-2 py-1 w-24 grid items-center ${
 							type === "positive"
 								? "bg-green-300 dark:bg-green-700"
 								: "bg-red-300 dark:bg-red-700"
 						}`}
 					>
-						<p className=" capitalize font-medium text-md py-1">
+						<p className=" capitalize font-medium text-sm py-1">
 							{type}
 						</p>
 					</Card>

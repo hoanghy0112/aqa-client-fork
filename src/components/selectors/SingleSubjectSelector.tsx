@@ -13,7 +13,7 @@ import {
 	ModalHeader,
 	useDisclosure,
 } from "@nextui-org/modal";
-import { Card } from "@nextui-org/react";
+import { Card, Spinner } from "@nextui-org/react";
 import { Skeleton } from "@nextui-org/skeleton";
 import { motion } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
@@ -24,13 +24,19 @@ import OptionButton from "../OptionButton";
 import { SortSelector } from "./SortSelector";
 import { useSearchParams } from "next/navigation";
 import useNavigate from "@/hooks/useNavigate";
+import useSWR from "swr";
+import withQuery from "@/utils/withQuery";
 
 type Props = {
 	subjectId?: string | null;
 	setSubject: (d: Subject) => any;
+} & FilterType;
+
+type FilterType = {
+	lecturer_id?: string;
 };
 
-function SingleSubjectSelector_({ subjectId, setSubject }: Props) {
+function SingleSubjectSelector_({ subjectId, setSubject, lecturer_id }: Props) {
 	const searchParams = useSearchParams();
 
 	const [faculty, setFaculty] = useState<string>();
@@ -48,18 +54,19 @@ function SingleSubjectSelector_({ subjectId, setSubject }: Props) {
 		setIsClient(true);
 	}, []);
 
-	const { items, isLoading, hasMore, bottomRef } = useIncrementalFetch<Subject>({
-		url: GET_SUBJECT_TABLE,
-		query: {
+	const { data: items, isLoading } = useSWR<Subject[]>(
+		withQuery(GET_SUBJECT_TABLE, {
 			debouncedKeyword,
 			page_size: 20,
 			filter_field: "subject_name",
 			faculty_name: faculty,
 			direction: sort,
-		},
-	});
+			lecturer_id,
+		}),
+		(url: string) => fetch(url).then((res) => res.json())
+	);
 
-	const subject = items.find((v) => v.subject_id == subjectId) || undefined;
+	const subject = items?.find((v) => v.subject_id == subjectId) || undefined;
 
 	const hasValue = Boolean(subject);
 	const buttonText = hasValue ? subject?.subject_name : "Chọn môn học";
@@ -71,7 +78,7 @@ function SingleSubjectSelector_({ subjectId, setSubject }: Props) {
 				onPress={onOpen}
 				hasValue={hasValue}
 			>
-				{buttonText}
+				{isLoading ? <Spinner size="sm" /> : buttonText}
 			</OptionButton>
 			<Modal
 				isOpen={isOpen}
@@ -109,7 +116,7 @@ function SingleSubjectSelector_({ subjectId, setSubject }: Props) {
 								</div>
 							</ModalHeader>
 							<ModalBody className="mb-5">
-								{items.length > 0 || !isLoading ? (
+								{items?.length || 0 > 0 || !isLoading ? (
 									<>
 										<div className="w-full mb-2">
 											<Card
@@ -185,8 +192,6 @@ function SingleSubjectSelector_({ subjectId, setSubject }: Props) {
 											</div>
 										))
 								)}
-								{hasMore ? <Loading /> : <NoData />}
-								<div ref={bottomRef} />
 							</ModalBody>
 						</>
 					)}
@@ -218,9 +223,10 @@ export default function SingleSubjectSelector({
 
 export function SingleSubjectSelectorWithSearchParam({
 	onSelect,
+	...props
 }: {
 	onSelect?: (d: Subject) => any;
-}) {
+} & FilterType) {
 	const searchParams = useSearchParams();
 	const navigate = useNavigate();
 
@@ -230,7 +236,7 @@ export function SingleSubjectSelectorWithSearchParam({
 			if (d.faculty_name)
 				navigate.replace({
 					subject_id: d.subject_id,
-					faculty: d.faculty_name,
+					// faculty: d.faculty_name,
 				});
 			else navigate.replace({ subject_id: d.subject_id });
 		},
@@ -241,6 +247,7 @@ export function SingleSubjectSelectorWithSearchParam({
 		<SingleSubjectSelector_
 			subjectId={searchParams.get("subject_id")}
 			setSubject={setSubject}
+			{...props}
 		/>
 	);
 }
@@ -248,10 +255,11 @@ export function SingleSubjectSelectorWithSearchParam({
 export function SingleSubjectSelectorWithProps({
 	subjectId,
 	setSubjectId,
+	...props
 }: {
 	subjectId?: string;
 	setSubjectId?: (d: string) => any;
-}) {
+} & FilterType) {
 	const [isClient, setIsClient] = useState(false);
 
 	useEffect(() => {
@@ -266,5 +274,11 @@ export function SingleSubjectSelectorWithProps({
 		[isClient]
 	);
 
-	return <SingleSubjectSelector_ subjectId={subjectId} setSubject={setSubject} />;
+	return (
+		<SingleSubjectSelector_
+			subjectId={subjectId}
+			setSubject={setSubject}
+			{...props}
+		/>
+	);
 }

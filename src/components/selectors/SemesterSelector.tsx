@@ -1,9 +1,9 @@
 "use client";
 
 import { getSemesterList } from "@/api/semester";
+import SemesterIcon from "@/assets/SemesterIcon";
 import { useFilter } from "@/contexts/FilterContext";
 import useNavigate from "@/hooks/useNavigate";
-import withQuery from "@/utils/withQuery";
 import { Button } from "@nextui-org/button";
 import {
 	Dropdown,
@@ -11,11 +11,10 @@ import {
 	DropdownMenu,
 	DropdownSection,
 	DropdownTrigger,
+	Spinner,
 } from "@nextui-org/react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import OptionButton from "../OptionButton";
-import SemesterIcon from "@/assets/SemesterIcon";
 
 function SemesterSelector_({
 	semester,
@@ -46,11 +45,11 @@ function SemesterSelector_({
 						hasValue
 							? ""
 							: isNoBorder
-							? " bg-white dark:bg-zinc-800 border-0 hover:!bg-zinc-700"
-							: " border-0 bg-slate-100 dark:bg-slate-800 hover:!bg-slate-700"
+							? " bg-white dark:bg-zinc-800 border-0 dark:hover:!bg-zinc-700 hover:!bg-zinc-100"
+							: " border-0 bg-slate-100 dark:bg-slate-800 dark:hover:!bg-slate-700 hover:!bg-slate-200"
 					} rounded-lg`}
 				>
-					{buttonText}
+					{semesters.length ? buttonText : <Spinner size="sm" />}
 				</Button>
 			</DropdownTrigger>
 			<DropdownMenu

@@ -33,7 +33,7 @@ export default function CommentSearchBar() {
 					}}
 					isClearable
 					type="text"
-					size="lg"
+					size="md"
 					placeholder="Nhập từ khóa cần tìm..."
 					variant="bordered"
 					className="w-[500px]"
@@ -48,7 +48,7 @@ export default function CommentSearchBar() {
 				className=""
 				variant="shadow"
 				color="primary"
-				size="lg"
+				size="md"
 			>
 				{isLoading ? (
 					<Spinner color="default" />

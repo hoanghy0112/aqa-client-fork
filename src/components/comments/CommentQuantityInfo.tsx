@@ -14,14 +14,16 @@ import { useSearchParams } from "next/navigation";
 
 type Props = {
 	subject_id?: string | null;
+	lecturer_id?: string;
 };
 
-export default function CommentQuantityInfo({ subject_id }: Props) {
+export default function CommentQuantityInfo({ subject_id, lecturer_id }: Props) {
 	const searchParams = useSearchParams();
 
 	const { data, isLoading, error } = useSWR(
 		withQuery(GET_COMMENT_QUANTITY, {
-			subject_id,
+			subject_id: searchParams.get("subject_id") || subject_id,
+			lecturer_id,
 			semester_id: searchParams.get("semester"),
 			program: searchParams.get("program"),
 			faculty_name: searchParams.get("faculty"),
