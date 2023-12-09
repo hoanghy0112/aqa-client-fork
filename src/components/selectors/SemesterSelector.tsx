@@ -16,6 +16,10 @@ import {
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+type FilterType = {
+	lecturer_id?: string;
+};
+
 function SemesterSelector_({
 	semester,
 	setSemester,
@@ -83,13 +87,16 @@ function SemesterSelector_({
 	);
 }
 
-export default function SemesterSelector(props: SemesterPropType) {
+export default function SemesterSelector({
+	lecturer_id,
+	...props
+}: SemesterPropType & FilterType) {
 	const { semester, setSemester } = useFilter();
 	const [semesters, setSemesters] = useState<Semester[]>([]);
 
 	useEffect(() => {
 		(async () => {
-			const semesterList = await getSemesterList();
+			const semesterList = await getSemesterList(lecturer_id);
 			setSemesters(semesterList);
 		})();
 	}, []);
@@ -104,7 +111,10 @@ export default function SemesterSelector(props: SemesterPropType) {
 	);
 }
 
-export function SemesterSelectorWithSearchParam(props: SemesterPropType) {
+export function SemesterSelectorWithSearchParam({
+	lecturer_id,
+	...props
+}: SemesterPropType & FilterType) {
 	const searchParams = useSearchParams();
 	const navigate = useNavigate();
 
@@ -137,7 +147,7 @@ export function SemesterSelectorWithSearchParam(props: SemesterPropType) {
 
 	useEffect(() => {
 		(async () => {
-			const semesterList = await getSemesterList();
+			const semesterList = await getSemesterList(lecturer_id);
 			setSemesters(semesterList);
 		})();
 	}, []);

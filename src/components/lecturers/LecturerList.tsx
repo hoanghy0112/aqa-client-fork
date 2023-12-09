@@ -71,12 +71,13 @@ export default function LecturerList() {
 				<Table
 					isStriped
 					isHeaderSticky
+					selectionMode="single"
 					aria-label="Subject table"
 					sortDescriptor={sortDescriptor}
 					onSortChange={onSortChange}
 					className=" max-h-[90vh] "
 					bottomContent={
-						isLoading ? (
+						isLoading || !items ? (
 							<div>
 								<Loading ref={bottomRef} />
 							</div>

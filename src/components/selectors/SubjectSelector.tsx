@@ -2,7 +2,7 @@
 
 import { GET_SUBJECT_TABLE } from "@/constants/api_endpoint";
 import { FilterProvider, useFilter } from "@/contexts/FilterContext";
-import useIncrementalFetch from "@/hooks/useIncrementalFetch";
+import withQuery from "@/utils/withQuery";
 import { Button } from "@nextui-org/button";
 import { Checkbox } from "@nextui-org/checkbox";
 import { Chip } from "@nextui-org/chip";
@@ -17,9 +17,9 @@ import {
 } from "@nextui-org/modal";
 import { cn } from "@nextui-org/react";
 import { Skeleton } from "@nextui-org/skeleton";
-import { Spinner } from "@nextui-org/spinner";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import useSWR from "swr";
 import { useDebounce } from "usehooks-ts";
 import OptionButton from "../OptionButton";
 import { SortSelector } from "./SortSelector";
@@ -48,16 +48,16 @@ export default function SubjectSelector({ isNoBorder }: SubjectSelectorPropTypes
 		onOpenChange: onOpenChangeDetail,
 	} = useDisclosure();
 
-	const { items, isLoading, hasMore, bottomRef } = useIncrementalFetch<Subject>({
-		url: GET_SUBJECT_TABLE,
-		query: {
+	const { data: items, isLoading } = useSWR<Subject[]>(
+		withQuery(GET_SUBJECT_TABLE, {
 			debouncedKeyword,
 			page_size: 20,
 			filter_field: "subject_name",
 			faculty_name: faculty?.faculty_name,
 			direction: sort,
-		},
-	});
+		}),
+		(url) => fetch(url).then((res) => res.json())
+	);
 
 	return (
 		<>
@@ -107,7 +107,7 @@ export default function SubjectSelector({ isNoBorder }: SubjectSelectorPropTypes
 								>{`Đã chọn ${subjects.size} môn`}</Button>
 							</ModalHeader>
 							<ModalBody className="mb-5">
-								{items.length > 0 || !isLoading ? (
+								{items?.length || 0 > 0 || !isLoading ? (
 									<>
 										{items?.map(
 											({
@@ -195,7 +195,7 @@ export default function SubjectSelector({ isNoBorder }: SubjectSelectorPropTypes
 											</div>
 										))
 								)}
-								{hasMore ? (
+								{/* {hasMore ? (
 									<div
 										// ref={bottomRef}
 										className=" w-full py-4 flex flex-row justify-center gap-2 items-center"
@@ -215,7 +215,7 @@ export default function SubjectSelector({ isNoBorder }: SubjectSelectorPropTypes
 										</p>
 									</div>
 								)}
-								<div ref={bottomRef} />
+								<div ref={bottomRef} /> */}
 							</ModalBody>
 							<ModalFooter>
 								<Button

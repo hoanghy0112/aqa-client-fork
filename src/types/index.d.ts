@@ -29,4 +29,14 @@ declare type Faculty = {
 	faculty_name: string;
 };
 
+declare type IClass = {
+	class_id: string;
+	class_name: string;
+	total: number;
+	attend: number;
+	semester_id: string;
+	semester_name: string;
+	point: number;
+};
+
 declare type ISortOptions = "asc" | "desc" | undefined;

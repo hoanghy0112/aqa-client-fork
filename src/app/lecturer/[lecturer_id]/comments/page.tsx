@@ -49,7 +49,7 @@ export default function Page({ params: { lecturer_id }, searchParams }: Props) {
 					<CommentQuantityInfo lecturer_id={lecturer_id} />
 				</div>
 				<div className=" flex flex-row gap-3 ml-auto mr-10">
-					<SemesterSelectorWithSearchParam />
+					<SemesterSelectorWithSearchParam lecturer_id={lecturer_id} />
 					<ProgramSelectorWithSearchParam />
 					<SingleSubjectSelectorWithSearchParam
 						lecturer_id={lecturer_id}

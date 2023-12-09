@@ -1,5 +1,6 @@
 "use client";
-import { FilterProvider, useFilter } from "@/contexts/FilterContext";
+
+import { useFilter } from "@/contexts/FilterContext";
 import { Button } from "@nextui-org/button";
 import { Card } from "@nextui-org/card";
 import { Input } from "@nextui-org/input";
@@ -8,6 +9,7 @@ import FacultySelector from "../selectors/FacultySelector";
 import ProgramSelector from "../selectors/ProgramSelector";
 import SemesterSelector from "../selectors/SemesterSelector";
 import SubjectSelector from "../selectors/SubjectSelector";
+import LecturerList from "./LecturerList";
 
 export default function LecturerTable() {
 	const searchText = useRef<string>("");
@@ -54,6 +56,7 @@ export default function LecturerTable() {
 				<div className=" w-[2px] h-5 bg-zinc-200" />
 				<SubjectSelector isNoBorder />
 			</div>
+			<LecturerList />
 		</div>
 	);
 }
