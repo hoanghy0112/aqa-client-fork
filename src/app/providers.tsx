@@ -5,6 +5,16 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
+import {
+	useQuery,
+	useMutation,
+	useQueryClient,
+	QueryClient,
+	QueryClientProvider,
+} from "react-query";
+
+const queryClient = new QueryClient();
+
 export default function Providers({ children }: { children: React.ReactNode }) {
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
@@ -14,7 +24,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 	return (
 		<NextUIProvider>
 			<NextThemesProvider attribute="class" defaultTheme="dark">
-				{children}
+				<QueryClientProvider client={queryClient}>
+					{children}
+				</QueryClientProvider>
 			</NextThemesProvider>
 		</NextUIProvider>
 	);

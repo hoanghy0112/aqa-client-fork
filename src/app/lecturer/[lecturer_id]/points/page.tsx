@@ -1,9 +1,13 @@
-import { getSemesterList } from "@/api/semester";
-import ClientProvider from "@/components/ClientProvider";
-import { GET_LECTURER_CLASSES } from "@/constants/api_endpoint";
+"use client";
+
+import { GET_LECTURER_CLASSES, GET_SEMESTER_LIST } from "@/constants/api_endpoint";
 import { FilterProvider } from "@/contexts/FilterContext";
 import withQuery from "@/utils/withQuery";
-import { Accordion, AccordionItem } from "@nextui-org/react";
+import { Accordion, AccordionItem, Button } from "@nextui-org/react";
+import useSWR from "swr";
+import Loading from "@components/Loading";
+import React from "react";
+import { useQuery } from "react-query";
 
 async function SemesterClass({
 	semester_id,
@@ -12,43 +16,72 @@ async function SemesterClass({
 	semester_id: string;
 	lecturer_id: string;
 }) {
-	const classesData = (await fetch(
-		withQuery(GET_LECTURER_CLASSES(lecturer_id), { semester_id })
-	)) as unknown as { meta: any; data: IClass[] };
+	const classesRes = await fetch(
+		withQuery(GET_LECTURER_CLASSES(lecturer_id), { semester_id }),
+		{ cache: "force-cache" }
+	);
+
+	const classesData = (await classesRes.json()) as unknown as {
+		meta: any;
+		data: IClass[];
+	};
+
+	// const {} = useQuery([lecturer_id, semester_id], (queryKey) => {
+	// 	    const [_key, id] = queryKey;
+    // const response = await apiInstance.get(`/product/${id}`, {});
+
+    // return response.data;
+	// })
+
 	return (
-		<>
+		<div className=" flex gap-2 pb-2">
 			{classesData.data.map(({ class_id, class_name }) => (
-				<div key={class_id}>{class_name}</div>
+				<Button key={class_id}>{class_name}</Button>
 			))}
-		</>
+		</div>
 	);
 }
 
-export default async function Page({
+export default function Page({
 	params: { lecturer_id },
 }: {
 	params: { lecturer_id: string };
 }) {
-	const semesters = await getSemesterList(lecturer_id);
+	const { data: semesters, isLoading } = useSWR<Semester[]>(
+		withQuery(GET_SEMESTER_LIST, { lecturer_id }),
+		(url) => fetch(url).then((res) => res.json())
+	);
 
 	return (
-		<ClientProvider>
-			<FilterProvider>
-				<Accordion variant="splitted">
-					{semesters.map(({ semester_id, semester_name }) => (
+		<FilterProvider>
+			{isLoading ? (
+				<Loading />
+			) : (
+				<Accordion variant="splitted" selectionMode="multiple" isCompact>
+					{semesters?.map(({ semester_id, semester_name }) => (
 						<AccordionItem
 							key={semester_id}
 							aria-label={semester_name}
-							title={semester_name}
+							title={
+								<p className="py-1 font-medium">{semester_name}</p>
+							}
 						>
-							<SemesterClass
-								semester_id={semester_id}
-								lecturer_id={lecturer_id}
-							/>
+							<React.Suspense
+								fallback={
+									<div className=" pb-4">
+										<Loading />
+									</div>
+								}
+							>
+								<SemesterClass
+									semester_id={semester_id}
+									lecturer_id={lecturer_id}
+								/>
+							</React.Suspense>
 						</AccordionItem>
-					))}
+					)) || <></>}
 				</Accordion>
-			</FilterProvider>
-		</ClientProvider>
+			)}
+		</FilterProvider>
 	);
 }

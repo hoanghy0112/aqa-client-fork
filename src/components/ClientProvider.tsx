@@ -3,5 +3,5 @@
 import { ReactNode } from "react";
 
 export default function ClientProvider({ children }: { children: ReactNode }) {
-	return <>{children}</>;
+	return <div>{children}</div>;
 }
