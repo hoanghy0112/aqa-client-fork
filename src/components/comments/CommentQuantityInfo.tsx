@@ -15,20 +15,14 @@ import { useSearchParams } from "next/navigation";
 type Props = {
 	subject_id?: string | null;
 	lecturer_id?: string;
+	query: IFilter;
 };
 
-export default function CommentQuantityInfo({ subject_id, lecturer_id }: Props) {
+export default function CommentQuantityInfo({ query }: Props) {
 	const searchParams = useSearchParams();
 
 	const { data, isLoading, error } = useSWR(
-		withQuery(GET_COMMENT_QUANTITY, {
-			subject_id: searchParams.get("subject_id") || subject_id,
-			lecturer_id,
-			semester_id: searchParams.get("semester"),
-			program: searchParams.get("program"),
-			faculty_name: searchParams.get("faculty"),
-			keyword: searchParams.get("keyword"),
-		}),
+		withQuery(GET_COMMENT_QUANTITY, query),
 		(...args) => fetch(...args).then((r) => r.json())
 	);
 

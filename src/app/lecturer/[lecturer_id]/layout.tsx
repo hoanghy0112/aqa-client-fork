@@ -26,7 +26,7 @@ export default async function Layout({
 				</Link>
 			</h2>
 			<PageTabs defaultPath={`/lecturer/${lecturer_id}`} tabs={tabs} />
-			<div className="mt-4"> {children}</div>
+			<div className="mt-14"> {children}</div>
 		</div>
 	);
 }
@@ -35,10 +35,6 @@ export const tabs = [
 	{
 		link: "points",
 		title: "Điểm các lớp",
-	},
-	{
-		link: "lecturers",
-		title: "Điểm các giảng viên",
 	},
 	{
 		link: "comments",

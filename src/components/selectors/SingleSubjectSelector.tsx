@@ -34,9 +34,10 @@ type Props = {
 
 type FilterType = {
 	lecturer_id?: string;
+	defaultFilter?: IFilter;
 };
 
-function SingleSubjectSelector_({ subjectId, setSubject, lecturer_id }: Props) {
+function SingleSubjectSelector_({ subjectId, setSubject, defaultFilter }: Props) {
 	const searchParams = useSearchParams();
 
 	const [faculty, setFaculty] = useState<string>();
@@ -56,12 +57,12 @@ function SingleSubjectSelector_({ subjectId, setSubject, lecturer_id }: Props) {
 
 	const { data: items, isLoading } = useSWR<Subject[]>(
 		withQuery(GET_SUBJECT_TABLE, {
+			...defaultFilter,
 			debouncedKeyword,
 			page_size: 20,
 			filter_field: "subject_name",
 			faculty_name: faculty,
 			direction: sort,
-			lecturer_id,
 		}),
 		(url: string) => fetch(url).then((res) => res.json())
 	);
@@ -131,7 +132,7 @@ function SingleSubjectSelector_({ subjectId, setSubject, lecturer_id }: Props) {
 												className="w-full flex flex-col justify-between cursor-pointer rounded-lg gap-2 px-4 py-3 border-2 border-transparent"
 											>
 												<p className=" text-md font-semibold mb-1 text-start">
-													Không chọn
+													Tất cả môn học
 												</p>
 											</Card>
 										</div>

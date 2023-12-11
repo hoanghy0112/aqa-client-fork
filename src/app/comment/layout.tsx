@@ -17,7 +17,7 @@ function CommentLayout_({ children }: { children: ReactNode }) {
 
 	return (
 		<>
-			<h1 className="font-semibold text-3xl">Bình luận</h1>
+			{/* <h1 className="font-semibold text-3xl">Bình luận</h1>
 			<div className="mt-14 flex flex-row items-center ">
 				<div className="rounded-md flex flex-row overflow-hidden">
 					<CommentQuantityInfo
@@ -32,7 +32,8 @@ function CommentLayout_({ children }: { children: ReactNode }) {
 				</div>
 			</div>
 			<CommentSearchBar />
-			<Card className="mt-8 mb-20 w-full p-5">{children}</Card>
+			<Card className="mt-8 mb-20 w-full p-5">{children}</Card> */}
+			{children}
 		</>
 	);
 }

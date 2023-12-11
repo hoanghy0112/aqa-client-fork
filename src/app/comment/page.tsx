@@ -1,4 +1,5 @@
 import CommentList from "@/components/comments/CommentList";
+import CommentPage from "@/components/comments/CommentPage";
 import { Metadata } from "next";
 // import { notFound } from "next/navigation";
 
@@ -11,14 +12,20 @@ export default function Page({ searchParams }: Props) {
 	const { semester, keyword, faculty, program, type, subject_id } = searchParams;
 
 	return (
-		<CommentList
-			subjectId={subject_id}
-			semester={semester}
-			faculty={faculty}
-			program={program}
-			keyword={keyword}
-			type={type || ""}
-		/>
+		<>
+			<h1 className="mb-14 font-semibold text-3xl">Bình luận</h1>
+			<CommentPage
+				selectors={["faculty", "program", "semester", "single-subject"]}
+			/>
+		</>
+		// <CommentList
+		// 	subjectId={subject_id}
+		// 	semester={semester}
+		// 	faculty={faculty}
+		// 	program={program}
+		// 	keyword={keyword}
+		// 	type={type || ""}
+		// />
 	);
 }
 

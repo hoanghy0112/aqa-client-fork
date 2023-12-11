@@ -72,7 +72,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 								icon={CriteriaIcon}
 							/>
 						</NavigationDrawer>
-						<main className="w-full px-20 pt-12 pb-10 overflow-y-scroll overflow-x-hidden">
+						<main className="w-full xl:px-20 lg:px-16 px-5 pt-12 pb-10 overflow-y-scroll overflow-x-hidden">
 							<Suspense fallback={<p>Loading</p>}>{children}</Suspense>
 						</main>
 					</div>

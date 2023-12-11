@@ -40,3 +40,23 @@ declare type IClass = {
 };
 
 declare type ISortOptions = "asc" | "desc" | undefined;
+
+declare interface IFilter {
+	type?: string | null;
+	q?: string | null;
+	lecturer_id?: string | null;
+	faculty_id?: string | null;
+	faculty_name?: string | null;
+	program?: string | null;
+	semester_id?: string | null;
+	subject_ids?: string[];
+	subject_id?: string | null;
+	sort?: "asc" | "desc";
+}
+
+declare type SelectorType =
+	| "semester"
+	| "program"
+	| "faculty"
+	| "single-subject"
+	| "multi-subject";

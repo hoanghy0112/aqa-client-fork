@@ -7,14 +7,19 @@ import { Accordion, AccordionItem, Button } from "@nextui-org/react";
 import useSWR from "swr";
 import Loading from "@components/Loading";
 import React from "react";
-import { useQuery } from "react-query";
+
+import { redirect } from "next/navigation";
+import { RedirectType } from "next/dist/client/components/redirect";
+import { useRouter } from "next/navigation";
 
 async function SemesterClass({
 	semester_id,
 	lecturer_id,
+	onPress,
 }: {
 	semester_id: string;
 	lecturer_id: string;
+	onPress: (id: string) => any;
 }) {
 	const classesRes = await fetch(
 		withQuery(GET_LECTURER_CLASSES(lecturer_id), { semester_id }),
@@ -26,18 +31,21 @@ async function SemesterClass({
 		data: IClass[];
 	};
 
-	// const {} = useQuery([lecturer_id, semester_id], (queryKey) => {
-	// 	    const [_key, id] = queryKey;
-    // const response = await apiInstance.get(`/product/${id}`, {});
-
-    // return response.data;
-	// })
-
 	return (
-		<div className=" flex gap-2 pb-2">
-			{classesData.data.map(({ class_id, class_name }) => (
-				<Button key={class_id}>{class_name}</Button>
-			))}
+		<div className=" flex flex-wrap gap-2 pb-2">
+			{classesData.data.length ? (
+				classesData.data.map(({ class_id, class_name }) => (
+					<Button
+						className=" bg-gray-200"
+						key={class_id}
+						onPress={() => onPress(class_id)}
+					>
+						{class_name}
+					</Button>
+				))
+			) : (
+				<p className=" font-medium text-slate-800">Không có dữ liệu</p>
+			)}
 		</div>
 	);
 }
@@ -47,6 +55,8 @@ export default function Page({
 }: {
 	params: { lecturer_id: string };
 }) {
+	const router = useRouter();
+
 	const { data: semesters, isLoading } = useSWR<Semester[]>(
 		withQuery(GET_SEMESTER_LIST, { lecturer_id }),
 		(url) => fetch(url).then((res) => res.json())
@@ -76,6 +86,9 @@ export default function Page({
 								<SemesterClass
 									semester_id={semester_id}
 									lecturer_id={lecturer_id}
+									onPress={(class_id) =>
+										router.push(`/class/${class_id}`)
+									}
 								/>
 							</React.Suspense>
 						</AccordionItem>

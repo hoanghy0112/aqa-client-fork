@@ -28,7 +28,9 @@ export default function CommentItem({
 				}}
 				className="w-full px-3 py-3 flex flex-row items-center border-b-1 border-b-slate-400 dark:border-b-slate-600"
 			>
-				<p className="font-medium text-sm">{content}</p>
+				<p className="font-medium text-sm text-left whitespace-pre-wrap	">
+					{content}
+				</p>
 				<div className="ml-auto w-56 pl-5 flex shrink-0 flex-row gap-5">
 					<Card
 						isPressable
@@ -52,7 +54,7 @@ export default function CommentItem({
 						}`}
 					>
 						<p className=" capitalize font-medium text-sm py-1">
-							{type}
+							{type == "positive" ? "Tích cực" : "Tiêu cực"}
 						</p>
 					</Card>
 				</div>
