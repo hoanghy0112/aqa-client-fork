@@ -3,13 +3,11 @@
 import { GET_LECTURER_CLASSES, GET_SEMESTER_LIST } from "@/constants/api_endpoint";
 import { FilterProvider } from "@/contexts/FilterContext";
 import withQuery from "@/utils/withQuery";
-import { Accordion, AccordionItem, Button } from "@nextui-org/react";
-import useSWR from "swr";
 import Loading from "@components/Loading";
+import { Accordion, AccordionItem, Button } from "@nextui-org/react";
 import React from "react";
+import useSWR from "swr";
 
-import { redirect } from "next/navigation";
-import { RedirectType } from "next/dist/client/components/redirect";
 import { useRouter } from "next/navigation";
 
 async function SemesterClass({
@@ -26,6 +24,8 @@ async function SemesterClass({
 		{ cache: "force-cache" }
 	);
 
+	console.log({ classesRes });
+
 	const classesData = (await classesRes.json()) as unknown as {
 		meta: any;
 		data: IClass[];
@@ -36,7 +36,7 @@ async function SemesterClass({
 			{classesData.data.length ? (
 				classesData.data.map(({ class_id, class_name }) => (
 					<Button
-						className=" bg-gray-200"
+						className=" bg-gray-200 dark:bg-zinc-800"
 						key={class_id}
 						onPress={() => onPress(class_id)}
 					>
@@ -59,7 +59,11 @@ export default function Page({
 
 	const { data: semesters, isLoading } = useSWR<Semester[]>(
 		withQuery(GET_SEMESTER_LIST, { lecturer_id }),
-		(url) => fetch(url).then((res) => res.json())
+		(url) =>
+			fetch(url).then((res) => {
+				console.log({ res });
+				return res.json();
+			})
 	);
 
 	return (

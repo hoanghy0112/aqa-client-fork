@@ -17,6 +17,8 @@ export const GET_LECTURER_DETAIL = `${API_BASE_URL}/lecturers`;
 export const GET_LECTURER_CLASSES = (id: string) =>
 	`${API_BASE_URL}/lecturers/${id}/classes`;
 
+export const GET_CLASS_INFORMATION = (id: string) => `${API_BASE_URL}/classes/${id}`;
+
 export const GET_CRITERIA_PER_SEMESTER = `${API_BASE_URL}/criterias`;
 export const GET_CRITERIA_NAME = `${API_BASE_URL}/criterias/name`;
 export const GET_CRITERIA_POINT_ACROSS_SEMESTER = `${API_BASE_URL}/criterias/points`;
