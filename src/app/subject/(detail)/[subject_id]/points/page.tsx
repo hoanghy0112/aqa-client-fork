@@ -68,9 +68,9 @@ function Page_({ subject_id }: { subject_id: string }) {
 			data?.data && data.data.length > 0
 				? [
 						...defaultColumns,
-						...data.data[0].points.map((v) => ({
+						...data.data[0].points.map((v, index) => ({
 							key: v.criteria_id,
-							index: v.index,
+							index: index + 1,
 							label: v.criteria_name,
 						})),
 				  ]

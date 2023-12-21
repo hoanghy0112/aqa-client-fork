@@ -55,11 +55,11 @@ function SingleSubjectSelector_({ subjectId, setSubject, defaultFilter }: Props)
 		setIsClient(true);
 	}, []);
 
-	const { data: items, isLoading } = useSWR<Subject[]>(
+	const { data: response, isLoading } = useSWR<IncrementalData<Subject>>(
 		withQuery(GET_SUBJECT_TABLE, {
 			...defaultFilter,
 			debouncedKeyword,
-			page_size: 20,
+			page_size: 200,
 			filter_field: "subject_name",
 			faculty_name: faculty,
 			direction: sort,
@@ -67,7 +67,9 @@ function SingleSubjectSelector_({ subjectId, setSubject, defaultFilter }: Props)
 		(url: string) => fetch(url).then((res) => res.json())
 	);
 
-	const subject = items?.find((v) => v.subject_id == subjectId) || undefined;
+	const items = response?.data;
+
+	const subject = items?.find?.((v) => v.subject_id == subjectId) || undefined;
 
 	const hasValue = Boolean(subject);
 	const buttonText = hasValue ? subject?.subject_name : "Chọn môn học";

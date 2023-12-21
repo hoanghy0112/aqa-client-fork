@@ -144,7 +144,7 @@ export default function LecturerList() {
 										return (
 											<TableCell>
 												<Link
-													href={`/subject/${item.lecturer_id}`}
+													href={`/lecturer/${item.lecturer_id}`}
 													className="py-3"
 												>
 													{getKeyValue(item, columnKey)}

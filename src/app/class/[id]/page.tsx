@@ -25,7 +25,7 @@ export default async function DetailClassPage({
 			</h2>
 			<ClassDetail className="mt-10" {...classInfo} />
 			<div className=" grid grid-cols-1 3xl:grid-cols-2 mt-10">
-				<PointTable data={classInfo.points || []} />C
+				<PointTable data={classInfo.points || []} />
 			</div>
 		</div>
 	);

@@ -29,6 +29,8 @@ export default function CriteriaOverallChart() {
 		(url: string) => fetch(url).then((r) => r.json())
 	);
 
+	console.log({ averageData });
+
 	return (
 		<ChartLayout
 			primaryTitle="Biểu đồ tiêu chí qua các kỳ"

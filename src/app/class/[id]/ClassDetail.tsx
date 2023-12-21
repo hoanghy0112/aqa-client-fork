@@ -41,7 +41,7 @@ export default function ClassDetail({
 					<TableRow>
 						<TableCell>Môn</TableCell>
 						<TableCell>
-							<TextLink href={`/faculty/${subject_id}`}>
+							<TextLink href={`/subject/${subject_id}`}>
 								{subject_name}
 							</TextLink>
 						</TableCell>

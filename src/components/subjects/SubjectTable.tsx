@@ -11,7 +11,7 @@ import SubjectList from "./SubjectList";
 
 export default function SubjectTable() {
 	const searchText = useRef<string>("");
-	const { setKeyword } = useFilter();
+	const { setKeyword, semester, program, faculty } = useFilter();
 
 	function handleSearch() {
 		setKeyword(searchText.current);

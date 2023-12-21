@@ -25,6 +25,15 @@ export default function Page({ params: { subject_id }, searchParams }: Props) {
 
 	const { semester, keyword, faculty, program, type } = searchParams;
 
+	const query = {
+		subject_id,
+		type,
+		q: keyword,
+		semester_id: semester,
+		program,
+		faculty_name: faculty,
+	};
+
 	const {
 		items: comments,
 		hasMore,
@@ -32,21 +41,14 @@ export default function Page({ params: { subject_id }, searchParams }: Props) {
 		bottomRef,
 	} = useIncrementalFetch<IComment>({
 		url: GET_COMMENT_LIST,
-		query: {
-			subject_id,
-			type,
-			q: keyword,
-			semester_id: semester,
-			program,
-			faculty_name: faculty,
-		},
+		query,
 	});
 
 	return (
 		<FilterProvider>
 			<div className="mt-14 flex flex-row items-center ">
 				<div className="rounded-md flex flex-row overflow-hidden">
-					<CommentQuantityInfo subject_id={subject_id} />
+					<CommentQuantityInfo subject_id={subject_id} query={query} />
 				</div>
 				<div className=" flex flex-row gap-3 ml-auto mr-10">
 					<SemesterSelectorWithSearchParam />

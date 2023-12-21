@@ -21,16 +21,23 @@ export default function AveragePointChart() {
 
 	const { semester, criteria, sort, faculty, program } = useFilter();
 
-	const { data, isLoading } = useSWR<IChartData[]>(
+	const { data: response, isLoading } = useSWR<IncrementalData<IChartData>>(
 		withQuery(GET_SUBJECT_AVERAGE_POINT, {
 			semester_id: semester?.semester_id,
 			criteria_id: criteria?.criteria_id,
 			program,
 			faculty_name: faculty?.faculty_name,
 			sort,
+			filter_field: "point",
+			page: 0,
+			page_size: 20,
 		}),
 		(url: string) => fetch(url).then((r) => r.json())
 	);
+
+	const data = response?.data || [];
+
+	console.log({ data });
 
 	return (
 		<>
@@ -59,7 +66,7 @@ export default function AveragePointChart() {
 										label: LEGEND_NAME,
 										data:
 											data?.map((d) => ({
-												x: d.display_name,
+												x: d.subject_name,
 												y: d.average_point / d.max_point,
 												id: d.subject_id,
 											})) || [],
@@ -84,7 +91,7 @@ const dataFormatter = (number: number) => {
 
 interface IChartData {
 	average_point: number;
-	display_name: string;
+	subject_name: string;
 	max_point: number;
 	subject_id: string;
 }

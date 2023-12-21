@@ -1,7 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import { GET_SUBJECT_TABLE } from "@/constants/api_endpoint";
+import {
+	GET_SUBJECT_AVERAGE_POINT,
+	GET_SUBJECT_TABLE,
+	GET_SUBJECT_WITH_POINTS,
+} from "@/constants/api_endpoint";
 import { useFilter } from "@/contexts/FilterContext";
 import useIncrementalFetch from "@/hooks/useIncrementalFetch";
 import {
@@ -30,7 +34,7 @@ export default function SubjectList() {
 	});
 
 	const { items, isLoading, bottomRef } = useIncrementalFetch<ISubjectItem>({
-		url: GET_SUBJECT_TABLE,
+		url: semester?.semester_id ? GET_SUBJECT_WITH_POINTS : GET_SUBJECT_TABLE,
 		query: {
 			semester_id: semester?.semester_id,
 			keyword,
@@ -43,12 +47,12 @@ export default function SubjectList() {
 	});
 
 	useEffect(() => {
-		if (items.length > 0)
+		if (items.length > 0 && semester?.semester_id)
 			setColumns([
 				...defaultColumns,
-				...items[0].points.map((v) => ({
+				...items[0].points.map((v, index) => ({
 					key: v.criteria_id,
-					index: v.index,
+					index: index + 1,
 					label: v.criteria_name,
 				})),
 			]);
@@ -62,6 +66,7 @@ export default function SubjectList() {
 		<div className="pt-10">
 			{columns.length > 2 || !isLoading ? (
 				<Table
+					isHeaderSticky
 					isStriped
 					aria-label="Subject table"
 					sortDescriptor={sortDescriptor}
@@ -113,13 +118,13 @@ export default function SubjectList() {
 						items={items.map((v) => ({
 							...v,
 							...Object.fromEntries(
-								v.points.map((p) => [
+								v?.points?.map?.((p) => [
 									p.criteria_id,
 									<p
 										key={p.criteria_id}
 										className=" font-semibold text-md"
 									>{`${Math.floor(p.point * 100)}%`}</p>,
-								])
+								]) || []
 							),
 						}))}
 					>

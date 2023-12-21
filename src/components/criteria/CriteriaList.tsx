@@ -11,9 +11,9 @@ const CriteriaList = () => {
 	);
 	return (
 		<>
-			{criterias?.map((criteria) => (
+			{criterias?.map((criteria, index) => (
 				<SpecificCriteriaChart
-					criteria={criteria}
+					criteria={{ ...criteria, index: index + 1 }}
 					key={criteria.criteria_id}
 				/>
 			))}

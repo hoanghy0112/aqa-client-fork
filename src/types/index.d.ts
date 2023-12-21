@@ -24,6 +24,18 @@ declare type Subject = {
 	subject_name: string;
 };
 
+interface IncrementalData<T> {
+	meta: {
+		total: string;
+		page_size: string;
+		pages: string;
+		current_page: string;
+		has_previous: boolean;
+		has_next: boolean;
+	};
+	data: T[];
+}
+
 declare type Faculty = {
 	faculty_id: string;
 	faculty_name: string;

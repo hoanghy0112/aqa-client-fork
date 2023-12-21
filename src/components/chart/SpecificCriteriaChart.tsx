@@ -27,7 +27,7 @@ export default function SpecificCriteriaChart({ criteria }: { criteria: Criteria
 				if (data.length == 0) setIsLoading(true);
 				const res = await fetch(
 					withQuery(GET_CRITERIA_POINT_ACROSS_SEMESTER, {
-						criteria_id: criteria.criteria_id,
+						criteria_name: criteria.display_name,
 						faculty_id: faculty?.faculty_id,
 					})
 				);
