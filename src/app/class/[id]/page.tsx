@@ -20,7 +20,7 @@ export default async function DetailClassPage({
 			<h2 className="mt-3 text-gray-600 dark:text-gray-300">
 				Giảng viên{" "}
 				<TextLink href={`/lecturer/${classInfo.lecturer_id}`}>
-					{classInfo.lecturer_name}
+					{classInfo.lecturer_id}
 				</TextLink>
 			</h2>
 			<ClassDetail className="mt-10" {...classInfo} />
