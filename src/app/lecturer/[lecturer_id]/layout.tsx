@@ -16,7 +16,7 @@ export default async function Layout({
 
 	return (
 		<div>
-			<h1 className="font-semibold text-2xl">{lecturer_name}</h1>
+			<h1 className="font-semibold text-2xl">{lecturer_id}</h1>
 			<h2 className="mt-2 text-gray-600 dark:text-gray-300">
 				Khoa{" "}
 				<Link href={`/faculty/${faculty_id}`}>

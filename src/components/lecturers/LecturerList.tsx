@@ -173,7 +173,7 @@ export default function LecturerList() {
 
 const defaultColumns: { key: string; label: string; index?: number }[] = [
 	{
-		key: "lecturer_name",
+		key: "lecturer_id",
 		label: "Tên giảng viên",
 	},
 	{
