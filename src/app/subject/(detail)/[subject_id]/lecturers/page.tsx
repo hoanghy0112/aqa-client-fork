@@ -60,7 +60,7 @@ function Page_({ subject_id }: { subject_id: string }) {
 										label: LEGEND_NAMES[0],
 										data:
 											chartData?.map((d) => ({
-												x: d.lecturer_name,
+												x: d.lecturer_id,
 												y: d.point * 100,
 												id: d.lecturer_id,
 											})) || [],
@@ -69,7 +69,7 @@ function Page_({ subject_id }: { subject_id: string }) {
 										label: LEGEND_NAMES[1],
 										data:
 											chartData?.map((d) => ({
-												x: d.lecturer_name,
+												x: d.lecturer_id,
 												y: d.class_num,
 												id: d.lecturer_id,
 											})) || [],
