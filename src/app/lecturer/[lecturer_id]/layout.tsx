@@ -54,10 +54,10 @@ export async function generateMetadata({
 }: {
 	params: { lecturer_id: string };
 }) {
-	const res = await fetch(`${GET_LECTURER_DETAIL}/${lecturer_id}`);
-	const { lecturer_name }: ILecturerInfo = await res.json();
+	// const res = await fetch(`${GET_LECTURER_DETAIL}/${lecturer_id}`);
+	// const { lecturer_name, lecturer_id }: ILecturerInfo = await res.json();
 
 	return {
-		title: `${lecturer_name} - AQA`,
+		title: `${lecturer_id} - AQA`,
 	};
 }
