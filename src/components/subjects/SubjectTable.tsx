@@ -15,6 +15,7 @@ export default function SubjectTable() {
 
 	function handleSearch() {
 		setKeyword(searchText.current);
+		console.log({ text: searchText.current });
 	}
 
 	return (
