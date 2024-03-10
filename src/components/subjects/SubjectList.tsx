@@ -33,8 +33,6 @@ export default function SubjectList() {
 		direction: "ascending",
 	});
 
-	console.log({ keyword });
-
 	const { items, isLoading, bottomRef } = useIncrementalFetch<ISubjectItem>({
 		url: semester?.semester_id ? GET_SUBJECT_WITH_POINTS : GET_SUBJECT_TABLE,
 		query: {

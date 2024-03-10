@@ -48,7 +48,7 @@ export default function SubjectSelector({ isNoBorder }: SubjectSelectorPropTypes
 		onOpenChange: onOpenChangeDetail,
 	} = useDisclosure();
 
-	const { data: items, isLoading } = useSWR<Subject[]>(
+	const { data: items, isLoading } = useSWR<{ data: Subject[] }>(
 		withQuery(GET_SUBJECT_TABLE, {
 			debouncedKeyword,
 			page_size: 20,
@@ -58,6 +58,7 @@ export default function SubjectSelector({ isNoBorder }: SubjectSelectorPropTypes
 		}),
 		(url) => fetch(url).then((res) => res.json())
 	);
+	console.log({ items });
 
 	return (
 		<>
@@ -107,9 +108,9 @@ export default function SubjectSelector({ isNoBorder }: SubjectSelectorPropTypes
 								>{`Đã chọn ${subjects.size} môn`}</Button>
 							</ModalHeader>
 							<ModalBody className="mb-5">
-								{items?.length || 0 > 0 || !isLoading ? (
+								{items?.data.length || 0 > 0 || !isLoading ? (
 									<>
-										{items?.map(
+										{items?.data.map(
 											({
 												subject_name,
 												faculty_name,
