@@ -2,21 +2,28 @@
 
 import { SemesterSelectorWithSearchParam } from "@/components/selectors/SemesterSelector";
 
+import { getCommentQuantity } from "@/api/graphql/comment";
 import CommentQuantityInfo from "@/components/comments/CommentQuantityInfo";
 import CommentSearchBar from "@/components/comments/CommentSearchBar";
 import { FacultySelectorWithSearchParams } from "@/components/selectors/FacultySelector";
 import { ProgramSelectorWithSearchParam } from "@/components/selectors/ProgramSelector";
 import { SingleSubjectSelectorWithSearchParam } from "@/components/selectors/SingleSubjectSelector";
+import { GET_COMMENT_LIST } from "@/constants/api_endpoint";
+import useIncrementalFetch from "@/hooks/useIncrementalFetch";
+import { useQuery } from "@apollo/client";
 import { Card } from "@nextui-org/card";
 import { useSearchParams } from "next/navigation";
-import { ReactNode, useEffect } from "react";
-import useIncrementalFetch from "@/hooks/useIncrementalFetch";
-import { GET_COMMENT_LIST } from "@/constants/api_endpoint";
-import CommentItem from "./CommentItem";
 import Loading from "../Loading";
+import CommentItem from "./CommentItem";
 
 export default function CommentPage({ defaultFilter = {}, selectors = [] }: IProps) {
 	const searchParams = useSearchParams();
+
+	const { data } = useQuery(getCommentQuantity, {
+		variables: { type: "positive" },
+	});
+
+	console.log({ data });
 
 	const query: IFilter = {
 		...defaultFilter,
