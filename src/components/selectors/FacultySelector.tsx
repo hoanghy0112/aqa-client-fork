@@ -1,9 +1,8 @@
 "use client";
 
-import { GET_FACULTY_LIST } from "@/constants/api_endpoint";
 import { useFilter } from "@/contexts/FilterContext";
+import { Faculty, useFacultiesQuery } from "@/gql/graphql";
 import useNavigate from "@/hooks/useNavigate";
-import { defaultFetcher } from "@/utils/fetchers";
 import { Button } from "@nextui-org/button";
 import {
 	Modal,
@@ -15,9 +14,7 @@ import {
 import { Spinner } from "@nextui-org/spinner";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import useSWR from "swr";
 import OptionButton from "../OptionButton";
-import { Faculty, useFacultiesQuery } from "@/gql/graphql";
 
 function FacultySelector_({
 	faculty,
@@ -76,8 +73,17 @@ function FacultySelector_({
 							</ModalHeader>
 							<ModalBody className="pb-8 pt-3">
 								{data && !isLoading ? (
-									data.map(
-										({ display_name = "", faculty_id = "" }) => (
+									[
+										{
+											display_name: "Chọn tất cả",
+											faculty_id: "",
+										},
+										...data,
+									].map(
+										({
+											display_name = "",
+											faculty_id = "",
+										}: Faculty) => (
 											<Button
 												ref={
 													display_name ==
