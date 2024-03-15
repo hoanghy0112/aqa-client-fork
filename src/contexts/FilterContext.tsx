@@ -2,6 +2,8 @@
 
 import { ReactNode, createContext, useContext, useEffect, useState } from "react";
 
+import { Faculty } from "@/gql/graphql";
+
 export const FilterContext = createContext<IFilterContext>({
 	setKeyword: (d: string) => {},
 	setIsLoading: (d: boolean) => {},
@@ -28,7 +30,7 @@ export function FilterProvider({
 	program: default_program,
 	faculty: default_faculty = {
 		faculty_id: "",
-		faculty_name: "",
+		display_name: "",
 	},
 	semester: default_semester = {
 		semester_name: "",

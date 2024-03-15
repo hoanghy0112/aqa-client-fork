@@ -17,6 +17,7 @@ import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import useSWR from "swr";
 import OptionButton from "../OptionButton";
+import { Faculty, useFacultiesQuery } from "@/gql/graphql";
 
 function FacultySelector_({
 	faculty,
@@ -36,8 +37,8 @@ function FacultySelector_({
 
 	const currentSelectedRef = useRef<any>();
 
-	const hasValue = Boolean(faculty?.faculty_name);
-	const buttonText = hasValue ? faculty?.faculty_name : "Chọn khoa";
+	const hasValue = Boolean(faculty?.display_name);
+	const buttonText = hasValue ? faculty?.display_name : "Chọn khoa";
 
 	useEffect(() => {
 		if (currentSelectedRef.current) {
@@ -76,38 +77,38 @@ function FacultySelector_({
 							<ModalBody className="pb-8 pt-3">
 								{data && !isLoading ? (
 									data.map(
-										({ faculty_name = "", faculty_id = "" }) => (
+										({ display_name = "", faculty_id = "" }) => (
 											<Button
 												ref={
-													faculty_name ==
-													faculty?.faculty_name
+													display_name ==
+													faculty?.display_name
 														? currentSelectedRef
 														: null
 												}
 												onPress={() => {
 													setFaculty?.({
 														faculty_id,
-														faculty_name,
+														display_name,
 													});
 													onClose();
 												}}
 												variant={
-													faculty_name ==
-													faculty?.faculty_name
+													display_name ==
+													faculty?.display_name
 														? "shadow"
 														: "flat"
 												}
 												color={
-													faculty_name ==
-													faculty?.faculty_name
+													display_name ==
+													faculty?.display_name
 														? "primary"
 														: "default"
 												}
 												className={`py-5`}
-												key={faculty_name}
+												key={display_name}
 											>
 												<p className="font-medium">
-													{faculty_name || "Tất cả"}
+													{display_name || "Tất cả"}
 												</p>
 											</Button>
 										)
@@ -132,14 +133,14 @@ function FacultySelector_({
 export default function FacultySelector(props: FacultySelectorPropTypes) {
 	const { faculty, setFaculty } = useFilter();
 
-	const { data, isLoading } = useSWR<Faculty[]>(GET_FACULTY_LIST, defaultFetcher);
+	const { data, loading } = useFacultiesQuery();
 
 	return (
 		<FacultySelector_
 			faculty={faculty}
 			setFaculty={setFaculty}
-			data={data}
-			isLoading={isLoading}
+			data={data?.faculties.data}
+			isLoading={loading}
 			{...props}
 		/>
 	);
@@ -149,17 +150,18 @@ export function FacultySelectorWithSearchParams(props: FacultySelectorPropTypes)
 	const searchParams = useSearchParams();
 	const navigate = useNavigate();
 
-	const { data, isLoading } = useSWR<Faculty[]>(GET_FACULTY_LIST, defaultFetcher);
+	// const { data, isLoading } = useSWR<Faculty[]>(GET_FACULTY_LIST, defaultFetcher);
+	const { data, loading } = useFacultiesQuery();
 
 	const faculty = useMemo(() => {
-		const facultyName = searchParams.get("faculty") || undefined;
-		if (!facultyName) return undefined;
-		return data?.find((v) => v.faculty_name === facultyName);
+		const facultyId = searchParams.get("faculty") || undefined;
+		if (!facultyId) return undefined;
+		return data?.faculties.data?.find((v) => v.faculty_id === facultyId);
 	}, [searchParams, data]);
 
 	const setFaculty = useCallback(
 		(faculty: Faculty) => {
-			navigate.replace({ faculty: faculty.faculty_name, subject_id: "" });
+			navigate.replace({ faculty: faculty.faculty_id, subject_id: "" });
 		},
 		[navigate]
 	);
@@ -168,8 +170,8 @@ export function FacultySelectorWithSearchParams(props: FacultySelectorPropTypes)
 		<FacultySelector_
 			faculty={faculty}
 			setFaculty={setFaculty}
-			data={data}
-			isLoading={isLoading}
+			data={data?.faculties.data}
+			isLoading={loading}
 			{...props}
 		/>
 	);

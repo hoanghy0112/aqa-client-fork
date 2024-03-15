@@ -80,9 +80,9 @@ export type Faculty = {
   display_name: Scalars['String']['output'];
   faculty_id: Scalars['String']['output'];
   full_name?: Maybe<Scalars['String']['output']>;
-  lecturers: PaginatedLecturer;
+  lecturers?: Maybe<PaginatedLecturer>;
   points?: Maybe<PaginatedGroupedPoint>;
-  subjects: PaginatedSubject;
+  subjects?: Maybe<PaginatedSubject>;
   total_point?: Maybe<GroupedPoint>;
 };
 
@@ -432,6 +432,11 @@ export type CommentQuantityQueryVariables = Exact<{
 
 export type CommentQuantityQuery = { __typename?: 'Query', positive: { __typename?: 'CommentQuantity', quantity: number, type: string }, negative: { __typename?: 'CommentQuantity', quantity: number, type: string }, all: { __typename?: 'CommentQuantity', quantity: number, type: string } };
 
+export type FacultiesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FacultiesQuery = { __typename?: 'Query', faculties: { __typename?: 'PaginatedFaculty', data: Array<{ __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null }> } };
+
 
 export const CommentQuantityDocument = gql`
     query CommentQuantity($filter: FilterArgs) {
@@ -484,4 +489,50 @@ export type CommentQuantitySuspenseQueryHookResult = ReturnType<typeof useCommen
 export type CommentQuantityQueryResult = Apollo.QueryResult<CommentQuantityQuery, CommentQuantityQueryVariables>;
 export function refetchCommentQuantityQuery(variables?: CommentQuantityQueryVariables) {
       return { query: CommentQuantityDocument, variables: variables }
+    }
+export const FacultiesDocument = gql`
+    query Faculties {
+  faculties(pagination: {size: 100}) {
+    data {
+      display_name
+      faculty_id
+      full_name
+    }
+  }
+}
+    `;
+
+/**
+ * __useFacultiesQuery__
+ *
+ * To run a query within a React component, call `useFacultiesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFacultiesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFacultiesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useFacultiesQuery(baseOptions?: Apollo.QueryHookOptions<FacultiesQuery, FacultiesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FacultiesQuery, FacultiesQueryVariables>(FacultiesDocument, options);
+      }
+export function useFacultiesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FacultiesQuery, FacultiesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FacultiesQuery, FacultiesQueryVariables>(FacultiesDocument, options);
+        }
+export function useFacultiesSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<FacultiesQuery, FacultiesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FacultiesQuery, FacultiesQueryVariables>(FacultiesDocument, options);
+        }
+export type FacultiesQueryHookResult = ReturnType<typeof useFacultiesQuery>;
+export type FacultiesLazyQueryHookResult = ReturnType<typeof useFacultiesLazyQuery>;
+export type FacultiesSuspenseQueryHookResult = ReturnType<typeof useFacultiesSuspenseQuery>;
+export type FacultiesQueryResult = Apollo.QueryResult<FacultiesQuery, FacultiesQueryVariables>;
+export function refetchFacultiesQuery(variables?: FacultiesQueryVariables) {
+      return { query: FacultiesDocument, variables: variables }
     }
