@@ -437,6 +437,11 @@ export type FacultiesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type FacultiesQuery = { __typename?: 'Query', faculties: { __typename?: 'PaginatedFaculty', data: Array<{ __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null }> } };
 
+export type ProgramsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ProgramsQuery = { __typename?: 'Query', programs: Array<{ __typename?: 'Program', program: string }> };
+
 export type SemestersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -540,6 +545,48 @@ export type FacultiesSuspenseQueryHookResult = ReturnType<typeof useFacultiesSus
 export type FacultiesQueryResult = Apollo.QueryResult<FacultiesQuery, FacultiesQueryVariables>;
 export function refetchFacultiesQuery(variables?: FacultiesQueryVariables) {
       return { query: FacultiesDocument, variables: variables }
+    }
+export const ProgramsDocument = gql`
+    query Programs {
+  programs {
+    program
+  }
+}
+    `;
+
+/**
+ * __useProgramsQuery__
+ *
+ * To run a query within a React component, call `useProgramsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProgramsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProgramsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useProgramsQuery(baseOptions?: Apollo.QueryHookOptions<ProgramsQuery, ProgramsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ProgramsQuery, ProgramsQueryVariables>(ProgramsDocument, options);
+      }
+export function useProgramsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProgramsQuery, ProgramsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ProgramsQuery, ProgramsQueryVariables>(ProgramsDocument, options);
+        }
+export function useProgramsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ProgramsQuery, ProgramsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ProgramsQuery, ProgramsQueryVariables>(ProgramsDocument, options);
+        }
+export type ProgramsQueryHookResult = ReturnType<typeof useProgramsQuery>;
+export type ProgramsLazyQueryHookResult = ReturnType<typeof useProgramsLazyQuery>;
+export type ProgramsSuspenseQueryHookResult = ReturnType<typeof useProgramsSuspenseQuery>;
+export type ProgramsQueryResult = Apollo.QueryResult<ProgramsQuery, ProgramsQueryVariables>;
+export function refetchProgramsQuery(variables?: ProgramsQueryVariables) {
+      return { query: ProgramsDocument, variables: variables }
     }
 export const SemestersDocument = gql`
     query Semesters {

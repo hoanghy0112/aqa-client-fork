@@ -17,6 +17,7 @@ import { Spinner } from "@nextui-org/spinner";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useMemo } from "react";
 import useSWR from "swr";
+import { Program, useProgramsQuery } from "@/gql/graphql";
 
 function ProgramSelector_({
 	program,
@@ -26,7 +27,8 @@ function ProgramSelector_({
 	program?: string;
 	setProgram?: (d: string) => any;
 } & ProgramSelectorPropTypes) {
-	const { data, isLoading } = useSWR<string[]>(GET_PROGRAM_LIST, defaultFetcher);
+	// const { data, isLoading } = useSWR<string[]>(GET_PROGRAM_LIST, defaultFetcher);
+	const { data, loading: isLoading } = useProgramsQuery();
 
 	const hasValue = Boolean(program);
 	const buttonText = program || "Chương trình";
@@ -63,7 +65,7 @@ function ProgramSelector_({
 			>
 				<DropdownSection title="Chọn chương trình">
 					{data && !isLoading ? (
-						data.map((programTitle) => (
+						data.programs.map(({ program: programTitle }) => (
 							<DropdownItem
 								onPress={() => setProgram?.(programTitle)}
 								className={`py-2`}
