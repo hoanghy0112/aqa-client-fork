@@ -1,35 +1,26 @@
-import CommentList from "@/components/comments/CommentList";
 import CommentPage from "@/components/comments/CommentPage";
 import { Metadata } from "next";
-// import { notFound } from "next/navigation";
 
-type Props = {
-	params: { type: "all" | "positive" | "negative" };
-	searchParams: { [key: string]: string | undefined };
-};
+type Props = { searchParams: { [key: string]: string | undefined } };
 
-export default function Page({ searchParams }: Props) {
-	const { semester, keyword, faculty, program, type, subject_id } = searchParams;
-
+export default function Page({ searchParams: { type } }: Props) {
 	return (
 		<>
-			<h1 className="mb-14 font-semibold text-3xl">Bình luận</h1>
+			<h1 className="mb-14 font-semibold text-2xl">
+				{generateTitle(type).title}
+			</h1>
 			<CommentPage
 				selectors={["faculty", "program", "semester", "single-subject"]}
 			/>
 		</>
-		// <CommentList
-		// 	subjectId={subject_id}
-		// 	semester={semester}
-		// 	faculty={faculty}
-		// 	program={program}
-		// 	keyword={keyword}
-		// 	type={type || ""}
-		// />
 	);
 }
 
 export function generateMetadata({ searchParams: { type } }: Props): Metadata {
+	return generateTitle(type);
+}
+
+function generateTitle(type?: string) {
 	if (type == "negative")
 		return {
 			title: "Bình luận tiêu cực",

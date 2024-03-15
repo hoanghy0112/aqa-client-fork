@@ -1,5 +1,5 @@
-/* eslint-disable */
-import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+import { gql } from '@apollo/client';
+import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -7,6 +7,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string; }
@@ -14,7 +15,6 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
-  /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
   DateTime: { input: any; output: any; }
 };
 
@@ -299,16 +299,10 @@ export type QueryCommentArgs = {
 
 
 export type QueryCommentQuantityArgs = {
-  class_id?: InputMaybe<Scalars['String']['input']>;
-  class_type?: InputMaybe<Scalars['String']['input']>;
-  criteria_id?: InputMaybe<Scalars['String']['input']>;
-  faculty_id?: InputMaybe<Scalars['String']['input']>;
-  keyword?: InputMaybe<Scalars['String']['input']>;
-  lecturer_id?: InputMaybe<Scalars['String']['input']>;
-  program?: InputMaybe<Scalars['String']['input']>;
-  semester_id?: InputMaybe<Scalars['String']['input']>;
-  subjects?: InputMaybe<Array<Scalars['String']['input']>>;
-  type: Scalars['String']['input'];
+  filter?: InputMaybe<FilterArgs>;
+  pagination?: InputMaybe<PaginationArgs>;
+  sort?: InputMaybe<SortArgs>;
+  type?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -411,7 +405,7 @@ export type SortFieldArgs = {
 export type Subject = {
   __typename?: 'Subject';
   display_name?: Maybe<Scalars['String']['output']>;
-  faculty?: Maybe<Faculty>;
+  faculty: Faculty;
   faculty_id: Scalars['String']['output'];
   points: Array<GroupedPoint>;
   subject_id: Scalars['String']['output'];
@@ -432,11 +426,62 @@ export type SubjectPointsArgs = {
 };
 
 export type CommentQuantityQueryVariables = Exact<{
-  type: Scalars['String']['input'];
+  filter?: InputMaybe<FilterArgs>;
 }>;
 
 
-export type CommentQuantityQuery = { __typename?: 'Query', commentQuantity: { __typename?: 'CommentQuantity', quantity: number, type: string } };
+export type CommentQuantityQuery = { __typename?: 'Query', positive: { __typename?: 'CommentQuantity', quantity: number, type: string }, negative: { __typename?: 'CommentQuantity', quantity: number, type: string }, all: { __typename?: 'CommentQuantity', quantity: number, type: string } };
 
 
-export const CommentQuantityDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"CommentQuantity"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"type"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"commentQuantity"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"type"},"value":{"kind":"Variable","name":{"kind":"Name","value":"type"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"quantity"}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}}]}}]} as unknown as DocumentNode<CommentQuantityQuery, CommentQuantityQueryVariables>;
+export const CommentQuantityDocument = gql`
+    query CommentQuantity($filter: FilterArgs) {
+  positive: commentQuantity(type: "positive", filter: $filter) {
+    quantity
+    type
+  }
+  negative: commentQuantity(type: "negative", filter: $filter) {
+    quantity
+    type
+  }
+  all: commentQuantity(filter: $filter) {
+    quantity
+    type
+  }
+}
+    `;
+
+/**
+ * __useCommentQuantityQuery__
+ *
+ * To run a query within a React component, call `useCommentQuantityQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCommentQuantityQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCommentQuantityQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useCommentQuantityQuery(baseOptions?: Apollo.QueryHookOptions<CommentQuantityQuery, CommentQuantityQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CommentQuantityQuery, CommentQuantityQueryVariables>(CommentQuantityDocument, options);
+      }
+export function useCommentQuantityLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CommentQuantityQuery, CommentQuantityQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CommentQuantityQuery, CommentQuantityQueryVariables>(CommentQuantityDocument, options);
+        }
+export function useCommentQuantitySuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<CommentQuantityQuery, CommentQuantityQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<CommentQuantityQuery, CommentQuantityQueryVariables>(CommentQuantityDocument, options);
+        }
+export type CommentQuantityQueryHookResult = ReturnType<typeof useCommentQuantityQuery>;
+export type CommentQuantityLazyQueryHookResult = ReturnType<typeof useCommentQuantityLazyQuery>;
+export type CommentQuantitySuspenseQueryHookResult = ReturnType<typeof useCommentQuantitySuspenseQuery>;
+export type CommentQuantityQueryResult = Apollo.QueryResult<CommentQuantityQuery, CommentQuantityQueryVariables>;
+export function refetchCommentQuantityQuery(variables?: CommentQuantityQueryVariables) {
+      return { query: CommentQuantityDocument, variables: variables }
+    }
