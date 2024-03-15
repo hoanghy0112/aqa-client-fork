@@ -8,7 +8,11 @@ const config: CodegenConfig = {
 	generates: {
 		"src/gql/": {
 			preset: "client",
-			plugins: ["typescript", "typescript-operations"],
+			// plugins: ["typescript", "typescript-operations"],
+			// config: {
+			// 	enumsAsTypes: true,
+			// 	futureProofEnums: true,
+			// },
 		},
 	},
 };

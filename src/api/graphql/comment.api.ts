@@ -1,6 +1,6 @@
 import { graphql } from "../../gql";
 
-export const getCommentQuantity = graphql(`
+export const getCommentQuantityApi = graphql(`
 	query CommentQuantity($type: String!) {
 		commentQuantity(type: $type) {
 			quantity

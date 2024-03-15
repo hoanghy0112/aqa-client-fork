@@ -2,7 +2,7 @@
 
 import { SemesterSelectorWithSearchParam } from "@/components/selectors/SemesterSelector";
 
-import { getCommentQuantity } from "@/api/graphql/comment";
+import { getCommentQuantityApi } from "@/api/graphql/comment.api";
 import CommentQuantityInfo from "@/components/comments/CommentQuantityInfo";
 import CommentSearchBar from "@/components/comments/CommentSearchBar";
 import { FacultySelectorWithSearchParams } from "@/components/selectors/FacultySelector";
@@ -19,11 +19,11 @@ import CommentItem from "./CommentItem";
 export default function CommentPage({ defaultFilter = {}, selectors = [] }: IProps) {
 	const searchParams = useSearchParams();
 
-	const { data } = useQuery(getCommentQuantity, {
+	const { data } = useQuery(getCommentQuantityApi, {
 		variables: { type: "positive" },
 	});
 
-	console.log({ data });
+	console.log({ data: data });
 
 	const query: IFilter = {
 		...defaultFilter,

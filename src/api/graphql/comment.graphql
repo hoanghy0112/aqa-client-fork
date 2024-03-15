@@ -1,0 +1,6 @@
+query CommentQuantity {
+    commentQuantity(type: "positive") {
+        quantity
+        type
+    }
+}
