@@ -1,5 +1,13 @@
-query CommentQuantity {
-    commentQuantity(type: "positive") {
+query CommentQuantity($filter: FilterArgs) {
+    positive: commentQuantity(type: "positive", filter: $filter) {
+        quantity
+        type
+    }
+    negative: commentQuantity(type: "negative", filter: $filter) {
+        quantity
+        type
+    }
+    all: commentQuantity(filter: $filter) {
         quantity
         type
     }
