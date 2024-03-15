@@ -2,7 +2,7 @@
 
 import { ReactNode, createContext, useContext, useEffect, useState } from "react";
 
-import { Faculty } from "@/gql/graphql";
+import { Faculty, Semester } from "@/gql/graphql";
 
 export const FilterContext = createContext<IFilterContext>({
 	setKeyword: (d: string) => {},
@@ -33,7 +33,7 @@ export function FilterProvider({
 		display_name: "",
 	},
 	semester: default_semester = {
-		semester_name: "",
+		display_name: "",
 		semester_id: "",
 	} as Semester,
 	sort: default_sort = "desc",

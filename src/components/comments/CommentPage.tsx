@@ -28,7 +28,7 @@ export default function CommentPage({ defaultFilter = {}, selectors = [] }: IPro
 		program: selectors.includes("program")
 			? searchParams.get("program")
 			: undefined,
-		faculty_name: selectors.includes("faculty")
+		faculty_id: selectors.includes("faculty")
 			? searchParams.get("faculty")
 			: undefined,
 		subject_id: selectors.includes("single-subject")

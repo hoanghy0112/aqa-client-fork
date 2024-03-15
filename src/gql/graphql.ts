@@ -388,8 +388,8 @@ export type Semester = {
   __typename?: 'Semester';
   display_name: Scalars['String']['output'];
   semester_id: Scalars['String']['output'];
-  type: Scalars['String']['output'];
-  year: Scalars['String']['output'];
+  type?: Maybe<Scalars['String']['output']>;
+  year?: Maybe<Scalars['String']['output']>;
 };
 
 export type SortArgs = {
@@ -436,6 +436,11 @@ export type FacultiesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type FacultiesQuery = { __typename?: 'Query', faculties: { __typename?: 'PaginatedFaculty', data: Array<{ __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null }> } };
+
+export type SemestersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SemestersQuery = { __typename?: 'Query', semesters?: Array<{ __typename?: 'Semester', display_name: string, semester_id: string, type?: string | null, year?: string | null }> | null };
 
 
 export const CommentQuantityDocument = gql`
@@ -535,4 +540,49 @@ export type FacultiesSuspenseQueryHookResult = ReturnType<typeof useFacultiesSus
 export type FacultiesQueryResult = Apollo.QueryResult<FacultiesQuery, FacultiesQueryVariables>;
 export function refetchFacultiesQuery(variables?: FacultiesQueryVariables) {
       return { query: FacultiesDocument, variables: variables }
+    }
+export const SemestersDocument = gql`
+    query Semesters {
+  semesters {
+    display_name
+    semester_id
+    type
+    year
+  }
+}
+    `;
+
+/**
+ * __useSemestersQuery__
+ *
+ * To run a query within a React component, call `useSemestersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSemestersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSemestersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSemestersQuery(baseOptions?: Apollo.QueryHookOptions<SemestersQuery, SemestersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SemestersQuery, SemestersQueryVariables>(SemestersDocument, options);
+      }
+export function useSemestersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SemestersQuery, SemestersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SemestersQuery, SemestersQueryVariables>(SemestersDocument, options);
+        }
+export function useSemestersSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<SemestersQuery, SemestersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<SemestersQuery, SemestersQueryVariables>(SemestersDocument, options);
+        }
+export type SemestersQueryHookResult = ReturnType<typeof useSemestersQuery>;
+export type SemestersLazyQueryHookResult = ReturnType<typeof useSemestersLazyQuery>;
+export type SemestersSuspenseQueryHookResult = ReturnType<typeof useSemestersSuspenseQuery>;
+export type SemestersQueryResult = Apollo.QueryResult<SemestersQuery, SemestersQueryVariables>;
+export function refetchSemestersQuery(variables?: SemestersQueryVariables) {
+      return { query: SemestersDocument, variables: variables }
     }

@@ -3,6 +3,7 @@
 import { getSemesterList } from "@/api/semester";
 import SemesterIcon from "@/assets/SemesterIcon";
 import { useFilter } from "@/contexts/FilterContext";
+import { Semester, useSemestersQuery } from "@/gql/graphql";
 import useNavigate from "@/hooks/useNavigate";
 import { Button } from "@nextui-org/button";
 import {
@@ -30,8 +31,8 @@ function SemesterSelector_({
 	setSemester: (d?: Semester) => any;
 	semesters: Semester[];
 } & SemesterPropType) {
-	const hasValue = Boolean(semester?.semester_name);
-	const buttonText = semester?.semester_name || "Tất cả học kỳ";
+	const hasValue = Boolean(semester?.display_name);
+	const buttonText = semester?.display_name || "Tất cả học kỳ";
 
 	return (
 		<Dropdown backdrop="blur" shouldBlockScroll={false}>
@@ -59,21 +60,22 @@ function SemesterSelector_({
 			<DropdownMenu
 				variant="faded"
 				aria-label="Semester dropwdown"
+				className=" max-h-96 overflow-auto"
 				selectionMode="single"
 				selectedKeys={new Set([semester?.semester_id || ""])}
 				onAction={(key) => {
 					if (key === "")
 						setSemester?.({
-							semester_name: "Tất cả học kỳ",
+							display_name: "Tất cả học kỳ",
 							semester_id: "",
 						});
 					else setSemester(semesters.find((v) => v.semester_id === key));
 				}}
 			>
 				<DropdownSection title="Chọn học kỳ">
-					{semesters.map(({ semester_name, semester_id }) => (
+					{semesters.map(({ display_name, semester_id }) => (
 						<DropdownItem className={`py-2`} key={semester_id}>
-							<p className="font-medium"> {semester_name}</p>
+							<p className="font-medium"> {display_name}</p>
 						</DropdownItem>
 					))}
 				</DropdownSection>
@@ -92,20 +94,13 @@ export default function SemesterSelector({
 	...props
 }: SemesterPropType & FilterType) {
 	const { semester, setSemester } = useFilter();
-	const [semesters, setSemesters] = useState<Semester[]>([]);
-
-	useEffect(() => {
-		(async () => {
-			const semesterList = await getSemesterList(lecturer_id);
-			setSemesters(semesterList);
-		})();
-	}, []);
+	const { data } = useSemestersQuery();
 
 	return (
 		<SemesterSelector_
 			semester={semester}
 			setSemester={setSemester}
-			semesters={semesters}
+			semesters={data?.semesters || []}
 			{...props}
 		/>
 	);
@@ -118,24 +113,17 @@ export function SemesterSelectorWithSearchParam({
 	const searchParams = useSearchParams();
 	const navigate = useNavigate();
 
-	const [semesters, setSemesters] = useState<Semester[]>([]);
+	const { data } = useSemestersQuery();
 
 	const semester = useMemo<Semester | undefined>(() => {
-		if (semesters.length > 0) {
+		const semesterList = data?.semesters;
+		if (semesterList?.length || 0 > 0) {
 			if (searchParams.has("semester")) {
 				const semesterId = searchParams.get("semester");
-				return semesters.find((v) => v.semester_id == semesterId);
-			} else {
-				if (searchParams.get("semester") == "") {
-					return {
-						semester_id: "",
-						semester_name: "",
-					};
-				}
+				return semesterList?.find((v) => v.semester_id == semesterId);
 			}
 		}
-		return undefined;
-	}, [searchParams, semesters]);
+	}, [searchParams, data?.semesters]);
 
 	const setSemester = useCallback(
 		(semester: Semester | undefined) => {
@@ -145,18 +133,11 @@ export function SemesterSelectorWithSearchParam({
 		[navigate]
 	);
 
-	useEffect(() => {
-		(async () => {
-			const semesterList = await getSemesterList(lecturer_id);
-			setSemesters(semesterList);
-		})();
-	}, []);
-
 	return (
 		<SemesterSelector_
 			semester={semester}
 			setSemester={setSemester}
-			semesters={semesters}
+			semesters={data?.semesters || []}
 			{...props}
 		/>
 	);
