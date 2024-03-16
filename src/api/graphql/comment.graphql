@@ -13,12 +13,25 @@ query CommentQuantity($filter: FilterArgs) {
 	}
 }
 
-query CommentList($filter: FilterArgs, $sort: SortArgs) {
-	comments(filter: $filter, sort: $sort) {
+query CommentList($filter: FilterArgs, $page: Int, $sort: SortArgs, $type: String) {
+	comments(
+		filter: $filter
+		pagination: { page: $page }
+		sort: $sort
+		type: $type
+	) {
 		data {
 			comment_id
 			display_name
 			type
+			class {
+				class_id
+				class_type
+				display_name
+				participating_student
+				program
+				total_student
+			}
 		}
 		meta {
 			hasNext

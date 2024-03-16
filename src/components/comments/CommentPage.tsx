@@ -14,14 +14,15 @@ import { Card } from "@nextui-org/card";
 import { useSearchParams } from "next/navigation";
 import Loading from "../Loading";
 import CommentItem from "./CommentItem";
+import { useCommentListLazyQuery } from "@/gql/graphql";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 
 export default function CommentPage({ defaultFilter = {}, selectors = [] }: IProps) {
 	const searchParams = useSearchParams();
 
-	const query: IFilter = {
+	const query = {
 		...defaultFilter,
-		type: searchParams.get("type"),
-		q: searchParams.get("keyword"),
+		keyword: searchParams.get("keyword"),
 		semester_id: selectors.includes("semester")
 			? searchParams.get("semester")
 			: undefined,
@@ -31,22 +32,22 @@ export default function CommentPage({ defaultFilter = {}, selectors = [] }: IPro
 		faculty_id: selectors.includes("faculty")
 			? searchParams.get("faculty")
 			: undefined,
-		subject_id: selectors.includes("single-subject")
+		subjects: selectors.includes("single-subject")
 			? searchParams.get("subject_id")
+				? [searchParams.get("subject_id")]
+				: undefined
 			: undefined,
 	};
 
-	const {
-		items: comments,
-		hasMore,
-		isLoading,
-		bottomRef,
-	} = useIncrementalFetch<IComment>({
-		url: GET_COMMENT_LIST,
-		query,
-	});
+	const [getCommentList, { data, loading: isLoading }] = useCommentListLazyQuery();
 
-	// const {} = useCommen
+	const { dataList: comments, bottomRef } = useInfiniteScroll({
+		queryFunction: getCommentList,
+		variables: { filter: query, type: searchParams.get("type") },
+		isLoading,
+		data: data?.comments.data,
+		meta: data?.comments.meta,
+	});
 
 	return (
 		<div>
@@ -74,19 +75,19 @@ export default function CommentPage({ defaultFilter = {}, selectors = [] }: IPro
 			<CommentSearchBar />
 			<Card className="mt-8 mb-20 w-full p-5">
 				{comments.map(
-					({ content, type, comment_id, teach_id }: IComment) => (
+					({ comment_id, display_name, type, class: class_ }) => (
 						<CommentItem
 							key={comment_id}
-							content={content}
+							content={display_name}
 							type={type}
 							comment_id={comment_id}
-							teach_id={teach_id}
+							class_id={class_?.class_id}
 							isLast={false}
 						/>
 					)
 				)}
-				{hasMore ? <Loading /> : null}
-				{!hasMore && !isLoading ? (
+				{data?.comments.meta.hasNext ? <Loading /> : null}
+				{!data?.comments.meta.hasNext && !isLoading ? (
 					<div className="w-full flex flex-col pt-6 pb-4 items-center">
 						<p className="w-fit text-lg font-semibold">
 							Không còn bình luận nào

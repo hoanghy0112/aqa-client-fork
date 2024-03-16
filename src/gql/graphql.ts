@@ -310,6 +310,7 @@ export type QueryCommentsArgs = {
   filter?: InputMaybe<FilterArgs>;
   pagination?: InputMaybe<PaginationArgs>;
   sort?: InputMaybe<SortArgs>;
+  type?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -426,11 +427,13 @@ export type CommentQuantityQuery = { __typename?: 'Query', positive: { __typenam
 
 export type CommentListQueryVariables = Exact<{
   filter?: InputMaybe<FilterArgs>;
+  page?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<SortArgs>;
+  type?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type CommentListQuery = { __typename?: 'Query', comments: { __typename?: 'PaginatedComment', data: Array<{ __typename?: 'Comment', comment_id: string, display_name: string, type: string }>, meta: { __typename?: 'PaginatedMetaData', hasNext: boolean, hasPrev: boolean, page: number, size: number, total_item: number, total_page: number } } };
+export type CommentListQuery = { __typename?: 'Query', comments: { __typename?: 'PaginatedComment', data: Array<{ __typename?: 'Comment', comment_id: string, display_name: string, type: string, class?: { __typename?: 'Class', class_id: string, class_type: string, display_name: string, participating_student: number, program: string, total_student: number } | null }>, meta: { __typename?: 'PaginatedMetaData', hasNext: boolean, hasPrev: boolean, page: number, size: number, total_item: number, total_page: number } } };
 
 export type FacultiesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -510,12 +513,20 @@ export function refetchCommentQuantityQuery(variables?: CommentQuantityQueryVari
       return { query: CommentQuantityDocument, variables: variables }
     }
 export const CommentListDocument = gql`
-    query CommentList($filter: FilterArgs, $sort: SortArgs) {
-  comments(filter: $filter, sort: $sort) {
+    query CommentList($filter: FilterArgs, $page: Int, $sort: SortArgs, $type: String) {
+  comments(filter: $filter, pagination: {page: $page}, sort: $sort, type: $type) {
     data {
       comment_id
       display_name
       type
+      class {
+        class_id
+        class_type
+        display_name
+        participating_student
+        program
+        total_student
+      }
     }
     meta {
       hasNext
@@ -542,7 +553,9 @@ export const CommentListDocument = gql`
  * const { data, loading, error } = useCommentListQuery({
  *   variables: {
  *      filter: // value for 'filter'
+ *      page: // value for 'page'
  *      sort: // value for 'sort'
+ *      type: // value for 'type'
  *   },
  * });
  */

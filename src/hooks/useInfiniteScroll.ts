@@ -1,6 +1,8 @@
 import { PaginatedMetaData } from "@/gql/graphql";
 import { useEffect, useRef, useState } from "react";
 import { useDeepCompareEffect } from "react-use";
+import _ from "lodash";
+import { pagination } from "@nextui-org/react";
 
 export function useInfiniteScroll<T>({
 	queryFunction,
@@ -17,18 +19,29 @@ export function useInfiniteScroll<T>({
 }) {
 	const bottomRef = useRef<HTMLDivElement>(null);
 	const [dataList, setDataList] = useState<T[]>([]);
+	const isQuerying = useRef(false);
 
 	useDeepCompareEffect(() => {
-		queryFunction({ variables });
+		isQuerying.current = true;
+		queryFunction({
+			variables: {
+				page: 0,
+				..._.pickBy(variables, _.identity),
+			},
+		});
 		setDataList([]);
 	}, [variables]);
 
-	if (bottomRef.current) {
+	if (bottomRef.current && dataList.length && !isLoading) {
 		const observer = new IntersectionObserver(([entry]) => {
 			if (entry.isIntersecting) {
-				if (meta?.hasNext) {
+				if (meta?.hasNext && isQuerying.current == false) {
+					isQuerying.current = true;
 					queryFunction({
-						variables: { page: meta.page + 1, ...variables },
+						variables: {
+							page: meta.page + 1,
+							..._.pickBy(variables, _.identity),
+						},
 					});
 				}
 				observer.unobserve(entry.target);
@@ -39,8 +52,10 @@ export function useInfiniteScroll<T>({
 	}
 
 	useDeepCompareEffect(() => {
-		if (!isLoading) {
-			setDataList((prev) => [...prev, ...(data || [])]);
+		if (!isLoading && data) {
+			isQuerying.current = false;
+			if (meta?.page === 0) setDataList(data || []);
+			else setDataList((prev) => [...prev, ...(data || [])]);
 		}
 	}, [isLoading, data]);
 

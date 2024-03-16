@@ -70,7 +70,7 @@ export default function Page({ params: { subject_id }, searchParams }: Props) {
 							content={content}
 							type={type}
 							comment_id={comment_id}
-							teach_id={teach_id}
+							class_id={teach_id}
 							isLast={false}
 						/>
 					)

@@ -12,9 +12,9 @@ export default function CommentItem({
 	type,
 }: {
 	content: string;
-	type: "positive" | "negative";
+	type: string;
 	comment_id: string;
-	teach_id: string;
+	class_id?: string;
 	isLast: boolean;
 }) {
 	return (
@@ -44,7 +44,7 @@ export default function CommentItem({
 							alt="Copy comment"
 						/>
 					</Card>
-					{/* <Card
+					<Card
 						isPressable
 						shadow="sm"
 						className={`px-2 py-1 w-24 grid items-center ${
@@ -56,7 +56,7 @@ export default function CommentItem({
 						<p className=" capitalize font-medium text-sm py-1">
 							{type == "positive" ? "Tích cực" : "Tiêu cực"}
 						</p>
-					</Card> */}
+					</Card>
 				</div>
 			</motion.div>
 		</Card>
