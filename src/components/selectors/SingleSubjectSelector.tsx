@@ -1,7 +1,12 @@
 "use client";
 
 import { FilterProvider, useFilter } from "@/contexts/FilterContext";
-import { Subject, SubjectsQuery, useSubjectsQuery } from "@/gql/graphql";
+import {
+	Subject,
+	SubjectsQuery,
+	useSubjectsLazyQuery,
+	useSubjectsQuery,
+} from "@/gql/graphql";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import useNavigate from "@/hooks/useNavigate";
 import { Input } from "@nextui-org/input";
@@ -38,21 +43,24 @@ function SingleSubjectSelector_({ subjectId, setSubject, defaultFilter }: Props)
 
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-	const {
-		data: items,
-		page,
-		bottomRef,
-		setData,
-	} = useInfiniteScroll<ArrayElement<SubjectsQuery["subjects"]["data"]>>([
-		sort,
-		debouncedKeyword,
-	]);
+	// const {
+	// 	data: items,
+	// 	page,
+	// 	bottomRef,
+	// 	setData,
+	// } = useInfiniteScroll<ArrayElement<SubjectsQuery["subjects"]["data"]>>([
+	// 	sort,
+	// 	debouncedKeyword,
+	// ]);
 
-	const { loading: isLoading } = useSubjectsQuery({
-		variables: { keyword: debouncedKeyword, isAscending: sort != "desc", page },
-		onCompleted({ subjects }) {
-			setData(subjects);
-		},
+	const [getSubjects, { data, loading: isLoading }] = useSubjectsLazyQuery();
+
+	const { dataList: items, bottomRef } = useInfiniteScroll({
+		queryFunction: getSubjects,
+		variables: { keyword: debouncedKeyword, isAscending: sort != "desc" },
+		isLoading,
+		data: data?.subjects.data,
+		meta: data?.subjects.meta,
 	});
 
 	const subject = items?.find?.((v) => v.subject_id == subjectId) || undefined;

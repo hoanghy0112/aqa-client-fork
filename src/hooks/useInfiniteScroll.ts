@@ -2,16 +2,35 @@ import { PaginatedMetaData } from "@/gql/graphql";
 import { useEffect, useRef, useState } from "react";
 import { useDeepCompareEffect } from "react-use";
 
-export function useInfiniteScroll<T>(deps: any[]) {
+export function useInfiniteScroll<T>({
+	queryFunction,
+	variables,
+	isLoading,
+	data,
+	meta,
+}: {
+	queryFunction: (options: { variables: Record<string, any> }) => any;
+	variables: Record<string, any>;
+	isLoading: boolean;
+	data?: T[];
+	meta?: PaginatedMetaData;
+}) {
 	const bottomRef = useRef<HTMLDivElement>(null);
-	const [meta, setMeta] = useState<PaginatedMetaData>();
-	const [page, setPage] = useState(0);
-	const [data, setData] = useState<T[]>([]);
+	const [dataList, setDataList] = useState<T[]>([]);
+
+	useDeepCompareEffect(() => {
+		queryFunction({ variables });
+		setDataList([]);
+	}, [variables]);
 
 	if (bottomRef.current) {
 		const observer = new IntersectionObserver(([entry]) => {
 			if (entry.isIntersecting) {
-				if (meta?.hasNext) setPage((prev) => prev + 1);
+				if (meta?.hasNext) {
+					queryFunction({
+						variables: { page: meta.page + 1, ...variables },
+					});
+				}
 				observer.unobserve(entry.target);
 			}
 		});
@@ -19,25 +38,11 @@ export function useInfiniteScroll<T>(deps: any[]) {
 		observer.observe(bottomRef.current);
 	}
 
-	useEffect(() => {
-		setPage(0);
-		setData([]);
-		setMeta(undefined);
-	}, deps);
+	useDeepCompareEffect(() => {
+		if (!isLoading) {
+			setDataList((prev) => [...prev, ...(data || [])]);
+		}
+	}, [isLoading, data]);
 
-	return {
-		data,
-		setData: ({
-			data: newData,
-			meta,
-		}: {
-			data: T[];
-			meta: PaginatedMetaData;
-		}) => {
-			setMeta(meta);
-			setData((prev) => [...prev, ...newData]);
-		},
-		page,
-		bottomRef,
-	};
+	return { dataList, bottomRef };
 }
