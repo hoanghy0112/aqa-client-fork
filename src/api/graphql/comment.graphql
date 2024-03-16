@@ -1,14 +1,32 @@
 query CommentQuantity($filter: FilterArgs) {
-    positive: commentQuantity(type: "positive", filter: $filter) {
-        quantity
-        type
-    }
-    negative: commentQuantity(type: "negative", filter: $filter) {
-        quantity
-        type
-    }
-    all: commentQuantity(filter: $filter) {
-        quantity
-        type
-    }
+	positive: commentQuantity(type: "positive", filter: $filter) {
+		quantity
+		type
+	}
+	negative: commentQuantity(type: "negative", filter: $filter) {
+		quantity
+		type
+	}
+	all: commentQuantity(filter: $filter) {
+		quantity
+		type
+	}
+}
+
+query CommentList($filter: FilterArgs, $sort: SortArgs) {
+	comments(filter: $filter, sort: $sort) {
+		data {
+			comment_id
+			display_name
+			type
+		}
+		meta {
+			hasNext
+			hasPrev
+			page
+			size
+			total_item
+			total_page
+		}
+	}
 }

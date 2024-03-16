@@ -46,6 +46,8 @@ export default function CommentPage({ defaultFilter = {}, selectors = [] }: IPro
 		query,
 	});
 
+	// const {} = useCommen
+
 	return (
 		<div>
 			<div className="flex flex-col xl:flex-row gap-8 xl:gap-0 items-center ">

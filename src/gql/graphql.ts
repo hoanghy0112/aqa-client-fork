@@ -307,17 +307,9 @@ export type QueryCommentQuantityArgs = {
 
 
 export type QueryCommentsArgs = {
-  class_id?: InputMaybe<Scalars['String']['input']>;
-  class_type?: InputMaybe<Scalars['String']['input']>;
-  criteria_id?: InputMaybe<Scalars['String']['input']>;
-  faculty_id?: InputMaybe<Scalars['String']['input']>;
-  keyword?: InputMaybe<Scalars['String']['input']>;
-  lecturer_id?: InputMaybe<Scalars['String']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  program?: InputMaybe<Scalars['String']['input']>;
-  semester_id?: InputMaybe<Scalars['String']['input']>;
-  size?: InputMaybe<Scalars['Int']['input']>;
-  subjects?: InputMaybe<Array<Scalars['String']['input']>>;
+  filter?: InputMaybe<FilterArgs>;
+  pagination?: InputMaybe<PaginationArgs>;
+  sort?: InputMaybe<SortArgs>;
 };
 
 
@@ -432,6 +424,14 @@ export type CommentQuantityQueryVariables = Exact<{
 
 export type CommentQuantityQuery = { __typename?: 'Query', positive: { __typename?: 'CommentQuantity', quantity: number, type: string }, negative: { __typename?: 'CommentQuantity', quantity: number, type: string }, all: { __typename?: 'CommentQuantity', quantity: number, type: string } };
 
+export type CommentListQueryVariables = Exact<{
+  filter?: InputMaybe<FilterArgs>;
+  sort?: InputMaybe<SortArgs>;
+}>;
+
+
+export type CommentListQuery = { __typename?: 'Query', comments: { __typename?: 'PaginatedComment', data: Array<{ __typename?: 'Comment', comment_id: string, display_name: string, type: string }>, meta: { __typename?: 'PaginatedMetaData', hasNext: boolean, hasPrev: boolean, page: number, size: number, total_item: number, total_page: number } } };
+
 export type FacultiesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -508,6 +508,62 @@ export type CommentQuantitySuspenseQueryHookResult = ReturnType<typeof useCommen
 export type CommentQuantityQueryResult = Apollo.QueryResult<CommentQuantityQuery, CommentQuantityQueryVariables>;
 export function refetchCommentQuantityQuery(variables?: CommentQuantityQueryVariables) {
       return { query: CommentQuantityDocument, variables: variables }
+    }
+export const CommentListDocument = gql`
+    query CommentList($filter: FilterArgs, $sort: SortArgs) {
+  comments(filter: $filter, sort: $sort) {
+    data {
+      comment_id
+      display_name
+      type
+    }
+    meta {
+      hasNext
+      hasPrev
+      page
+      size
+      total_item
+      total_page
+    }
+  }
+}
+    `;
+
+/**
+ * __useCommentListQuery__
+ *
+ * To run a query within a React component, call `useCommentListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCommentListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCommentListQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      sort: // value for 'sort'
+ *   },
+ * });
+ */
+export function useCommentListQuery(baseOptions?: Apollo.QueryHookOptions<CommentListQuery, CommentListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CommentListQuery, CommentListQueryVariables>(CommentListDocument, options);
+      }
+export function useCommentListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CommentListQuery, CommentListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CommentListQuery, CommentListQueryVariables>(CommentListDocument, options);
+        }
+export function useCommentListSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<CommentListQuery, CommentListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<CommentListQuery, CommentListQueryVariables>(CommentListDocument, options);
+        }
+export type CommentListQueryHookResult = ReturnType<typeof useCommentListQuery>;
+export type CommentListLazyQueryHookResult = ReturnType<typeof useCommentListLazyQuery>;
+export type CommentListSuspenseQueryHookResult = ReturnType<typeof useCommentListSuspenseQuery>;
+export type CommentListQueryResult = Apollo.QueryResult<CommentListQuery, CommentListQueryVariables>;
+export function refetchCommentListQuery(variables?: CommentListQueryVariables) {
+      return { query: CommentListDocument, variables: variables }
     }
 export const FacultiesDocument = gql`
     query Faculties {
