@@ -84,3 +84,6 @@ declare type SelectorType =
 	| "faculty"
 	| "single-subject"
 	| "multi-subject";
+
+type ArrayElement<ArrayType extends readonly unknown[]> =
+	ArrayType extends readonly (infer ElementType)[] ? ElementType : never;

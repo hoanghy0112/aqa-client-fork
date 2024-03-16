@@ -450,10 +450,11 @@ export type SemestersQuery = { __typename?: 'Query', semesters?: Array<{ __typen
 export type SubjectsQueryVariables = Exact<{
   keyword?: InputMaybe<Scalars['String']['input']>;
   isAscending?: InputMaybe<Scalars['Boolean']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type SubjectsQuery = { __typename?: 'Query', subjects: { __typename?: 'PaginatedSubject', data: Array<{ __typename?: 'Subject', display_name?: string | null, faculty_id?: string | null, subject_id: string, total_point?: number | null, faculty?: { __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null } | null }> } };
+export type SubjectsQuery = { __typename?: 'Query', subjects: { __typename?: 'PaginatedSubject', data: Array<{ __typename?: 'Subject', display_name?: string | null, faculty_id?: string | null, subject_id: string, total_point?: number | null, faculty?: { __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null } | null }>, meta: { __typename?: 'PaginatedMetaData', hasNext: boolean, hasPrev: boolean, page: number, size: number, total_item: number, total_page: number } } };
 
 
 export const CommentQuantityDocument = gql`
@@ -642,8 +643,12 @@ export function refetchSemestersQuery(variables?: SemestersQueryVariables) {
       return { query: SemestersDocument, variables: variables }
     }
 export const SubjectsDocument = gql`
-    query Subjects($keyword: String, $isAscending: Boolean) {
-  subjects(filter: {keyword: $keyword}, sort: {isAscending: $isAscending}) {
+    query Subjects($keyword: String, $isAscending: Boolean, $page: Int) {
+  subjects(
+    filter: {keyword: $keyword}
+    pagination: {page: $page, size: 10}
+    sort: {isAscending: $isAscending}
+  ) {
     data {
       display_name
       faculty_id
@@ -654,6 +659,14 @@ export const SubjectsDocument = gql`
         faculty_id
         full_name
       }
+    }
+    meta {
+      hasNext
+      hasPrev
+      page
+      size
+      total_item
+      total_page
     }
   }
 }
@@ -673,6 +686,7 @@ export const SubjectsDocument = gql`
  *   variables: {
  *      keyword: // value for 'keyword'
  *      isAscending: // value for 'isAscending'
+ *      page: // value for 'page'
  *   },
  * });
  */

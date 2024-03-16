@@ -1,15 +1,27 @@
-query Subjects($keyword: String, $isAscending: Boolean) {
-	subjects(filter: { keyword: $keyword }, sort: { isAscending: $isAscending }) {
+query Subjects($keyword: String, $isAscending: Boolean, $page: Int) {
+	subjects(
+		filter: { keyword: $keyword }
+		pagination: { page: $page, size: 10 }
+		sort: { isAscending: $isAscending }
+	) {
 		data {
 			display_name
 			faculty_id
 			subject_id
 			total_point
-            faculty {
-                display_name
-                faculty_id
-                full_name
-            }
+			faculty {
+				display_name
+				faculty_id
+				full_name
+			}
+		}
+		meta {
+			hasNext
+			hasPrev
+			page
+			size
+			total_item
+			total_page
 		}
 	}
 }

@@ -1,9 +1,9 @@
 "use client";
 
-import { GET_SUBJECT_TABLE } from "@/constants/api_endpoint";
 import { FilterProvider, useFilter } from "@/contexts/FilterContext";
+import { Subject, SubjectsQuery, useSubjectsQuery } from "@/gql/graphql";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import useNavigate from "@/hooks/useNavigate";
-import withQuery from "@/utils/withQuery";
 import { Input } from "@nextui-org/input";
 import {
 	Modal,
@@ -13,15 +13,12 @@ import {
 	useDisclosure,
 } from "@nextui-org/modal";
 import { Card, Spinner } from "@nextui-org/react";
-import { Skeleton } from "@nextui-org/skeleton";
-import { motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import useSWR from "swr";
 import { useDebounce } from "usehooks-ts";
 import OptionButton from "../OptionButton";
+import SubjectSelectorSkeleton from "../skeleton/SubjectSelectorSkeleton";
 import { SortSelector } from "./SortSelector";
-import { Subject, useSubjectsQuery } from "@/gql/graphql";
 
 type Props = {
 	subjectId?: string | null;
@@ -34,10 +31,6 @@ type FilterType = {
 };
 
 function SingleSubjectSelector_({ subjectId, setSubject, defaultFilter }: Props) {
-	const searchParams = useSearchParams();
-
-	const [faculty, setFaculty] = useState<string>();
-
 	const [keyword, setKeyword] = useState<string | undefined>();
 	const debouncedKeyword = useDebounce<string>(keyword || "", 500);
 
@@ -45,11 +38,22 @@ function SingleSubjectSelector_({ subjectId, setSubject, defaultFilter }: Props)
 
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-	const { data, loading: isLoading } = useSubjectsQuery({
-		variables: { keyword: debouncedKeyword, isAscending: sort == "asc" },
-	});
+	const {
+		data: items,
+		page,
+		bottomRef,
+		setData,
+	} = useInfiniteScroll<ArrayElement<SubjectsQuery["subjects"]["data"]>>([
+		sort,
+		debouncedKeyword,
+	]);
 
-	const items = data?.subjects.data;
+	const { loading: isLoading } = useSubjectsQuery({
+		variables: { keyword: debouncedKeyword, isAscending: sort != "desc", page },
+		onCompleted({ subjects }) {
+			setData(subjects);
+		},
+	});
 
 	const subject = items?.find?.((v) => v.subject_id == subjectId) || undefined;
 
@@ -101,83 +105,63 @@ function SingleSubjectSelector_({ subjectId, setSubject, defaultFilter }: Props)
 								</div>
 							</ModalHeader>
 							<ModalBody className="mb-5">
-								{items?.length || 0 > 0 || !isLoading ? (
-									<>
-										<div className="w-full mb-2">
-											<Card
-												isPressable
-												onPress={() => {
-													onClose();
-													setSubject({
-														subject_id: "",
-														display_name: "",
-													} as Subject);
-												}}
-												className="w-full flex flex-col justify-between cursor-pointer rounded-lg gap-2 px-4 py-3 border-2 border-transparent"
+								<>
+									<div className="w-full mb-2">
+										<Card
+											isPressable
+											onPress={() => {
+												onClose();
+												setSubject({
+													subject_id: "",
+													display_name: "",
+												} as Subject);
+											}}
+											className="w-full flex flex-col justify-between cursor-pointer rounded-lg gap-2 px-4 py-3 border-2 border-transparent"
+										>
+											<p className=" text-md font-semibold mb-1 text-start">
+												Tất cả môn học
+											</p>
+										</Card>
+									</div>
+									{items?.map(
+										({
+											display_name,
+											faculty_id,
+											subject_id,
+											faculty,
+										}) => (
+											<div
+												key={subject_id}
+												className="w-full mb-2"
 											>
-												<p className=" text-md font-semibold mb-1 text-start">
-													Tất cả môn học
-												</p>
-											</Card>
-										</div>
-										{items?.map(
-											({
-												display_name,
-												faculty_id,
-												subject_id,
-												faculty,
-											}) => (
-												<div
-													key={subject_id}
-													className="w-full mb-2"
+												<Card
+													isPressable
+													onPress={() => {
+														onClose();
+														setSubject({
+															subject_id,
+															display_name,
+															faculty_id,
+														} as Subject);
+													}}
+													className="w-full flex flex-col justify-between cursor-pointer rounded-lg gap-2 px-4 py-3 border-2 border-transparent"
 												>
-													<Card
-														isPressable
-														onPress={() => {
-															onClose();
-															setSubject({
-																subject_id,
-																display_name,
-																faculty_id,
-															} as Subject);
-														}}
-														className="w-full flex flex-col justify-between cursor-pointer rounded-lg gap-2 px-4 py-3 border-2 border-transparent"
-													>
-														<p className=" text-md font-semibold mb-1 text-start">
-															{display_name}
-														</p>
-														<p className=" text-sm w-full font-normal text-start">
-															{faculty?.display_name}
-														</p>
-													</Card>
-												</div>
-											)
-										)}
-									</>
-								) : (
-									Array(6)
-										.fill(0)
-										.map((_, index) => (
-											<div key={index} className="rounded-md">
-												<Skeleton className="w-fit h-fit rounded-md">
-													<motion.div
-														className="h-12"
-														initial={{ width: 0 }}
-														animate={{
-															width: Math.floor(
-																Math.random() * 500 +
-																	100
-															),
-														}}
-														transition={{
-															ease: "easeOut",
-															duration: 0.3,
-														}}
-													/>
-												</Skeleton>
+													<p className=" text-md font-semibold mb-1 text-start">
+														{display_name}
+													</p>
+													<p className=" text-sm w-full font-normal text-start">
+														{faculty?.display_name}
+													</p>
+												</Card>
 											</div>
-										))
-								)}
+										)
+									)}
+									{isLoading ? (
+										<SubjectSelectorSkeleton />
+									) : (
+										<div ref={bottomRef} />
+									)}
+								</>
 							</ModalBody>
 						</>
 					)}
