@@ -405,9 +405,9 @@ export type SortFieldArgs = {
 export type Subject = {
   __typename?: 'Subject';
   display_name?: Maybe<Scalars['String']['output']>;
-  faculty: Faculty;
-  faculty_id: Scalars['String']['output'];
-  points: Array<GroupedPoint>;
+  faculty?: Maybe<Faculty>;
+  faculty_id?: Maybe<Scalars['String']['output']>;
+  points?: Maybe<Array<GroupedPoint>>;
   subject_id: Scalars['String']['output'];
   total_point?: Maybe<Scalars['Float']['output']>;
 };
@@ -446,6 +446,14 @@ export type SemestersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type SemestersQuery = { __typename?: 'Query', semesters?: Array<{ __typename?: 'Semester', display_name: string, semester_id: string, type?: string | null, year?: string | null }> | null };
+
+export type SubjectsQueryVariables = Exact<{
+  keyword?: InputMaybe<Scalars['String']['input']>;
+  isAscending?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type SubjectsQuery = { __typename?: 'Query', subjects: { __typename?: 'PaginatedSubject', data: Array<{ __typename?: 'Subject', display_name?: string | null, faculty_id?: string | null, subject_id: string, total_point?: number | null, faculty?: { __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null } | null }> } };
 
 
 export const CommentQuantityDocument = gql`
@@ -632,4 +640,58 @@ export type SemestersSuspenseQueryHookResult = ReturnType<typeof useSemestersSus
 export type SemestersQueryResult = Apollo.QueryResult<SemestersQuery, SemestersQueryVariables>;
 export function refetchSemestersQuery(variables?: SemestersQueryVariables) {
       return { query: SemestersDocument, variables: variables }
+    }
+export const SubjectsDocument = gql`
+    query Subjects($keyword: String, $isAscending: Boolean) {
+  subjects(filter: {keyword: $keyword}, sort: {isAscending: $isAscending}) {
+    data {
+      display_name
+      faculty_id
+      subject_id
+      total_point
+      faculty {
+        display_name
+        faculty_id
+        full_name
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useSubjectsQuery__
+ *
+ * To run a query within a React component, call `useSubjectsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSubjectsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSubjectsQuery({
+ *   variables: {
+ *      keyword: // value for 'keyword'
+ *      isAscending: // value for 'isAscending'
+ *   },
+ * });
+ */
+export function useSubjectsQuery(baseOptions?: Apollo.QueryHookOptions<SubjectsQuery, SubjectsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SubjectsQuery, SubjectsQueryVariables>(SubjectsDocument, options);
+      }
+export function useSubjectsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SubjectsQuery, SubjectsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SubjectsQuery, SubjectsQueryVariables>(SubjectsDocument, options);
+        }
+export function useSubjectsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<SubjectsQuery, SubjectsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<SubjectsQuery, SubjectsQueryVariables>(SubjectsDocument, options);
+        }
+export type SubjectsQueryHookResult = ReturnType<typeof useSubjectsQuery>;
+export type SubjectsLazyQueryHookResult = ReturnType<typeof useSubjectsLazyQuery>;
+export type SubjectsSuspenseQueryHookResult = ReturnType<typeof useSubjectsSuspenseQuery>;
+export type SubjectsQueryResult = Apollo.QueryResult<SubjectsQuery, SubjectsQueryVariables>;
+export function refetchSubjectsQuery(variables?: SubjectsQueryVariables) {
+      return { query: SubjectsDocument, variables: variables }
     }

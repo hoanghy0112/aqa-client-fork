@@ -2,7 +2,7 @@
 
 import { ReactNode, createContext, useContext, useEffect, useState } from "react";
 
-import { Faculty, Semester } from "@/gql/graphql";
+import { Faculty, Semester, Subject } from "@/gql/graphql";
 
 export const FilterContext = createContext<IFilterContext>({
 	setKeyword: (d: string) => {},

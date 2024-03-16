@@ -2,30 +2,26 @@
 
 import { GET_SUBJECT_TABLE } from "@/constants/api_endpoint";
 import { FilterProvider, useFilter } from "@/contexts/FilterContext";
-import useIncrementalFetch from "@/hooks/useIncrementalFetch";
-import { Button } from "@nextui-org/button";
+import useNavigate from "@/hooks/useNavigate";
+import withQuery from "@/utils/withQuery";
 import { Input } from "@nextui-org/input";
 import {
 	Modal,
 	ModalBody,
 	ModalContent,
-	ModalFooter,
 	ModalHeader,
 	useDisclosure,
 } from "@nextui-org/modal";
 import { Card, Spinner } from "@nextui-org/react";
 import { Skeleton } from "@nextui-org/skeleton";
 import { motion } from "framer-motion";
+import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import useSWR from "swr";
 import { useDebounce } from "usehooks-ts";
-import Loading from "../Loading";
-import NoData from "../NoData";
 import OptionButton from "../OptionButton";
 import { SortSelector } from "./SortSelector";
-import { useSearchParams } from "next/navigation";
-import useNavigate from "@/hooks/useNavigate";
-import useSWR from "swr";
-import withQuery from "@/utils/withQuery";
+import { Subject, useSubjectsQuery } from "@/gql/graphql";
 
 type Props = {
 	subjectId?: string | null;
@@ -49,30 +45,16 @@ function SingleSubjectSelector_({ subjectId, setSubject, defaultFilter }: Props)
 
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-	const [isClient, setIsClient] = useState(false);
+	const { data, loading: isLoading } = useSubjectsQuery({
+		variables: { keyword: debouncedKeyword, isAscending: sort == "asc" },
+	});
 
-	useEffect(() => {
-		setIsClient(true);
-	}, []);
-
-	const { data: response, isLoading } = useSWR<IncrementalData<Subject>>(
-		withQuery(GET_SUBJECT_TABLE, {
-			...defaultFilter,
-			debouncedKeyword,
-			page_size: 200,
-			filter_field: "subject_name",
-			faculty_name: faculty,
-			direction: sort,
-		}),
-		(url: string) => fetch(url).then((res) => res.json())
-	);
-
-	const items = response?.data;
+	const items = data?.subjects.data;
 
 	const subject = items?.find?.((v) => v.subject_id == subjectId) || undefined;
 
 	const hasValue = Boolean(subject);
-	const buttonText = hasValue ? subject?.subject_name : "Chọn môn học";
+	const buttonText = hasValue ? subject?.display_name : "Chọn môn học";
 
 	return (
 		<>
@@ -128,7 +110,7 @@ function SingleSubjectSelector_({ subjectId, setSubject, defaultFilter }: Props)
 													onClose();
 													setSubject({
 														subject_id: "",
-														subject_name: "",
+														display_name: "",
 													} as Subject);
 												}}
 												className="w-full flex flex-col justify-between cursor-pointer rounded-lg gap-2 px-4 py-3 border-2 border-transparent"
@@ -140,9 +122,10 @@ function SingleSubjectSelector_({ subjectId, setSubject, defaultFilter }: Props)
 										</div>
 										{items?.map(
 											({
-												subject_name,
-												faculty_name,
+												display_name,
+												faculty_id,
 												subject_id,
+												faculty,
 											}) => (
 												<div
 													key={subject_id}
@@ -154,17 +137,17 @@ function SingleSubjectSelector_({ subjectId, setSubject, defaultFilter }: Props)
 															onClose();
 															setSubject({
 																subject_id,
-																subject_name,
-																faculty_name,
+																display_name,
+																faculty_id,
 															} as Subject);
 														}}
 														className="w-full flex flex-col justify-between cursor-pointer rounded-lg gap-2 px-4 py-3 border-2 border-transparent"
 													>
 														<p className=" text-md font-semibold mb-1 text-start">
-															{subject_name}
+															{display_name}
 														</p>
 														<p className=" text-sm w-full font-normal text-start">
-															{faculty_name}
+															{faculty?.display_name}
 														</p>
 													</Card>
 												</div>
@@ -236,10 +219,9 @@ export function SingleSubjectSelectorWithSearchParam({
 	const setSubject = useCallback(
 		(d: Subject) => {
 			onSelect?.(d);
-			if (d.faculty_name)
+			if (d.display_name)
 				navigate.replace({
 					subject_id: d.subject_id,
-					// faculty: d.faculty_name,
 				});
 			else navigate.replace({ subject_id: d.subject_id });
 		},
