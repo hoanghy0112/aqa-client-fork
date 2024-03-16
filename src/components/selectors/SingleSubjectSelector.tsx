@@ -43,16 +43,6 @@ function SingleSubjectSelector_({ subjectId, setSubject, defaultFilter }: Props)
 
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-	// const {
-	// 	data: items,
-	// 	page,
-	// 	bottomRef,
-	// 	setData,
-	// } = useInfiniteScroll<ArrayElement<SubjectsQuery["subjects"]["data"]>>([
-	// 	sort,
-	// 	debouncedKeyword,
-	// ]);
-
 	const [getSubjects, { data, loading: isLoading }] = useSubjectsLazyQuery();
 
 	const { dataList: items, bottomRef } = useInfiniteScroll({

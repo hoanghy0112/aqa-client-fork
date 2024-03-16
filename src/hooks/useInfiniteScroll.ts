@@ -1,8 +1,7 @@
 import { PaginatedMetaData } from "@/gql/graphql";
-import { useEffect, useRef, useState } from "react";
-import { useDeepCompareEffect } from "react-use";
 import _ from "lodash";
-import { pagination } from "@nextui-org/react";
+import { useRef, useState } from "react";
+import { useDeepCompareEffect } from "react-use";
 
 export function useInfiniteScroll<T>({
 	queryFunction,
@@ -23,12 +22,7 @@ export function useInfiniteScroll<T>({
 
 	useDeepCompareEffect(() => {
 		isQuerying.current = true;
-		queryFunction({
-			variables: {
-				page: 0,
-				..._.pickBy(variables, _.identity),
-			},
-		});
+		queryFunction({ variables: { page: 0, ...variables } });
 		setDataList([]);
 	}, [variables]);
 
@@ -38,10 +32,7 @@ export function useInfiniteScroll<T>({
 				if (meta?.hasNext && isQuerying.current == false) {
 					isQuerying.current = true;
 					queryFunction({
-						variables: {
-							page: meta.page + 1,
-							..._.pickBy(variables, _.identity),
-						},
+						variables: { page: meta.page + 1, ...variables },
 					});
 				}
 				observer.unobserve(entry.target);
