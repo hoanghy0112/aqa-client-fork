@@ -16,7 +16,7 @@ export default function InfoTab({
 	icon: string;
 	title: string;
 	type: string;
-	number: number;
+	number?: number;
 	isLoading: boolean;
 	defaultChecked?: boolean;
 }) {
@@ -49,7 +49,7 @@ export default function InfoTab({
 						{title}
 					</p>
 				</div>
-				{isLoading ? (
+				{number === undefined ? (
 					<Spinner className="mt-2 w-fit" />
 				) : (
 					<p className="text-2xl font-semibold pl-6 mt-2 w-fit">

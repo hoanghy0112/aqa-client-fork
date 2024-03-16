@@ -11,6 +11,8 @@ import POSITIVE_COMMENT_ICON from "@assets/positive_comment.svg";
 import { GET_COMMENT_QUANTITY } from "@/constants/api_endpoint";
 import withQuery from "@/utils/withQuery";
 import { useSearchParams } from "next/navigation";
+import { useCommentQuantityQuery } from "@/gql/graphql";
+import { useRememberValue } from "@/hooks/useRememberValue";
 
 type Props = {
 	subject_id?: string | null;
@@ -19,12 +21,11 @@ type Props = {
 };
 
 export default function CommentQuantityInfo({ query }: Props) {
-	const searchParams = useSearchParams();
+	const { data: commentQuantity, loading: isLoading } = useCommentQuantityQuery({
+		variables: { filter: query },
+	});
 
-	const { data, isLoading, error } = useSWR(
-		withQuery(GET_COMMENT_QUANTITY, query),
-		(...args) => fetch(...args).then((r) => r.json())
-	);
+	const data = useRememberValue(commentQuantity);
 
 	return (
 		<>
@@ -33,21 +34,21 @@ export default function CommentQuantityInfo({ query }: Props) {
 				icon={ALL_COMMENT_ICON}
 				title="Tất cả"
 				isLoading={isLoading}
-				number={(data?.positive || 0) + (data?.negative || 0)}
+				number={data?.all.quantity}
 			/>
 			<InfoTab
 				type="positive"
 				icon={POSITIVE_COMMENT_ICON}
 				title="Tích cực"
 				isLoading={isLoading}
-				number={data?.positive}
+				number={data?.positive.quantity}
 			/>
 			<InfoTab
 				type="negative"
 				icon={NEGATIVE_COMMENT_ICON}
 				title="Tiêu cực"
 				isLoading={isLoading}
-				number={data?.negative}
+				number={data?.negative.quantity}
 			/>
 		</>
 	);

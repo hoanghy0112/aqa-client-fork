@@ -8,14 +8,12 @@ import CommentSearchBar from "@/components/comments/CommentSearchBar";
 import { FacultySelectorWithSearchParams } from "@/components/selectors/FacultySelector";
 import { ProgramSelectorWithSearchParam } from "@/components/selectors/ProgramSelector";
 import { SingleSubjectSelectorWithSearchParam } from "@/components/selectors/SingleSubjectSelector";
-import { GET_COMMENT_LIST } from "@/constants/api_endpoint";
-import useIncrementalFetch from "@/hooks/useIncrementalFetch";
+import { useCommentListLazyQuery } from "@/gql/graphql";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { Card } from "@nextui-org/card";
 import { useSearchParams } from "next/navigation";
 import Loading from "../Loading";
 import CommentItem from "./CommentItem";
-import { useCommentListLazyQuery } from "@/gql/graphql";
-import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 
 export default function CommentPage({ defaultFilter = {}, selectors = [] }: IProps) {
 	const searchParams = useSearchParams();
@@ -53,7 +51,7 @@ export default function CommentPage({ defaultFilter = {}, selectors = [] }: IPro
 		<div>
 			<div className="flex flex-col xl:flex-row gap-8 xl:gap-0 items-center ">
 				<div className="rounded-md flex flex-row overflow-hidden">
-					<CommentQuantityInfo query={{ ...query, type: null }} />
+					<CommentQuantityInfo query={query} />
 				</div>
 				<div className=" flex flex-row gap-3 xl:ml-auto xl:mr-10">
 					{selectors.includes("semester") && (
