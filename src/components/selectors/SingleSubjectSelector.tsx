@@ -24,6 +24,7 @@ import { useDebounce } from "usehooks-ts";
 import OptionButton from "../OptionButton";
 import SubjectSelectorSkeleton from "../skeleton/SubjectSelectorSkeleton";
 import { SortSelector } from "./SortSelector";
+import { useRememberValue } from "@/hooks/useRememberValue";
 
 type Props = {
 	subjectId?: string | null;
@@ -45,7 +46,7 @@ function SingleSubjectSelector_({ subjectId, setSubject, defaultFilter }: Props)
 
 	const [getSubjects, { data, loading: isLoading }] = useSubjectsLazyQuery();
 
-	const { dataList: items, bottomRef } = useInfiniteScroll({
+	const { dataList, bottomRef } = useInfiniteScroll({
 		queryFunction: getSubjects,
 		variables: { keyword: debouncedKeyword, isAscending: sort != "desc" },
 		isLoading,
@@ -53,10 +54,14 @@ function SingleSubjectSelector_({ subjectId, setSubject, defaultFilter }: Props)
 		meta: data?.subjects.meta,
 	});
 
+	const items = useRememberValue(dataList);
+
 	const subject = items?.find?.((v) => v.subject_id == subjectId) || undefined;
+	console.log({ subject });
 
 	const hasValue = Boolean(subject);
 	const buttonText = hasValue ? subject?.display_name : "Chọn môn học";
+	console.log({ buttonText });
 
 	return (
 		<>
@@ -65,7 +70,7 @@ function SingleSubjectSelector_({ subjectId, setSubject, defaultFilter }: Props)
 				onPress={onOpen}
 				hasValue={hasValue}
 			>
-				{isLoading ? <Spinner size="sm" /> : buttonText}
+				{buttonText ?? <Spinner size="sm" />}
 			</OptionButton>
 			<Modal
 				isOpen={isOpen}

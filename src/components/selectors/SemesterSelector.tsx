@@ -34,6 +34,7 @@ function SemesterSelector_({
 } & SemesterPropType) {
 	const hasValue = Boolean(semester?.display_name);
 	const buttonText = semester?.display_name || "Tất cả học kỳ";
+	console.log({ semesters });
 
 	return (
 		<Dropdown backdrop="blur" shouldBlockScroll={false}>
@@ -55,7 +56,15 @@ function SemesterSelector_({
 							: " border-0 bg-slate-100 dark:bg-slate-800 dark:hover:!bg-slate-700 hover:!bg-slate-200"
 					} rounded-lg`}
 				>
-					{semesters.length ? buttonText : <Spinner size="sm" />}
+					{semesters.length ? (
+						buttonText
+					) : (
+						<Spinner
+							className={hasValue ? " text-white" : ""}
+							color={hasValue ? "default" : "primary"}
+							size="sm"
+						/>
+					)}
 				</Button>
 			</DropdownTrigger>
 			<DropdownMenu
@@ -119,13 +128,14 @@ export function SemesterSelectorWithSearchParam({
 	const { data: semesters } = useSemestersQuery();
 	const data = useRememberValue(semesters);
 
-	const semester = useMemo<Semester | undefined>(() => {
+	const semester_ = useMemo<Semester | undefined>(() => {
 		const semesterList = data?.semesters;
 		if (semesterList?.length || 0 > 0) {
 			if (semesterId)
 				return semesterList?.find((v) => v.semester_id == semesterId);
 		}
-	}, [semesterId, data?.semesters]);
+	}, [semesterId, data?.semesters?.length]);
+	const semester = useRememberValue(semester_);
 
 	const setSemester = useCallback(
 		(semester: Semester | undefined) => {
