@@ -5,6 +5,7 @@ import SemesterIcon from "@/assets/SemesterIcon";
 import { useFilter } from "@/contexts/FilterContext";
 import { Semester, useSemestersQuery } from "@/gql/graphql";
 import useNavigate from "@/hooks/useNavigate";
+import { useRememberValue } from "@/hooks/useRememberValue";
 import { Button } from "@nextui-org/button";
 import {
 	Dropdown,
@@ -113,17 +114,18 @@ export function SemesterSelectorWithSearchParam({
 	const searchParams = useSearchParams();
 	const navigate = useNavigate();
 
-	const { data } = useSemestersQuery();
+	const semesterId = searchParams.get("semester");
+
+	const { data: semesters } = useSemestersQuery();
+	const data = useRememberValue(semesters);
 
 	const semester = useMemo<Semester | undefined>(() => {
 		const semesterList = data?.semesters;
 		if (semesterList?.length || 0 > 0) {
-			if (searchParams.has("semester")) {
-				const semesterId = searchParams.get("semester");
+			if (semesterId)
 				return semesterList?.find((v) => v.semester_id == semesterId);
-			}
 		}
-	}, [searchParams, data?.semesters]);
+	}, [semesterId, data?.semesters]);
 
 	const setSemester = useCallback(
 		(semester: Semester | undefined) => {
