@@ -52,16 +52,15 @@ function SingleSubjectSelector_({ subjectId, setSubject, defaultFilter }: Props)
 		isLoading,
 		data: data?.subjects.data,
 		meta: data?.subjects.meta,
+		enabled: isOpen,
 	});
 
 	const items = useRememberValue(dataList);
 
 	const subject = items?.find?.((v) => v.subject_id == subjectId) || undefined;
-	console.log({ subject });
 
 	const hasValue = Boolean(subject);
 	const buttonText = hasValue ? subject?.display_name : "Chọn môn học";
-	console.log({ buttonText });
 
 	return (
 		<>

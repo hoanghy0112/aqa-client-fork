@@ -34,7 +34,6 @@ function SemesterSelector_({
 } & SemesterPropType) {
 	const hasValue = Boolean(semester?.display_name);
 	const buttonText = semester?.display_name || "Tất cả học kỳ";
-	console.log({ semesters });
 
 	return (
 		<Dropdown backdrop="blur" shouldBlockScroll={false}>

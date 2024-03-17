@@ -95,7 +95,7 @@ export default function CommentPage({ defaultFilter = {}, selectors = [] }: IPro
 						</p>
 					</div>
 				) : null}
-				<div ref={bottomRef} />
+				<div ref={bottomRef} key={"bottom-comment"} />
 			</Card>
 		</div>
 	);

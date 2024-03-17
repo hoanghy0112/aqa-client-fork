@@ -1,6 +1,6 @@
 import { PaginatedMetaData } from "@/gql/graphql";
 import _ from "lodash";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDeepCompareEffect } from "react-use";
 
 export function useInfiniteScroll<T>({
@@ -9,12 +9,14 @@ export function useInfiniteScroll<T>({
 	isLoading,
 	data,
 	meta,
+	enabled,
 }: {
 	queryFunction: (options: { variables: Record<string, any> }) => any;
 	variables: Record<string, any>;
 	isLoading: boolean;
 	data?: T[];
 	meta?: PaginatedMetaData;
+	enabled?: boolean;
 }) {
 	const bottomRef = useRef<HTMLDivElement>(null);
 	const [dataList, setDataList] = useState<T[]>([]);
@@ -24,31 +26,38 @@ export function useInfiniteScroll<T>({
 		isQuerying.current = true;
 		queryFunction({ variables: { page: 0, ...variables } });
 		setDataList([]);
-	}, [variables]);
+	}, [variables, enabled]);
 
-	if (bottomRef.current && dataList.length && !isLoading) {
-		const observer = new IntersectionObserver(([entry]) => {
-			if (entry.isIntersecting) {
-				if (meta?.hasNext && isQuerying.current == false) {
-					isQuerying.current = true;
-					queryFunction({
-						variables: { page: meta.page + 1, ...variables },
-					});
+	useEffect(() => {
+		if (bottomRef.current && dataList.length) {
+			const observer = new IntersectionObserver(([entry]) => {
+				if (entry.isIntersecting) {
+					if (meta?.hasNext && isQuerying.current == false && !isLoading) {
+						isQuerying.current = true;
+						queryFunction({
+							variables: { page: meta.page + 1, ...variables },
+						});
+					}
+					observer.unobserve(entry.target);
 				}
-				observer.unobserve(entry.target);
-			}
-		});
+			});
 
-		observer.observe(bottomRef.current);
-	}
+			observer.observe(bottomRef.current);
+		}
+	}, [dataList, enabled]);
 
 	useDeepCompareEffect(() => {
 		if (!isLoading && data) {
-			isQuerying.current = false;
 			if (meta?.page === 0) setDataList(data || []);
 			else setDataList((prev) => [...prev, ...(data || [])]);
 		}
-	}, [isLoading, data]);
+	}, [isLoading, data, enabled]);
+
+	useDeepCompareEffect(() => {
+		if (meta) {
+			isQuerying.current = false;
+		}
+	}, [meta, enabled]);
 
 	return { dataList, bottomRef };
 }
