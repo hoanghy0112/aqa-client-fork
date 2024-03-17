@@ -14,6 +14,7 @@ import { Card } from "@nextui-org/card";
 import { useSearchParams } from "next/navigation";
 import Loading from "../Loading";
 import CommentItem from "./CommentItem";
+import { useRememberValue } from "@/hooks/useRememberValue";
 
 export default function CommentPage({ defaultFilter = {}, selectors = [] }: IProps) {
 	const searchParams = useSearchParams();
@@ -47,6 +48,8 @@ export default function CommentPage({ defaultFilter = {}, selectors = [] }: IPro
 		meta: data?.comments.meta,
 	});
 
+	const metadata = useRememberValue(data?.comments.meta);
+
 	return (
 		<div>
 			<div className="flex flex-col xl:flex-row gap-8 xl:gap-0 items-center ">
@@ -70,7 +73,7 @@ export default function CommentPage({ defaultFilter = {}, selectors = [] }: IPro
 					)}
 				</div>
 			</div>
-			<CommentSearchBar />
+			<CommentSearchBar isLoading={!data} />
 			<Card className="mt-8 mb-20 w-full p-5">
 				{comments.map(
 					({ comment_id, display_name, type, class: class_ }) => (
@@ -84,8 +87,8 @@ export default function CommentPage({ defaultFilter = {}, selectors = [] }: IPro
 						/>
 					)
 				)}
-				{data?.comments.meta.hasNext ? <Loading /> : null}
-				{!data?.comments.meta.hasNext && !isLoading ? (
+				{metadata?.hasNext ? <Loading /> : null}
+				{!metadata?.hasNext && !isLoading ? (
 					<div className="w-full flex flex-col pt-6 pb-4 items-center">
 						<p className="w-fit text-lg font-semibold">
 							Không còn bình luận nào

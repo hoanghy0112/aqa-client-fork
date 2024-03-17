@@ -1,20 +1,31 @@
 "use client";
 
-import { useFilter } from "@/contexts/FilterContext";
 import useNavigate from "@/hooks/useNavigate";
 import { Button, Card, Input, Spinner } from "@nextui-org/react";
 import { useSearchParams } from "next/navigation";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
-export default function CommentSearchBar() {
+export default function CommentSearchBar({
+	isLoading: defaultLoading,
+}: {
+	isLoading: boolean;
+}) {
 	const navigate = useNavigate();
 
 	const searchParams = useSearchParams();
 
-	const { isLoading, setIsLoading } = useFilter();
+	const [isLoading, setIsLoading] = useState(true);
 	const [searchText, setSearchText] = useState(searchParams.get("keyword") || "");
 
-	const keyword = useMemo(() => searchParams.get("keyword") || "", [searchParams]);
+	const keyword = searchParams.get("keyword") || "";
+	useEffect(() => {
+		setSearchText(keyword);
+		setIsLoading(true);
+	}, [keyword]);
+
+	useEffect(() => {
+		if (!defaultLoading) setIsLoading(false);
+	}, [defaultLoading]);
 
 	const setKeyword = useCallback(
 		(newKeyword: string) => navigate.replace({ keyword: newKeyword }),
@@ -45,13 +56,14 @@ export default function CommentSearchBar() {
 					setKeyword(searchText);
 					setIsLoading(true);
 				}}
+				disabled={isLoading}
 				className=""
 				variant="shadow"
 				color="primary"
 				size="md"
 			>
 				{isLoading ? (
-					<Spinner color="default" />
+					<Spinner color="default" size={"sm"} />
 				) : (
 					<p className=" font-medium">Tìm kiếm</p>
 				)}
