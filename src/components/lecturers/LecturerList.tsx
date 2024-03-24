@@ -24,6 +24,8 @@ import { useCallback, useEffect, useState } from "react";
 import Loading from "../Loading";
 import TableSketon from "../TableSkeleton";
 import { useRouter } from "next/navigation";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import { useLecturerstWithPointsLazyQuery } from "@/gql/graphql";
 
 export default function LecturerList() {
 	const router = useRouter();
@@ -31,32 +33,65 @@ export default function LecturerList() {
 	const { semester, keyword, program, faculty } = useFilter();
 	const [columns, setColumns] = useState(defaultColumns);
 	const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
-		column: "lecturer_name",
+		column: "display_name",
 		direction: "ascending",
 	});
 
-	const { items, isLoading, bottomRef } = useIncrementalFetch<ISubjectItem>({
-		url: GET_LECTURER_WITH_POINTS,
-		query: {
-			semester_id: semester?.semester_id,
-			q: keyword,
-			program,
-			faculty_name: faculty?.faculty_name,
-			page_size: 20,
-			filter_field: sortDescriptor.column,
-			direction: sortDescriptor.direction === "ascending" ? "asc" : "desc",
+	// const { items, isLoading, bottomRef } = useIncrementalFetch<ISubjectItem>({
+	// 	url: GET_LECTURER_WITH_POINTS,
+	// 	query: {
+	// 		semester_id: semester?.semester_id,
+	// 		q: keyword,
+	// 		program,
+	// 		faculty_name: faculty?.display_name,
+	// 		page_size: 20,
+	// 		filter_field: sortDescriptor.column,
+	// 		direction: sortDescriptor.direction === "ascending" ? "asc" : "desc",
+	// 	},
+	// });
+	const [getLectureresWithPoints, { data, loading: isLoading, error }] =
+		useLecturerstWithPointsLazyQuery();
+
+	const { data: items, bottomRef } = useInfiniteScroll({
+		queryFunction: getLectureresWithPoints,
+		variables: {
+			filter: {
+				keyword,
+				semester_id: semester?.semester_id,
+				program,
+				faculty_id: faculty?.faculty_id,
+				criteria_id: [
+					"display_name",
+					"faculty_name",
+					"total_point",
+				].includes(sortDescriptor.column?.toString() || "")
+					? ""
+					: sortDescriptor.column,
+			},
+			sort: {
+				sortField: {
+					type:
+						sortDescriptor.column?.toString() != "display_name"
+							? "point"
+							: "",
+				},
+				isAscending: sortDescriptor.direction === "ascending",
+			},
 		},
+		isLoading,
+		data: data?.lecturers.data,
+		meta: data?.lecturers.meta,
 	});
 
 	useEffect(() => {
-		const item = items.find((a) => a.points.length > 0);
+		const item = items.find((a) => a.points?.length || 0 > 0);
 		if (items.length > 0)
 			setColumns([
 				...defaultColumns,
-				...(item?.points.map((v) => ({
-					key: v.criteria_id,
-					index: v.index,
-					label: v.criteria_name,
+				...(item?.points?.map((v, index) => ({
+					key: v.id,
+					index: index + 1,
+					label: v?.display_name || "",
 				})) || []),
 			]);
 	}, [items.length]);
@@ -75,7 +110,7 @@ export default function LecturerList() {
 					aria-label="Subject table"
 					sortDescriptor={sortDescriptor}
 					onSortChange={onSortChange}
-					className=" max-h-[90vh] "
+					className=" max-h-[80vh] "
 					bottomContent={
 						isLoading || !items ? (
 							<div>
@@ -98,7 +133,7 @@ export default function LecturerList() {
 							>
 								<div
 									className={`min-w-fit inline-block ${
-										column.key == "lecturer_name" && " w-[500px]"
+										column.key == "display_name" && " w-[300px]"
 									}`}
 								>
 									{column.index ? (
@@ -121,14 +156,23 @@ export default function LecturerList() {
 					<TableBody
 						items={items.map((v) => ({
 							...v,
+							faculty_name: v.faculty?.display_name,
+							total_point: new Intl.NumberFormat("en-US", {
+								style: "percent",
+								minimumFractionDigits: 0,
+								maximumFractionDigits: 2,
+							}).format(v.total_point || 0),
 							...Object.fromEntries(
-								v.points.map((p) => [
-									p.criteria_id,
-									<p
-										key={p.criteria_id}
-										className=" font-semibold text-md"
-									>{`${Math.floor(p.point * 100)}%`}</p>,
-								])
+								v?.points?.map((p) => [
+									p.id,
+									<p key={p.id} className=" font-semibold text-md">
+										{new Intl.NumberFormat("en-US", {
+											style: "percent",
+											minimumFractionDigits: 0,
+											maximumFractionDigits: 2,
+										}).format(p.average_point || 0)}
+									</p>,
+								]) || []
 							),
 						}))}
 					>
@@ -140,12 +184,12 @@ export default function LecturerList() {
 								}
 							>
 								{(columnKey) => {
-									if (columnKey === "lecturer_name") {
+									if (columnKey === "display_name") {
 										return (
 											<TableCell>
 												<Link
 													href={`/lecturer/${item.lecturer_id}`}
-													className="py-3"
+													className=" py-3 hover:underline hover:underline-offset-1 hover:font-medium"
 												>
 													{getKeyValue(item, columnKey)}
 												</Link>
@@ -173,12 +217,16 @@ export default function LecturerList() {
 
 const defaultColumns: { key: string; label: string; index?: number }[] = [
 	{
-		key: "lecturer_id",
+		key: "display_name",
 		label: "Tên giảng viên",
 	},
 	{
 		key: "faculty_name",
 		label: "Tên khoa",
+	},
+	{
+		key: "total_point",
+		label: "Điểm trung bình",
 	},
 ];
 

@@ -184,15 +184,9 @@ export type LecturerClassesArgs = {
 
 
 export type LecturerPointsArgs = {
-  class_id?: InputMaybe<Scalars['String']['input']>;
-  class_type?: InputMaybe<Scalars['String']['input']>;
-  criteria_id?: InputMaybe<Scalars['String']['input']>;
-  faculty_id?: InputMaybe<Scalars['String']['input']>;
-  keyword?: InputMaybe<Scalars['String']['input']>;
-  lecturer_id?: InputMaybe<Scalars['String']['input']>;
-  program?: InputMaybe<Scalars['String']['input']>;
-  semester_id?: InputMaybe<Scalars['String']['input']>;
-  subjects?: InputMaybe<Array<Scalars['String']['input']>>;
+  filter?: InputMaybe<FilterArgs>;
+  pagination?: InputMaybe<PaginationArgs>;
+  sort?: InputMaybe<SortArgs>;
 };
 
 export type Mutation = {
@@ -482,6 +476,15 @@ export type FacultiesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type FacultiesQuery = { __typename?: 'Query', faculties: { __typename?: 'PaginatedFaculty', data: Array<{ __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null }> } };
 
+export type LecturerstWithPointsQueryVariables = Exact<{
+  filter?: InputMaybe<FilterArgs>;
+  sort?: InputMaybe<SortArgs>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type LecturerstWithPointsQuery = { __typename?: 'Query', lecturers: { __typename?: 'PaginatedLecturer', data: Array<{ __typename?: 'Lecturer', birth_date?: any | null, display_name?: string | null, email?: string | null, faculty_id?: string | null, gender?: boolean | null, learning?: string | null, learning_position?: string | null, lecturer_id: string, mscb?: number | null, ngach?: string | null, phone?: string | null, position?: string | null, total_point?: number | null, username?: string | null, faculty: { __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null }, points: Array<{ __typename?: 'GroupedPoint', average_point: number, class_num: number, id: string, max_point?: number | null, point?: number | null, display_name?: string | null }> }>, meta: { __typename?: 'PaginatedMetaData', hasNext: boolean, hasPrev: boolean, page: number, size: number, total_item: number, total_page: number } } };
+
 export type ProgramsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -734,6 +737,87 @@ export type FacultiesSuspenseQueryHookResult = ReturnType<typeof useFacultiesSus
 export type FacultiesQueryResult = Apollo.QueryResult<FacultiesQuery, FacultiesQueryVariables>;
 export function refetchFacultiesQuery(variables?: FacultiesQueryVariables) {
       return { query: FacultiesDocument, variables: variables }
+    }
+export const LecturerstWithPointsDocument = gql`
+    query LecturerstWithPoints($filter: FilterArgs, $sort: SortArgs, $page: Int) {
+  lecturers(filter: $filter, sort: $sort, pagination: {page: $page, size: 10}) {
+    data {
+      birth_date
+      display_name
+      email
+      faculty_id
+      gender
+      learning
+      learning_position
+      lecturer_id
+      mscb
+      ngach
+      phone
+      position
+      total_point
+      username
+      faculty {
+        display_name
+        faculty_id
+        full_name
+      }
+      points(filter: $filter) {
+        average_point
+        class_num
+        id
+        max_point
+        point
+        display_name
+      }
+    }
+    meta {
+      hasNext
+      hasPrev
+      page
+      size
+      total_item
+      total_page
+    }
+  }
+}
+    `;
+
+/**
+ * __useLecturerstWithPointsQuery__
+ *
+ * To run a query within a React component, call `useLecturerstWithPointsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLecturerstWithPointsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLecturerstWithPointsQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      sort: // value for 'sort'
+ *      page: // value for 'page'
+ *   },
+ * });
+ */
+export function useLecturerstWithPointsQuery(baseOptions?: Apollo.QueryHookOptions<LecturerstWithPointsQuery, LecturerstWithPointsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<LecturerstWithPointsQuery, LecturerstWithPointsQueryVariables>(LecturerstWithPointsDocument, options);
+      }
+export function useLecturerstWithPointsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LecturerstWithPointsQuery, LecturerstWithPointsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<LecturerstWithPointsQuery, LecturerstWithPointsQueryVariables>(LecturerstWithPointsDocument, options);
+        }
+export function useLecturerstWithPointsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<LecturerstWithPointsQuery, LecturerstWithPointsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<LecturerstWithPointsQuery, LecturerstWithPointsQueryVariables>(LecturerstWithPointsDocument, options);
+        }
+export type LecturerstWithPointsQueryHookResult = ReturnType<typeof useLecturerstWithPointsQuery>;
+export type LecturerstWithPointsLazyQueryHookResult = ReturnType<typeof useLecturerstWithPointsLazyQuery>;
+export type LecturerstWithPointsSuspenseQueryHookResult = ReturnType<typeof useLecturerstWithPointsSuspenseQuery>;
+export type LecturerstWithPointsQueryResult = Apollo.QueryResult<LecturerstWithPointsQuery, LecturerstWithPointsQueryVariables>;
+export function refetchLecturerstWithPointsQuery(variables?: LecturerstWithPointsQueryVariables) {
+      return { query: LecturerstWithPointsDocument, variables: variables }
     }
 export const ProgramsDocument = gql`
     query Programs {
