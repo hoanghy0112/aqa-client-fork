@@ -38,6 +38,12 @@ export default function CommentSearchBar({
 				<Input
 					value={searchText}
 					onChange={(e) => setSearchText(e.target.value)}
+					onKeyDown={(e) => {
+						if (e.key === "Enter") {
+							setKeyword(searchText);
+							setIsLoading(true);
+						}
+					}}
 					onClear={() => {
 						setSearchText("");
 						setKeyword("");

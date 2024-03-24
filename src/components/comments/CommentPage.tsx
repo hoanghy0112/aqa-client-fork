@@ -2,7 +2,6 @@
 
 import { SemesterSelectorWithSearchParam } from "@/components/selectors/SemesterSelector";
 
-// import { getCommentQuantityApi } from "@/api/graphql/comment.api";
 import CommentQuantityInfo from "@/components/comments/CommentQuantityInfo";
 import CommentSearchBar from "@/components/comments/CommentSearchBar";
 import { FacultySelectorWithSearchParams } from "@/components/selectors/FacultySelector";
