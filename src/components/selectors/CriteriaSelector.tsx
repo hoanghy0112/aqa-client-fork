@@ -34,7 +34,7 @@ function CriteriaSelector_({ criteria, criteria_name, setCriteria }: Props) {
 	const [keyword, setKeyword] = useState("");
 	const debouncedKeyword = useDebounce<string>(keyword || "", 500);
 
-	const hasValue = Boolean(criteria?.display_name || criteria_name);
+	const hasValue = Boolean(criteria?.index || criteria_name);
 	const buttonText = hasValue ? `Tiêu chí` : "Tiêu chí";
 
 	const [getCriterias, { data, loading: isLoading, error }] =
@@ -57,7 +57,7 @@ function CriteriaSelector_({ criteria, criteria_name, setCriteria }: Props) {
 				tooltip={
 					hasValue
 						? criteria?.display_name || criteria_name
-						: "Nếu không chọn, tất cả các tiêu chí sẽ được xét"
+						: "Tất cả các tiêu chí"
 				}
 				hasValue={hasValue}
 				onPress={onOpen}
