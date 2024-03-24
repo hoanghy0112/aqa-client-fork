@@ -13,7 +13,7 @@ declare type IComment = {
 declare type Criteria = {
 	criteria_id: string;
 	display_name: string;
-	index: number;
+	index?: number;
 };
 
 declare type Subject = {

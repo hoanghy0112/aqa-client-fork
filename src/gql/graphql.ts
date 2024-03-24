@@ -18,6 +18,12 @@ export type Scalars = {
   DateTime: { input: any; output: any; }
 };
 
+export type AuthDto = {
+  __typename?: 'AuthDto';
+  access_token: Scalars['String']['output'];
+  user: UserEntity;
+};
+
 export type Class = {
   __typename?: 'Class';
   class_id: Scalars['String']['output'];
@@ -64,7 +70,7 @@ export type Criteria = {
   criteria_id: Scalars['String']['output'];
   display_name: Scalars['String']['output'];
   index?: Maybe<Scalars['Int']['output']>;
-  semester: Semester;
+  semester: Array<Semester>;
   /** This field may be wrong because I just get the first class type to determine this criteria type */
   type: Array<CriteriaProperty>;
 };
@@ -188,6 +194,16 @@ export type LecturerPointsArgs = {
   subjects?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
+export type Mutation = {
+  __typename?: 'Mutation';
+  register: UserEntity;
+};
+
+
+export type MutationRegisterArgs = {
+  user: UserDto;
+};
+
 export type PaginatedClass = {
   __typename?: 'PaginatedClass';
   data: Array<Class>;
@@ -263,6 +279,7 @@ export type Query = {
   comments: PaginatedComment;
   criteria?: Maybe<Criteria>;
   criterias: PaginatedCriteria;
+  currentUser: UserEntity;
   /** List all faculty available */
   faculties: PaginatedFaculty;
   /** Get detail information of a faculty and its lecturer list */
@@ -273,6 +290,7 @@ export type Query = {
   lecturer?: Maybe<Lecturer>;
   /** List all lecturer */
   lecturers: PaginatedLecturer;
+  login: AuthDto;
   programs: Array<Program>;
   /** List all semester */
   semesters?: Maybe<Array<Semester>>;
@@ -366,6 +384,12 @@ export type QueryLecturersArgs = {
 };
 
 
+export type QueryLoginArgs = {
+  password: Scalars['String']['input'];
+  username: Scalars['String']['input'];
+};
+
+
 export type QuerySubjectArgs = {
   id: Scalars['String']['input'];
 };
@@ -418,6 +442,20 @@ export type SubjectPointsArgs = {
   subjects?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
+export type UserDto = {
+  password: Scalars['String']['input'];
+  role: Scalars['String']['input'];
+  username: Scalars['String']['input'];
+};
+
+export type UserEntity = {
+  __typename?: 'UserEntity';
+  id: Scalars['String']['output'];
+  password: Scalars['String']['output'];
+  role: Scalars['String']['output'];
+  username: Scalars['String']['output'];
+};
+
 export type CommentQuantityQueryVariables = Exact<{
   filter?: InputMaybe<FilterArgs>;
 }>;
@@ -434,6 +472,15 @@ export type CommentListQueryVariables = Exact<{
 
 
 export type CommentListQuery = { __typename?: 'Query', comments: { __typename?: 'PaginatedComment', data: Array<{ __typename?: 'Comment', comment_id: string, display_name: string, type: string, class?: { __typename?: 'Class', class_id: string, class_type: string, display_name: string, participating_student: number, program: string, total_student: number } | null }>, meta: { __typename?: 'PaginatedMetaData', hasNext: boolean, hasPrev: boolean, page: number, size: number, total_item: number, total_page: number } } };
+
+export type CriteriasQueryVariables = Exact<{
+  filter?: InputMaybe<FilterArgs>;
+  isAscending?: InputMaybe<Scalars['Boolean']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type CriteriasQuery = { __typename?: 'Query', criterias: { __typename?: 'PaginatedCriteria', data: Array<{ __typename?: 'Criteria', display_name: string, criteria_id: string }>, meta: { __typename?: 'PaginatedMetaData', hasNext: boolean, hasPrev: boolean, page: number, size: number, total_item: number, total_page: number } } };
 
 export type FacultiesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -577,6 +624,66 @@ export type CommentListSuspenseQueryHookResult = ReturnType<typeof useCommentLis
 export type CommentListQueryResult = Apollo.QueryResult<CommentListQuery, CommentListQueryVariables>;
 export function refetchCommentListQuery(variables?: CommentListQueryVariables) {
       return { query: CommentListDocument, variables: variables }
+    }
+export const CriteriasDocument = gql`
+    query Criterias($filter: FilterArgs, $isAscending: Boolean, $page: Int) {
+  criterias(
+    filter: $filter
+    pagination: {page: $page, size: 10}
+    sort: {isAscending: $isAscending}
+  ) {
+    data {
+      display_name
+      criteria_id
+    }
+    meta {
+      hasNext
+      hasPrev
+      page
+      size
+      total_item
+      total_page
+    }
+  }
+}
+    `;
+
+/**
+ * __useCriteriasQuery__
+ *
+ * To run a query within a React component, call `useCriteriasQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCriteriasQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCriteriasQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      isAscending: // value for 'isAscending'
+ *      page: // value for 'page'
+ *   },
+ * });
+ */
+export function useCriteriasQuery(baseOptions?: Apollo.QueryHookOptions<CriteriasQuery, CriteriasQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CriteriasQuery, CriteriasQueryVariables>(CriteriasDocument, options);
+      }
+export function useCriteriasLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CriteriasQuery, CriteriasQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CriteriasQuery, CriteriasQueryVariables>(CriteriasDocument, options);
+        }
+export function useCriteriasSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<CriteriasQuery, CriteriasQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<CriteriasQuery, CriteriasQueryVariables>(CriteriasDocument, options);
+        }
+export type CriteriasQueryHookResult = ReturnType<typeof useCriteriasQuery>;
+export type CriteriasLazyQueryHookResult = ReturnType<typeof useCriteriasLazyQuery>;
+export type CriteriasSuspenseQueryHookResult = ReturnType<typeof useCriteriasSuspenseQuery>;
+export type CriteriasQueryResult = Apollo.QueryResult<CriteriasQuery, CriteriasQueryVariables>;
+export function refetchCriteriasQuery(variables?: CriteriasQueryVariables) {
+      return { query: CriteriasDocument, variables: variables }
     }
 export const FacultiesDocument = gql`
     query Faculties {

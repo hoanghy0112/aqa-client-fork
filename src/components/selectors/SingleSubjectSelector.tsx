@@ -1,14 +1,10 @@
 "use client";
 
 import { FilterProvider, useFilter } from "@/contexts/FilterContext";
-import {
-	Subject,
-	SubjectsQuery,
-	useSubjectsLazyQuery,
-	useSubjectsQuery,
-} from "@/gql/graphql";
+import { Subject, useSubjectsLazyQuery } from "@/gql/graphql";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import useNavigate from "@/hooks/useNavigate";
+import { useRememberValue } from "@/hooks/useRememberValue";
 import { Input } from "@nextui-org/input";
 import {
 	Modal,
@@ -24,7 +20,6 @@ import { useDebounce } from "usehooks-ts";
 import OptionButton from "../OptionButton";
 import SubjectSelectorSkeleton from "../skeleton/SubjectSelectorSkeleton";
 import { SortSelector } from "./SortSelector";
-import { useRememberValue } from "@/hooks/useRememberValue";
 
 type Props = {
 	subjectId?: string | null;
@@ -107,63 +102,61 @@ function SingleSubjectSelector_({ subjectId, setSubject, defaultFilter }: Props)
 								</div>
 							</ModalHeader>
 							<ModalBody className="mb-5">
-								<>
-									<div className="w-full mb-2">
-										<Card
-											isPressable
-											onPress={() => {
-												onClose();
-												setSubject({
-													subject_id: "",
-													display_name: "",
-												} as Subject);
-											}}
-											className="w-full flex flex-col justify-between cursor-pointer rounded-lg gap-2 px-4 py-3 border-2 border-transparent"
+								<div className="w-full mb-2">
+									<Card
+										isPressable
+										onPress={() => {
+											onClose();
+											setSubject({
+												subject_id: "",
+												display_name: "",
+											} as Subject);
+										}}
+										className="w-full flex flex-col justify-between cursor-pointer rounded-lg gap-2 px-4 py-3 border-2 border-transparent"
+									>
+										<p className=" text-md font-semibold mb-1 text-start">
+											Tất cả môn học
+										</p>
+									</Card>
+								</div>
+								{items?.map(
+									({
+										display_name,
+										faculty_id,
+										subject_id,
+										faculty,
+									}) => (
+										<div
+											key={subject_id}
+											className="w-full mb-2"
 										>
-											<p className=" text-md font-semibold mb-1 text-start">
-												Tất cả môn học
-											</p>
-										</Card>
-									</div>
-									{items?.map(
-										({
-											display_name,
-											faculty_id,
-											subject_id,
-											faculty,
-										}) => (
-											<div
-												key={subject_id}
-												className="w-full mb-2"
+											<Card
+												isPressable
+												onPress={() => {
+													onClose();
+													setSubject({
+														subject_id,
+														display_name,
+														faculty_id,
+													} as Subject);
+												}}
+												className="w-full flex flex-col justify-between cursor-pointer rounded-lg gap-2 px-4 py-3 border-2 border-transparent"
 											>
-												<Card
-													isPressable
-													onPress={() => {
-														onClose();
-														setSubject({
-															subject_id,
-															display_name,
-															faculty_id,
-														} as Subject);
-													}}
-													className="w-full flex flex-col justify-between cursor-pointer rounded-lg gap-2 px-4 py-3 border-2 border-transparent"
-												>
-													<p className=" text-md font-semibold mb-1 text-start">
-														{display_name}
-													</p>
-													<p className=" text-sm w-full font-normal text-start">
-														{faculty?.display_name}
-													</p>
-												</Card>
-											</div>
-										)
-									)}
-									{isLoading ? (
-										<SubjectSelectorSkeleton />
-									) : (
-										<div ref={bottomRef} />
-									)}
-								</>
+												<p className=" text-md font-semibold mb-1 text-start">
+													{display_name}
+												</p>
+												<p className=" text-sm w-full font-normal text-start">
+													{faculty?.display_name}
+												</p>
+											</Card>
+										</div>
+									)
+								)}
+								{isLoading ? (
+									<SubjectSelectorSkeleton />
+								) : (
+									<div ref={bottomRef} />
+								)}
 							</ModalBody>
 						</>
 					)}
