@@ -148,6 +148,7 @@ export type GroupedPoint = {
   __typename?: 'GroupedPoint';
   average_point: Scalars['Float']['output'];
   class_num: Scalars['Int']['output'];
+  display_name?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
   max_point?: Maybe<Scalars['Float']['output']>;
   point?: Maybe<Scalars['Float']['output']>;
@@ -431,15 +432,9 @@ export type Subject = {
 
 
 export type SubjectPointsArgs = {
-  class_id?: InputMaybe<Scalars['String']['input']>;
-  class_type?: InputMaybe<Scalars['String']['input']>;
-  criteria_id?: InputMaybe<Scalars['String']['input']>;
-  faculty_id?: InputMaybe<Scalars['String']['input']>;
-  keyword?: InputMaybe<Scalars['String']['input']>;
-  lecturer_id?: InputMaybe<Scalars['String']['input']>;
-  program?: InputMaybe<Scalars['String']['input']>;
-  semester_id?: InputMaybe<Scalars['String']['input']>;
-  subjects?: InputMaybe<Array<Scalars['String']['input']>>;
+  filter?: InputMaybe<FilterArgs>;
+  pagination?: InputMaybe<PaginationArgs>;
+  sort?: InputMaybe<SortArgs>;
 };
 
 export type UserDto = {
@@ -505,6 +500,15 @@ export type SubjectsQueryVariables = Exact<{
 
 
 export type SubjectsQuery = { __typename?: 'Query', subjects: { __typename?: 'PaginatedSubject', data: Array<{ __typename?: 'Subject', display_name?: string | null, faculty_id?: string | null, subject_id: string, total_point?: number | null, faculty?: { __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null } | null }>, meta: { __typename?: 'PaginatedMetaData', hasNext: boolean, hasPrev: boolean, page: number, size: number, total_item: number, total_page: number } } };
+
+export type SubjectsWithPointsQueryVariables = Exact<{
+  filter?: InputMaybe<FilterArgs>;
+  sort?: InputMaybe<SortArgs>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type SubjectsWithPointsQuery = { __typename?: 'Query', subjects: { __typename?: 'PaginatedSubject', data: Array<{ __typename?: 'Subject', display_name?: string | null, faculty_id?: string | null, subject_id: string, total_point?: number | null, faculty?: { __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null } | null, points?: Array<{ __typename?: 'GroupedPoint', average_point: number, class_num: number, id: string, max_point?: number | null, point?: number | null, display_name?: string | null }> | null }>, meta: { __typename?: 'PaginatedMetaData', hasNext: boolean, hasPrev: boolean, page: number, size: number, total_item: number, total_page: number } } };
 
 
 export const CommentQuantityDocument = gql`
@@ -884,4 +888,75 @@ export type SubjectsSuspenseQueryHookResult = ReturnType<typeof useSubjectsSuspe
 export type SubjectsQueryResult = Apollo.QueryResult<SubjectsQuery, SubjectsQueryVariables>;
 export function refetchSubjectsQuery(variables?: SubjectsQueryVariables) {
       return { query: SubjectsDocument, variables: variables }
+    }
+export const SubjectsWithPointsDocument = gql`
+    query SubjectsWithPoints($filter: FilterArgs, $sort: SortArgs, $page: Int) {
+  subjects(filter: $filter, sort: $sort, pagination: {page: $page, size: 10}) {
+    data {
+      display_name
+      faculty_id
+      subject_id
+      total_point
+      faculty {
+        display_name
+        faculty_id
+        full_name
+      }
+      points(filter: $filter) {
+        average_point
+        class_num
+        id
+        max_point
+        point
+        display_name
+      }
+    }
+    meta {
+      hasNext
+      hasPrev
+      page
+      size
+      total_item
+      total_page
+    }
+  }
+}
+    `;
+
+/**
+ * __useSubjectsWithPointsQuery__
+ *
+ * To run a query within a React component, call `useSubjectsWithPointsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSubjectsWithPointsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSubjectsWithPointsQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      sort: // value for 'sort'
+ *      page: // value for 'page'
+ *   },
+ * });
+ */
+export function useSubjectsWithPointsQuery(baseOptions?: Apollo.QueryHookOptions<SubjectsWithPointsQuery, SubjectsWithPointsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SubjectsWithPointsQuery, SubjectsWithPointsQueryVariables>(SubjectsWithPointsDocument, options);
+      }
+export function useSubjectsWithPointsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SubjectsWithPointsQuery, SubjectsWithPointsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SubjectsWithPointsQuery, SubjectsWithPointsQueryVariables>(SubjectsWithPointsDocument, options);
+        }
+export function useSubjectsWithPointsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<SubjectsWithPointsQuery, SubjectsWithPointsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<SubjectsWithPointsQuery, SubjectsWithPointsQueryVariables>(SubjectsWithPointsDocument, options);
+        }
+export type SubjectsWithPointsQueryHookResult = ReturnType<typeof useSubjectsWithPointsQuery>;
+export type SubjectsWithPointsLazyQueryHookResult = ReturnType<typeof useSubjectsWithPointsLazyQuery>;
+export type SubjectsWithPointsSuspenseQueryHookResult = ReturnType<typeof useSubjectsWithPointsSuspenseQuery>;
+export type SubjectsWithPointsQueryResult = Apollo.QueryResult<SubjectsWithPointsQuery, SubjectsWithPointsQueryVariables>;
+export function refetchSubjectsWithPointsQuery(variables?: SubjectsWithPointsQueryVariables) {
+      return { query: SubjectsWithPointsDocument, variables: variables }
     }

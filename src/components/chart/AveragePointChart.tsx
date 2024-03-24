@@ -26,7 +26,7 @@ export default function AveragePointChart() {
 			semester_id: semester?.semester_id,
 			criteria_id: criteria?.criteria_id,
 			program,
-			faculty_name: faculty?.faculty_name,
+			faculty_name: faculty?.display_name,
 			sort,
 			filter_field: "point",
 			page: 0,
@@ -36,8 +36,6 @@ export default function AveragePointChart() {
 	);
 
 	const data = response?.data || [];
-
-	console.log({ data });
 
 	return (
 		<>

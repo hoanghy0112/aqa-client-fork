@@ -24,39 +24,63 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import Loading from "../Loading";
 import TableSketon from "../TableSkeleton";
+import { useSubjectsWithPointsLazyQuery } from "@/gql/graphql";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 
 export default function SubjectList() {
 	const { semester, keyword, program, faculty } = useFilter();
 	const [columns, setColumns] = useState(defaultColumns);
 	const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
-		column: "subject_name",
+		column: "display_name",
 		direction: "ascending",
 	});
 
-	const { items, isLoading, bottomRef } = useIncrementalFetch<ISubjectItem>({
-		url: semester?.semester_id ? GET_SUBJECT_WITH_POINTS : GET_SUBJECT_TABLE,
-		query: {
-			semester_id: semester?.semester_id,
-			q: keyword,
-			program,
-			faculty_name: faculty?.faculty_name,
-			page_size: 20,
-			filter_field: sortDescriptor.column,
-			direction: sortDescriptor.direction === "ascending" ? "asc" : "desc",
+	const [getSubjectsWithPoints, { data, loading: isLoading, error }] =
+		useSubjectsWithPointsLazyQuery();
+
+	const { data: items, bottomRef } = useInfiniteScroll({
+		queryFunction: getSubjectsWithPoints,
+		variables: {
+			filter: {
+				keyword,
+				semester_id: semester?.semester_id,
+				program,
+				faculty_id: faculty?.faculty_id,
+				criteria_id: [
+					"display_name",
+					"faculty_name",
+					"total_point",
+				].includes(sortDescriptor.column?.toString() || "")
+					? ""
+					: sortDescriptor.column,
+			},
+			sort: {
+				sortField: {
+					type:
+						sortDescriptor.column?.toString() != "display_name"
+							? "point"
+							: "",
+				},
+				isAscending: sortDescriptor.direction === "ascending",
+			},
 		},
+		isLoading,
+		data: data?.subjects.data,
+		meta: data?.subjects.meta,
 	});
 
 	useEffect(() => {
 		if (items.length > 0 && semester?.semester_id)
 			setColumns([
 				...defaultColumns,
-				...items[0].points.map((v, index) => ({
-					key: v.criteria_id,
+				...(items[0]?.points?.map((v, index) => ({
+					key: v.id,
 					index: index + 1,
-					label: v.criteria_name,
-				})),
+					label: v.display_name || "",
+				})) || []),
 			]);
-	}, [items.length]);
+		else setColumns(defaultColumns);
+	}, [items.length, semester]);
 
 	const onSortChange = useCallback((e: SortDescriptor) => {
 		setSortDescriptor(e);
@@ -71,7 +95,7 @@ export default function SubjectList() {
 					aria-label="Subject table"
 					sortDescriptor={sortDescriptor}
 					onSortChange={onSortChange}
-					className=" max-h-[90vh]"
+					className=" max-h-[80vh]"
 					bottomContent={
 						isLoading ? (
 							<div>
@@ -94,7 +118,7 @@ export default function SubjectList() {
 							>
 								<div
 									className={`min-w-fit inline-block ${
-										column.key == "subject_name" && " w-[500px]"
+										column.key == "display_name" && " w-[300px]"
 									}`}
 								>
 									{column.index ? (
@@ -117,13 +141,22 @@ export default function SubjectList() {
 					<TableBody
 						items={items.map((v) => ({
 							...v,
+							faculty_name: v.faculty?.display_name,
+							total_point: new Intl.NumberFormat("en-US", {
+								style: "percent",
+								minimumFractionDigits: 0,
+								maximumFractionDigits: 2,
+							}).format(v.total_point || 0),
 							...Object.fromEntries(
 								v?.points?.map?.((p) => [
-									p.criteria_id,
-									<p
-										key={p.criteria_id}
-										className=" font-semibold text-md"
-									>{`${Math.floor(p.point * 100)}%`}</p>,
+									p.id,
+									<p key={p.id} className=" font-semibold text-md">
+										{new Intl.NumberFormat("en-US", {
+											style: "percent",
+											minimumFractionDigits: 0,
+											maximumFractionDigits: 2,
+										}).format(p.average_point || 0)}
+									</p>,
 								]) || []
 							),
 						}))}
@@ -131,12 +164,12 @@ export default function SubjectList() {
 						{(item) => (
 							<TableRow key={item.subject_id}>
 								{(columnKey) => {
-									if (columnKey === "subject_name") {
+									if (columnKey === "display_name") {
 										return (
 											<TableCell>
 												<Link
 													href={`/subject/${item.subject_id}`}
-													className="py-3"
+													className=" py-3 hover:underline hover:underline-offset-1 hover:font-medium"
 												>
 													{getKeyValue(item, columnKey)}
 												</Link>
@@ -164,12 +197,16 @@ export default function SubjectList() {
 
 const defaultColumns: { key: string; label: string; index?: number }[] = [
 	{
-		key: "subject_name",
+		key: "display_name",
 		label: "Tên môn học",
 	},
 	{
 		key: "faculty_name",
 		label: "Tên khoa",
+	},
+	{
+		key: "total_point",
+		label: "Điểm trung bình",
 	},
 ];
 

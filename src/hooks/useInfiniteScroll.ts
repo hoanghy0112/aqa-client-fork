@@ -2,6 +2,7 @@ import { PaginatedMetaData } from "@/gql/graphql";
 import _ from "lodash";
 import { useEffect, useRef, useState } from "react";
 import { useDeepCompareEffect } from "react-use";
+import { useRememberValue } from "./useRememberValue";
 
 export function useInfiniteScroll<T>({
 	queryFunction,
@@ -9,7 +10,7 @@ export function useInfiniteScroll<T>({
 	isLoading,
 	data,
 	meta,
-	enabled,
+	enabled = true,
 }: {
 	queryFunction: (options: { variables: Record<string, any> }) => any;
 	variables: Record<string, any>;
@@ -21,6 +22,8 @@ export function useInfiniteScroll<T>({
 	const bottomRef = useRef<HTMLDivElement>(null);
 	const [dataList, setDataList] = useState<T[]>([]);
 	const isQuerying = useRef(false);
+
+	const memoizedData = useRememberValue(dataList || []);
 
 	useDeepCompareEffect(() => {
 		isQuerying.current = true;
@@ -59,5 +62,5 @@ export function useInfiniteScroll<T>({
 		}
 	}, [meta, enabled]);
 
-	return { dataList, bottomRef };
+	return { data: memoizedData as T[], dataList, bottomRef };
 }
