@@ -71,7 +71,6 @@ export type Criteria = {
   display_name: Scalars['String']['output'];
   index?: Maybe<Scalars['Int']['output']>;
   semester: Array<Semester>;
-  /** This field may be wrong because I just get the first class type to determine this criteria type */
   type: Array<CriteriaProperty>;
 };
 
@@ -471,6 +470,17 @@ export type CriteriasQueryVariables = Exact<{
 
 export type CriteriasQuery = { __typename?: 'Query', criterias: { __typename?: 'PaginatedCriteria', data: Array<{ __typename?: 'Criteria', display_name: string, criteria_id: string }>, meta: { __typename?: 'PaginatedMetaData', hasNext: boolean, hasPrev: boolean, page: number, size: number, total_item: number, total_page: number } } };
 
+export type OverallCriteriaPointsEachSemesterQueryVariables = Exact<{
+  class_type?: InputMaybe<Scalars['String']['input']>;
+  faculty_id?: InputMaybe<Scalars['String']['input']>;
+  lecturer_id?: InputMaybe<Scalars['String']['input']>;
+  program?: InputMaybe<Scalars['String']['input']>;
+  subjects?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+}>;
+
+
+export type OverallCriteriaPointsEachSemesterQuery = { __typename?: 'Query', groupedPoints: { __typename?: 'PaginatedGroupedPoint', data: Array<{ __typename?: 'GroupedPoint', average_point: number, class_num: number, display_name?: string | null, id: string, max_point?: number | null, point?: number | null }> } };
+
 export type FacultiesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -691,6 +701,68 @@ export type CriteriasSuspenseQueryHookResult = ReturnType<typeof useCriteriasSus
 export type CriteriasQueryResult = Apollo.QueryResult<CriteriasQuery, CriteriasQueryVariables>;
 export function refetchCriteriasQuery(variables?: CriteriasQueryVariables) {
       return { query: CriteriasDocument, variables: variables }
+    }
+export const OverallCriteriaPointsEachSemesterDocument = gql`
+    query OverallCriteriaPointsEachSemester($class_type: String, $faculty_id: String, $lecturer_id: String, $program: String, $subjects: [String!]) {
+  groupedPoints(
+    groupEntity: "Semester"
+    size: 30
+    class_type: $class_type
+    faculty_id: $faculty_id
+    lecturer_id: $lecturer_id
+    program: $program
+    subjects: $subjects
+  ) {
+    data {
+      average_point
+      class_num
+      display_name
+      id
+      max_point
+      point
+    }
+  }
+}
+    `;
+
+/**
+ * __useOverallCriteriaPointsEachSemesterQuery__
+ *
+ * To run a query within a React component, call `useOverallCriteriaPointsEachSemesterQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOverallCriteriaPointsEachSemesterQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOverallCriteriaPointsEachSemesterQuery({
+ *   variables: {
+ *      class_type: // value for 'class_type'
+ *      faculty_id: // value for 'faculty_id'
+ *      lecturer_id: // value for 'lecturer_id'
+ *      program: // value for 'program'
+ *      subjects: // value for 'subjects'
+ *   },
+ * });
+ */
+export function useOverallCriteriaPointsEachSemesterQuery(baseOptions?: Apollo.QueryHookOptions<OverallCriteriaPointsEachSemesterQuery, OverallCriteriaPointsEachSemesterQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<OverallCriteriaPointsEachSemesterQuery, OverallCriteriaPointsEachSemesterQueryVariables>(OverallCriteriaPointsEachSemesterDocument, options);
+      }
+export function useOverallCriteriaPointsEachSemesterLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<OverallCriteriaPointsEachSemesterQuery, OverallCriteriaPointsEachSemesterQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<OverallCriteriaPointsEachSemesterQuery, OverallCriteriaPointsEachSemesterQueryVariables>(OverallCriteriaPointsEachSemesterDocument, options);
+        }
+export function useOverallCriteriaPointsEachSemesterSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<OverallCriteriaPointsEachSemesterQuery, OverallCriteriaPointsEachSemesterQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<OverallCriteriaPointsEachSemesterQuery, OverallCriteriaPointsEachSemesterQueryVariables>(OverallCriteriaPointsEachSemesterDocument, options);
+        }
+export type OverallCriteriaPointsEachSemesterQueryHookResult = ReturnType<typeof useOverallCriteriaPointsEachSemesterQuery>;
+export type OverallCriteriaPointsEachSemesterLazyQueryHookResult = ReturnType<typeof useOverallCriteriaPointsEachSemesterLazyQuery>;
+export type OverallCriteriaPointsEachSemesterSuspenseQueryHookResult = ReturnType<typeof useOverallCriteriaPointsEachSemesterSuspenseQuery>;
+export type OverallCriteriaPointsEachSemesterQueryResult = Apollo.QueryResult<OverallCriteriaPointsEachSemesterQuery, OverallCriteriaPointsEachSemesterQueryVariables>;
+export function refetchOverallCriteriaPointsEachSemesterQuery(variables?: OverallCriteriaPointsEachSemesterQueryVariables) {
+      return { query: OverallCriteriaPointsEachSemesterDocument, variables: variables }
     }
 export const FacultiesDocument = gql`
     query Faculties {

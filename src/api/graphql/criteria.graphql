@@ -18,3 +18,30 @@ query Criterias($filter: FilterArgs, $isAscending: Boolean, $page: Int) {
 		}
 	}
 }
+
+query OverallCriteriaPointsEachSemester(
+	$class_type: String,
+	$faculty_id: String,
+	$lecturer_id: String,
+	$program: String,
+	$subjects: [String!]
+) {
+	groupedPoints(
+		groupEntity: "Semester",
+		size: 30,
+		class_type: $class_type,
+		faculty_id: $faculty_id,
+		lecturer_id: $lecturer_id,
+		program: $program,
+		subjects: $subjects,
+	) {
+		data {
+			average_point
+			class_num
+			display_name
+			id
+			max_point
+			point
+		}
+	}
+}
