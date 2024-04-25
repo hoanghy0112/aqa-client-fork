@@ -500,6 +500,13 @@ export type FacultiesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type FacultiesQuery = { __typename?: 'Query', faculties: { __typename?: 'PaginatedFaculty', data: Array<{ __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null }> } };
 
+export type DetailLecturerQueryVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type DetailLecturerQuery = { __typename?: 'Query', lecturer?: { __typename?: 'Lecturer', birth_date?: any | null, display_name?: string | null, email?: string | null, faculty_id?: string | null, gender?: boolean | null, learning?: string | null, learning_position?: string | null, lecturer_id: string, mscb?: number | null, ngach?: string | null, phone?: string | null, position?: string | null, total_point?: number | null, username?: string | null } | null };
+
 export type LecturerstWithPointsQueryVariables = Exact<{
   filter?: InputMaybe<FilterArgs>;
   sort?: InputMaybe<SortArgs>;
@@ -942,6 +949,62 @@ export type FacultiesSuspenseQueryHookResult = ReturnType<typeof useFacultiesSus
 export type FacultiesQueryResult = Apollo.QueryResult<FacultiesQuery, FacultiesQueryVariables>;
 export function refetchFacultiesQuery(variables?: FacultiesQueryVariables) {
       return { query: FacultiesDocument, variables: variables }
+    }
+export const DetailLecturerDocument = gql`
+    query DetailLecturer($id: String!) {
+  lecturer(id: $id) {
+    birth_date
+    display_name
+    email
+    faculty_id
+    gender
+    learning
+    learning_position
+    lecturer_id
+    mscb
+    ngach
+    phone
+    position
+    total_point
+    username
+  }
+}
+    `;
+
+/**
+ * __useDetailLecturerQuery__
+ *
+ * To run a query within a React component, call `useDetailLecturerQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDetailLecturerQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDetailLecturerQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDetailLecturerQuery(baseOptions: Apollo.QueryHookOptions<DetailLecturerQuery, DetailLecturerQueryVariables> & ({ variables: DetailLecturerQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DetailLecturerQuery, DetailLecturerQueryVariables>(DetailLecturerDocument, options);
+      }
+export function useDetailLecturerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DetailLecturerQuery, DetailLecturerQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DetailLecturerQuery, DetailLecturerQueryVariables>(DetailLecturerDocument, options);
+        }
+export function useDetailLecturerSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<DetailLecturerQuery, DetailLecturerQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<DetailLecturerQuery, DetailLecturerQueryVariables>(DetailLecturerDocument, options);
+        }
+export type DetailLecturerQueryHookResult = ReturnType<typeof useDetailLecturerQuery>;
+export type DetailLecturerLazyQueryHookResult = ReturnType<typeof useDetailLecturerLazyQuery>;
+export type DetailLecturerSuspenseQueryHookResult = ReturnType<typeof useDetailLecturerSuspenseQuery>;
+export type DetailLecturerQueryResult = Apollo.QueryResult<DetailLecturerQuery, DetailLecturerQueryVariables>;
+export function refetchDetailLecturerQuery(variables: DetailLecturerQueryVariables) {
+      return { query: DetailLecturerDocument, variables: variables }
     }
 export const LecturerstWithPointsDocument = gql`
     query LecturerstWithPoints($filter: FilterArgs, $sort: SortArgs, $page: Int) {

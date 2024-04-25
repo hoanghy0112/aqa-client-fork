@@ -1,6 +1,10 @@
 "use client";
 
-import { useDetailCriteriaQuery, useDetailSubjectQuery } from "@/gql/graphql";
+import {
+	useDetailCriteriaQuery,
+	useDetailLecturerQuery,
+	useDetailSubjectQuery,
+} from "@/gql/graphql";
 import { useFilterUrlQuery } from "@/hooks/useFilterUrlQuery";
 import { Button } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
@@ -20,6 +24,11 @@ export default function BreadCrumb() {
 		skip: !query?.subjects?.length,
 	});
 
+	const { data: lecturer } = useDetailLecturerQuery({
+		variables: { id: query?.lecturer_id || "" },
+		skip: !query?.lecturer_id,
+	});
+
 	const paths = [
 		{
 			title: "Tiêu chí",
@@ -34,6 +43,12 @@ export default function BreadCrumb() {
 			link: "subject",
 			value: query?.subjects?.at(0),
 			name: subject?.subject?.display_name,
+		},
+		{
+			title: "Giảng viên",
+			link: "lecturer",
+			value: query?.lecturer_id,
+			name: lecturer?.lecturer?.display_name,
 		},
 	];
 

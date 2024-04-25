@@ -1,0 +1,18 @@
+query DetailLecturer($id: String!) {
+	lecturer(id: $id) {
+		birth_date
+		display_name
+		email
+		faculty_id
+		gender
+		learning
+		learning_position
+		lecturer_id
+		mscb
+		ngach
+		phone
+		position
+		total_point
+		username
+	}
+}
