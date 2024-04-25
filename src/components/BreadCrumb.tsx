@@ -64,8 +64,8 @@ export default function BreadCrumb() {
 					}}
 				>
 					<div className=" p-2 flex-col gap-2 items-start">
-						<p className=" text-black text-xs">{title}</p>
-						<p className=" h-auto max-w-[300px] whitespace-normal text-black font-semibold">
+						<p className=" text-black text-xs text-start">{title}</p>
+						<p className=" h-auto max-w-[350px] whitespace-normal text-black text-start font-semibold">
 							{name || "Tất cả"}
 						</p>
 					</div>

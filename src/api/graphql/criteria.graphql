@@ -3,6 +3,12 @@ query DetailCriteria($id: String!) {
 		criteria_id
 		display_name
 		index
+		semester {
+			display_name
+			semester_id
+			type
+			year
+		}
 	}
 }
 

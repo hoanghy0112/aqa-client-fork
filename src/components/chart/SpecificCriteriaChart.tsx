@@ -32,6 +32,7 @@ export default function SpecificCriteriaChart({ criteria }: { criteria: Criteria
 				variant="light"
 				className=" p-4 mb-6 h-fit"
 				onClick={() => {
+					console.log({ criteria });
 					setUrlQuery(`/criteria/${criteria.criteria_id}`, {
 						criteria_id: criteria.criteria_id,
 					});

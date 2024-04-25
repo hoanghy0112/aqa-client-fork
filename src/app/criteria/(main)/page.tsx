@@ -44,7 +44,7 @@ export default function Page() {
 							display_name,
 							value: criteria_id,
 							onClick() {
-								setUrlQuery(`/criteria/${criteria_id || "all"}`, {
+								setUrlQuery(`/criteria/${criteria_id}`, {
 									criteria_id,
 								});
 							},

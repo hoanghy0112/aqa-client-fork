@@ -466,7 +466,7 @@ export type DetailCriteriaQueryVariables = Exact<{
 }>;
 
 
-export type DetailCriteriaQuery = { __typename?: 'Query', criteria?: { __typename?: 'Criteria', criteria_id: string, display_name: string, index?: number | null } | null };
+export type DetailCriteriaQuery = { __typename?: 'Query', criteria?: { __typename?: 'Criteria', criteria_id: string, display_name: string, index?: number | null, semester: Array<{ __typename?: 'Semester', display_name: string, semester_id: string, type?: string | null, year?: string | null }> } | null };
 
 export type AllCriteriasQueryVariables = Exact<{
   filter?: InputMaybe<FilterArgs>;
@@ -689,6 +689,12 @@ export const DetailCriteriaDocument = gql`
     criteria_id
     display_name
     index
+    semester {
+      display_name
+      semester_id
+      type
+      year
+    }
   }
 }
     `;
