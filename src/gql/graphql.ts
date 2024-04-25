@@ -461,6 +461,20 @@ export type CommentListQueryVariables = Exact<{
 
 export type CommentListQuery = { __typename?: 'Query', comments: { __typename?: 'PaginatedComment', data: Array<{ __typename?: 'Comment', comment_id: string, display_name: string, type: string, class?: { __typename?: 'Class', class_id: string, class_type: string, display_name: string, participating_student: number, program: string, total_student: number } | null }>, meta: { __typename?: 'PaginatedMetaData', hasNext: boolean, hasPrev: boolean, page: number, size: number, total_item: number, total_page: number } } };
 
+export type DetailCriteriaQueryVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type DetailCriteriaQuery = { __typename?: 'Query', criteria?: { __typename?: 'Criteria', criteria_id: string, display_name: string, index?: number | null } | null };
+
+export type AllCriteriasQueryVariables = Exact<{
+  filter?: InputMaybe<FilterArgs>;
+}>;
+
+
+export type AllCriteriasQuery = { __typename?: 'Query', criterias: { __typename?: 'PaginatedCriteria', data: Array<{ __typename?: 'Criteria', display_name: string, criteria_id: string }>, meta: { __typename?: 'PaginatedMetaData', hasNext: boolean, hasPrev: boolean, page: number, size: number, total_item: number, total_page: number } } };
+
 export type CriteriasQueryVariables = Exact<{
   filter?: InputMaybe<FilterArgs>;
   isAscending?: InputMaybe<Scalars['Boolean']['input']>;
@@ -517,6 +531,13 @@ export type SemestersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type SemestersQuery = { __typename?: 'Query', semesters?: Array<{ __typename?: 'Semester', display_name: string, semester_id: string, type?: string | null, year?: string | null }> | null };
+
+export type DetailSubjectQueryVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type DetailSubjectQuery = { __typename?: 'Query', subject?: { __typename?: 'Subject', display_name?: string | null, faculty_id?: string | null, subject_id: string, total_point?: number | null } | null };
 
 export type SubjectsQueryVariables = Exact<{
   keyword?: InputMaybe<Scalars['String']['input']>;
@@ -654,6 +675,105 @@ export type CommentListSuspenseQueryHookResult = ReturnType<typeof useCommentLis
 export type CommentListQueryResult = Apollo.QueryResult<CommentListQuery, CommentListQueryVariables>;
 export function refetchCommentListQuery(variables?: CommentListQueryVariables) {
       return { query: CommentListDocument, variables: variables }
+    }
+export const DetailCriteriaDocument = gql`
+    query DetailCriteria($id: String!) {
+  criteria(id: $id) {
+    criteria_id
+    display_name
+    index
+  }
+}
+    `;
+
+/**
+ * __useDetailCriteriaQuery__
+ *
+ * To run a query within a React component, call `useDetailCriteriaQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDetailCriteriaQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDetailCriteriaQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDetailCriteriaQuery(baseOptions: Apollo.QueryHookOptions<DetailCriteriaQuery, DetailCriteriaQueryVariables> & ({ variables: DetailCriteriaQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DetailCriteriaQuery, DetailCriteriaQueryVariables>(DetailCriteriaDocument, options);
+      }
+export function useDetailCriteriaLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DetailCriteriaQuery, DetailCriteriaQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DetailCriteriaQuery, DetailCriteriaQueryVariables>(DetailCriteriaDocument, options);
+        }
+export function useDetailCriteriaSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<DetailCriteriaQuery, DetailCriteriaQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<DetailCriteriaQuery, DetailCriteriaQueryVariables>(DetailCriteriaDocument, options);
+        }
+export type DetailCriteriaQueryHookResult = ReturnType<typeof useDetailCriteriaQuery>;
+export type DetailCriteriaLazyQueryHookResult = ReturnType<typeof useDetailCriteriaLazyQuery>;
+export type DetailCriteriaSuspenseQueryHookResult = ReturnType<typeof useDetailCriteriaSuspenseQuery>;
+export type DetailCriteriaQueryResult = Apollo.QueryResult<DetailCriteriaQuery, DetailCriteriaQueryVariables>;
+export function refetchDetailCriteriaQuery(variables: DetailCriteriaQueryVariables) {
+      return { query: DetailCriteriaDocument, variables: variables }
+    }
+export const AllCriteriasDocument = gql`
+    query AllCriterias($filter: FilterArgs) {
+  criterias(filter: $filter, pagination: {page: 0, size: 150}) {
+    data {
+      display_name
+      criteria_id
+    }
+    meta {
+      hasNext
+      hasPrev
+      page
+      size
+      total_item
+      total_page
+    }
+  }
+}
+    `;
+
+/**
+ * __useAllCriteriasQuery__
+ *
+ * To run a query within a React component, call `useAllCriteriasQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllCriteriasQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllCriteriasQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useAllCriteriasQuery(baseOptions?: Apollo.QueryHookOptions<AllCriteriasQuery, AllCriteriasQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AllCriteriasQuery, AllCriteriasQueryVariables>(AllCriteriasDocument, options);
+      }
+export function useAllCriteriasLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllCriteriasQuery, AllCriteriasQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AllCriteriasQuery, AllCriteriasQueryVariables>(AllCriteriasDocument, options);
+        }
+export function useAllCriteriasSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<AllCriteriasQuery, AllCriteriasQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<AllCriteriasQuery, AllCriteriasQueryVariables>(AllCriteriasDocument, options);
+        }
+export type AllCriteriasQueryHookResult = ReturnType<typeof useAllCriteriasQuery>;
+export type AllCriteriasLazyQueryHookResult = ReturnType<typeof useAllCriteriasLazyQuery>;
+export type AllCriteriasSuspenseQueryHookResult = ReturnType<typeof useAllCriteriasSuspenseQuery>;
+export type AllCriteriasQueryResult = Apollo.QueryResult<AllCriteriasQuery, AllCriteriasQueryVariables>;
+export function refetchAllCriteriasQuery(variables?: AllCriteriasQueryVariables) {
+      return { query: AllCriteriasDocument, variables: variables }
     }
 export const CriteriasDocument = gql`
     query Criterias($filter: FilterArgs, $isAscending: Boolean, $page: Int) {
@@ -1055,6 +1175,52 @@ export type SemestersSuspenseQueryHookResult = ReturnType<typeof useSemestersSus
 export type SemestersQueryResult = Apollo.QueryResult<SemestersQuery, SemestersQueryVariables>;
 export function refetchSemestersQuery(variables?: SemestersQueryVariables) {
       return { query: SemestersDocument, variables: variables }
+    }
+export const DetailSubjectDocument = gql`
+    query DetailSubject($id: String!) {
+  subject(id: $id) {
+    display_name
+    faculty_id
+    subject_id
+    total_point
+  }
+}
+    `;
+
+/**
+ * __useDetailSubjectQuery__
+ *
+ * To run a query within a React component, call `useDetailSubjectQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDetailSubjectQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDetailSubjectQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDetailSubjectQuery(baseOptions: Apollo.QueryHookOptions<DetailSubjectQuery, DetailSubjectQueryVariables> & ({ variables: DetailSubjectQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DetailSubjectQuery, DetailSubjectQueryVariables>(DetailSubjectDocument, options);
+      }
+export function useDetailSubjectLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DetailSubjectQuery, DetailSubjectQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DetailSubjectQuery, DetailSubjectQueryVariables>(DetailSubjectDocument, options);
+        }
+export function useDetailSubjectSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<DetailSubjectQuery, DetailSubjectQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<DetailSubjectQuery, DetailSubjectQueryVariables>(DetailSubjectDocument, options);
+        }
+export type DetailSubjectQueryHookResult = ReturnType<typeof useDetailSubjectQuery>;
+export type DetailSubjectLazyQueryHookResult = ReturnType<typeof useDetailSubjectLazyQuery>;
+export type DetailSubjectSuspenseQueryHookResult = ReturnType<typeof useDetailSubjectSuspenseQuery>;
+export type DetailSubjectQueryResult = Apollo.QueryResult<DetailSubjectQuery, DetailSubjectQueryVariables>;
+export function refetchDetailSubjectQuery(variables: DetailSubjectQueryVariables) {
+      return { query: DetailSubjectDocument, variables: variables }
     }
 export const SubjectsDocument = gql`
     query Subjects($keyword: String, $isAscending: Boolean, $page: Int) {

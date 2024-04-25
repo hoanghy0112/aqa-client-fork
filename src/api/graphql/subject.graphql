@@ -1,3 +1,12 @@
+query DetailSubject($id: String!) {
+	subject(id: $id) {
+		display_name
+		faculty_id
+		subject_id
+		total_point
+	}
+}
+
 query Subjects($keyword: String, $isAscending: Boolean, $page: Int) {
 	subjects(
 		filter: { keyword: $keyword }

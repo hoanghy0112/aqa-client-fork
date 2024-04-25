@@ -1,0 +1,53 @@
+import {
+	useDetailCriteriaLazyQuery,
+	useDetailCriteriaQuery,
+	useDetailSubjectQuery,
+} from "@/gql/graphql";
+import { useFilterUrlQuery } from "@/hooks/useFilterUrlQuery";
+import { Button } from "@nextui-org/react";
+
+export default function BreadCrumb() {
+	const { query, setUrlQuery } = useFilterUrlQuery();
+
+	const { data: criteria } = useDetailCriteriaQuery({
+		variables: { id: query?.criteria_id || "" },
+		skip: !query?.criteria_id,
+	});
+
+	const { data: subject } = useDetailSubjectQuery({
+		variables: { id: query?.subjects?.at(0) || "" },
+		skip: !query?.subjects?.length,
+	});
+
+	const paths = [
+		{
+			title: "Tiêu chí",
+			link: "criteria",
+			value: query?.criteria_id,
+			name: criteria?.criteria?.display_name,
+		},
+		{ title: "Học kỳ", link: "semester", value: query?.semester_id, name: "" },
+		{ title: "Khoa", link: "faculty", value: query?.faculty_id, name: "" },
+		{
+			title: "Môn học",
+			link: "subject",
+			value: query?.subjects?.at(0),
+			name: subject?.subject?.display_name,
+		},
+	];
+
+	return (
+		<div className=" mt-5 flex flex-row gap-2">
+			{paths.map(({ title, name, link, value }) => (
+				<Button key={title} variant="light" className=" h-fit">
+					<div className=" p-2 flex-col gap-2 items-start">
+						<p className=" text-black text-xs">{title}</p>
+						<p className=" h-auto max-w-[300px] whitespace-normal text-black font-semibold">
+							{name || "Tất cả"}
+						</p>
+					</div>
+				</Button>
+			))}
+		</div>
+	);
+}

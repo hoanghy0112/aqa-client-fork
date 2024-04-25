@@ -24,8 +24,6 @@ async function SemesterClass({
 		{ cache: "force-cache" }
 	);
 
-	console.log({ classesRes });
-
 	const classesData = (await classesRes.json()) as unknown as {
 		meta: any;
 		data: IClass[];

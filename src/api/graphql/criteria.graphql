@@ -1,3 +1,28 @@
+query DetailCriteria($id: String!) {
+	criteria(id: $id) {
+		criteria_id
+		display_name
+		index
+	}
+}
+
+query AllCriterias($filter: FilterArgs) {
+	criterias(filter: $filter, pagination: { page: 0, size: 150 }) {
+		data {
+			display_name
+			criteria_id
+		}
+		meta {
+			hasNext
+			hasPrev
+			page
+			size
+			total_item
+			total_page
+		}
+	}
+}
+
 query Criterias($filter: FilterArgs, $isAscending: Boolean, $page: Int) {
 	criterias(
 		filter: $filter
@@ -20,20 +45,20 @@ query Criterias($filter: FilterArgs, $isAscending: Boolean, $page: Int) {
 }
 
 query OverallCriteriaPointsEachSemester(
-	$class_type: String,
-	$faculty_id: String,
-	$lecturer_id: String,
-	$program: String,
+	$class_type: String
+	$faculty_id: String
+	$lecturer_id: String
+	$program: String
 	$subjects: [String!]
 ) {
 	groupedPoints(
-		groupEntity: "Semester",
-		size: 30,
-		class_type: $class_type,
-		faculty_id: $faculty_id,
-		lecturer_id: $lecturer_id,
-		program: $program,
-		subjects: $subjects,
+		groupEntity: "Semester"
+		size: 30
+		class_type: $class_type
+		faculty_id: $faculty_id
+		lecturer_id: $lecturer_id
+		program: $program
+		subjects: $subjects
 	) {
 		data {
 			average_point
