@@ -23,7 +23,9 @@ import useSWR from "swr";
 import { useDebounce } from "usehooks-ts";
 import OptionButton from "../OptionButton";
 import { SortSelector } from "./SortSelector";
-import { Subject } from "@/gql/graphql";
+import { Subject, useSubjectsLazyQuery } from "@/gql/graphql";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import { useRememberValue } from "@/hooks/useRememberValue";
 
 export default function SubjectSelector({ isNoBorder }: SubjectSelectorPropTypes) {
 	const { subjects: _subjects, setSubjects: _setSubjects, faculty } = useFilter();
@@ -49,16 +51,26 @@ export default function SubjectSelector({ isNoBorder }: SubjectSelectorPropTypes
 		onOpenChange: onOpenChangeDetail,
 	} = useDisclosure();
 
-	const { data: items, isLoading } = useSWR<{ data: Subject[] }>(
-		withQuery(GET_SUBJECT_TABLE, {
-			debouncedKeyword,
-			page_size: 20,
-			filter_field: "subject_name",
-			faculty_name: faculty?.display_name,
-			direction: sort,
-		}),
-		(url) => fetch(url).then((res) => res.json())
-	);
+	// const { data: items, isLoading } = useSWR<{ data: Subject[] }>(
+	// 	withQuery(GET_SUBJECT_TABLE, {
+	// 		debouncedKeyword,
+	// 		page_size: 20,
+	// 		filter_field: "subject_name",
+	// 		faculty_name: faculty?.display_name,
+	// 		direction: sort,
+	// 	}),
+	// 	(url) => fetch(url).then((res) => res.json())
+	// );
+	const [getSubjects, { data, loading: isLoading }] = useSubjectsLazyQuery();
+	const { dataList, bottomRef } = useInfiniteScroll({
+		queryFunction: getSubjects,
+		variables: { keyword: debouncedKeyword, isAscending: sort != "desc" },
+		isLoading,
+		data: data?.subjects.data,
+		meta: data?.subjects.meta,
+		enabled: isOpen,
+	});
+	const items = useRememberValue(dataList);
 
 	return (
 		<>
@@ -108,12 +120,13 @@ export default function SubjectSelector({ isNoBorder }: SubjectSelectorPropTypes
 								>{`Đã chọn ${subjects.size} môn`}</Button>
 							</ModalHeader>
 							<ModalBody className="mb-5">
-								{items?.data.length || 0 > 0 || !isLoading ? (
+								{items?.length || 0 > 0 || !isLoading ? (
 									<>
-										{items?.data.map(
+										{items?.map(
 											({
 												display_name,
 												faculty_id,
+												faculty,
 												subject_id,
 											}) => (
 												<div
@@ -161,9 +174,11 @@ export default function SubjectSelector({ isNoBorder }: SubjectSelectorPropTypes
 															<p className=" text-md font-semibold mb-1 text-start">
 																{display_name}
 															</p>
-															{/* <p className=" text-sm w-full font-normal text-start">
-																{faculty_name}
-															</p> */}
+															<p className=" text-sm w-full font-normal text-start">
+																{
+																	faculty?.display_name
+																}
+															</p>
 														</div>
 													</Checkbox>
 												</div>

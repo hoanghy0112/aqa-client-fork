@@ -40,7 +40,6 @@ function SingleSubjectSelector_({ subjectId, setSubject, defaultFilter }: Props)
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
 	const [getSubjects, { data, loading: isLoading }] = useSubjectsLazyQuery();
-
 	const { dataList, bottomRef } = useInfiniteScroll({
 		queryFunction: getSubjects,
 		variables: { keyword: debouncedKeyword, isAscending: sort != "desc" },
@@ -49,7 +48,6 @@ function SingleSubjectSelector_({ subjectId, setSubject, defaultFilter }: Props)
 		meta: data?.subjects.meta,
 		enabled: isOpen,
 	});
-
 	const items = useRememberValue(dataList);
 
 	const subject = items?.find?.((v) => v.subject_id == subjectId) || undefined;
