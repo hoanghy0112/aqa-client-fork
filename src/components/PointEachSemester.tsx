@@ -1,6 +1,10 @@
 import { FilterProvider, useFilter } from "@/contexts/FilterContext";
-import { GroupedPoint, usePointsEachSemesterLazyQuery } from "@/gql/graphql";
-import { LineChart } from "@tremor/react";
+import {
+	FilterArgs,
+	GroupedPoint,
+	usePointsEachSemesterLazyQuery,
+} from "@/gql/graphql";
+import { AreaChart, LineChart } from "@tremor/react";
 import { ReactNode, useEffect, useState } from "react";
 import ChartLayout from "./chart/ChartLayout";
 import Loading from "./Loading";
@@ -18,10 +22,15 @@ function InnerPointEachSemester({ title, legend, selectors }: Props) {
 	const [data, setData] = useState<GroupedPoint[]>([]);
 	const [loading, setLoading] = useState(false);
 
-	const variables = {
-		program: filter.program,
-		faculty_id: filter.faculty?.faculty_id,
+	const variables: FilterArgs & { groupEntity: string } = {
 		criteria_id: filter.criteria?.criteria_id,
+		faculty_id: filter.faculty?.faculty_id,
+		subjects: Array.from(filter.subjects.values()).length
+			? Array.from(filter.subjects.values()).map(
+					(subject) => subject.subject_id
+			  )
+			: undefined,
+		program: filter.program,
 		groupEntity: "Semester",
 	};
 	console.log(JSON.stringify(variables));
@@ -33,7 +42,7 @@ function InnerPointEachSemester({ title, legend, selectors }: Props) {
 			setLoading(true);
 			const response = await fetchFunction({
 				variables,
-                fetchPolicy: 'cache-and-network'
+				fetchPolicy: "cache-and-network",
 			});
 			setData(response.data?.groupedPoints.data || []);
 			setLoading(false);
@@ -49,7 +58,7 @@ function InnerPointEachSemester({ title, legend, selectors }: Props) {
 			isFullWidth
 			handlerButtons={selectors}
 		>
-			<LineChart
+			<AreaChart
 				className=" h-full mt-4"
 				data={
 					[...data]
