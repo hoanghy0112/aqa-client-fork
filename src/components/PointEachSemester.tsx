@@ -33,7 +33,6 @@ function InnerPointEachSemester({ title, legend, selectors }: Props) {
 		program: filter.program,
 		groupEntity: "Semester",
 	};
-	console.log(JSON.stringify(variables));
 
 	const [fetchFunction] = usePointsEachSemesterLazyQuery();
 

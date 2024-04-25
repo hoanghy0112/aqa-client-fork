@@ -1,28 +1,27 @@
 "use client";
 
-import CriteriaList from "@/components/criteria/CriteriaList";
+import PageTabs from "@/components/Tabs";
 import { FilterProvider } from "@/contexts/FilterContext";
 import { ReactNode } from "react";
-import CriteriaTabs from "./tabs";
 
 export default function Layout({ children }: { children: ReactNode }) {
 	return (
 		<FilterProvider>
 			<h1 className="font-semibold text-3xl">Tiêu chí</h1>
-			<CriteriaTabs
+			<PageTabs
+				baseTab="criteria"
 				tabs={[
 					{
 						link: "",
-						title: "Biểu đồ từng tiêu chí",
+						title: "Trang chủ",
 					},
 					{
-						link: "#",
-						title: "()",
+						link: "detail",
+						title: "Chi tiết",
 					},
 				]}
 			/>
 			<div className=" w-full mt-5 p-0 h-[420px]">{children}</div>
-			<CriteriaList />
 		</FilterProvider>
 	);
 }
