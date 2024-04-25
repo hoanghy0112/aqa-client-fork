@@ -17,9 +17,9 @@ export default function PageTabs({
 
 	return (
 		<Tabs
-			selectedKey={pathname.split("/").at(-1)}
+			selectedKey={pathname.split("/").at(2) || ""}
 			onSelectionChange={(tab) => {
-				router.push(`${defaultPath}/${tab}`);
+				router.push(`/${defaultPath}/${tab}`);
 			}}
 			className={className}
 			aria-label="Page tabs"

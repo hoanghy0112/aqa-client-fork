@@ -26,9 +26,13 @@ import Loading from "../Loading";
 import TableSketon from "../TableSkeleton";
 import { useSubjectsWithPointsLazyQuery } from "@/gql/graphql";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import { useFilterUrlQuery } from "@/hooks/useFilterUrlQuery";
 
 export default function SubjectList() {
 	const { semester, keyword, program, faculty } = useFilter();
+
+	const { query, setUrlQuery } = useFilterUrlQuery();
+
 	const [columns, setColumns] = useState(defaultColumns);
 	const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
 		column: "display_name",
@@ -167,12 +171,26 @@ export default function SubjectList() {
 									if (columnKey === "display_name") {
 										return (
 											<TableCell>
-												<Link
-													href={`/subject/${item.subject_id}`}
-													className=" py-3 hover:underline hover:underline-offset-1 hover:font-medium"
+												<div
+													onClick={() => {
+														setUrlQuery(
+															`/subject/${item.subject_id}`,
+															{
+																subjects: [
+																	item.subject_id ||
+																		"",
+																],
+															}
+														);
+													}}
 												>
-													{getKeyValue(item, columnKey)}
-												</Link>
+													<p className=" cursor-pointer py-3 hover:underline hover:underline-offset-1 hover:font-medium">
+														{getKeyValue(
+															item,
+															columnKey
+														)}
+													</p>
+												</div>
 											</TableCell>
 										);
 									}

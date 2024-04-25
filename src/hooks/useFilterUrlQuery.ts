@@ -1,12 +1,12 @@
 import { FilterArgs } from "@/gql/graphql";
 import withQuery from "@/utils/withQuery";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import usePersistentState from "./usePersistentState";
 
 export function useFilterUrlQuery() {
 	const router = useRouter();
-	const params = useParams();
+	const params = useSearchParams();
 
 	const [query, setQuery] = useState<FilterArgs>({
 		criteria_id: "",
@@ -24,7 +24,7 @@ export function useFilterUrlQuery() {
 			// setQuery({ ...query, ...newQuery });
 			router.push(
 				withQuery(pathname, {
-					...params,
+					...Object.fromEntries(params.entries()),
 					tree: encodeURI(JSON.stringify({ ...query, ...newQuery })),
 				})
 			);
@@ -33,7 +33,8 @@ export function useFilterUrlQuery() {
 	);
 
 	useEffect(() => {
-		if (params.tree) setQuery(JSON.parse(decodeURI(params.tree.toString())));
+		if (params.has("tree"))
+			setQuery(JSON.parse(decodeURI(params.get("tree")?.toString() || "")));
 	}, []);
 
 	return { query, setUrlQuery };

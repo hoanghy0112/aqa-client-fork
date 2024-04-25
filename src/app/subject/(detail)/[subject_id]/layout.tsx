@@ -1,3 +1,4 @@
+import BreadCrumb from "@/components/BreadCrumb";
 import PageTabs from "@/components/PageTabs";
 import { GET_SUBJECT_INFO } from "@/constants/api_endpoint";
 import Link from "next/link";
@@ -25,7 +26,8 @@ export default async function Layout({
 					</span>
 				</Link>
 			</h2>
-			<PageTabs defaultPath={`/subject/${subject_id}`} tabs={tabs} />
+			<BreadCrumb />
+			<PageTabs defaultPath={`subject/${subject_id}`} tabs={tabs} />
 			<div className="mt-4"> {children}</div>
 		</div>
 	);
@@ -33,7 +35,7 @@ export default async function Layout({
 
 export const tabs = [
 	{
-		link: "points",
+		link: "",
 		title: "Điểm các lớp",
 	},
 	{

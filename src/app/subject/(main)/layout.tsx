@@ -1,14 +1,15 @@
 "use client";
 
+import BreadCrumb from "@/components/BreadCrumb";
+import PageTabs from "@/components/PageTabs";
 import SubjectTable from "@/components/subjects/SubjectTable";
 import { FilterProvider } from "@/contexts/FilterContext";
-import { usePathname, useRouter } from "next/navigation";
-import { ReactNode, useEffect, useMemo } from "react";
-import SubjectTabs from "../tabs";
+import { useRouter } from "next/navigation";
+import { ReactNode, useEffect } from "react";
 
 export const tabs = [
 	{
-		link: "average-point",
+		link: "",
 		title: "Biểu đồ điểm trung bình",
 	},
 	{
@@ -18,12 +19,6 @@ export const tabs = [
 ];
 
 export default function Layout({ children }: { children: ReactNode }) {
-	const pathName = usePathname();
-	const tabName = useMemo(
-		() => pathName.split("/").at(-1) || tabs[0].link,
-		[pathName]
-	);
-
 	const router = useRouter();
 
 	useEffect(() => {
@@ -33,7 +28,8 @@ export default function Layout({ children }: { children: ReactNode }) {
 	return (
 		<>
 			<h1 className="font-semibold text-3xl">Môn học</h1>
-			<SubjectTabs selectedTab={tabName} tabs={tabs} />
+			<BreadCrumb />
+			<PageTabs defaultPath="subject" tabs={tabs} />
 			<div className=" w-full mt-5 p-0 h-[420px]">
 				<FilterProvider>{children}</FilterProvider>
 			</div>

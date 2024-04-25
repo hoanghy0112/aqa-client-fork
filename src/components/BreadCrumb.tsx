@@ -1,12 +1,13 @@
-import {
-	useDetailCriteriaLazyQuery,
-	useDetailCriteriaQuery,
-	useDetailSubjectQuery,
-} from "@/gql/graphql";
+"use client";
+
+import { useDetailCriteriaQuery, useDetailSubjectQuery } from "@/gql/graphql";
 import { useFilterUrlQuery } from "@/hooks/useFilterUrlQuery";
 import { Button } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 
 export default function BreadCrumb() {
+	const router = useRouter();
+
 	const { query, setUrlQuery } = useFilterUrlQuery();
 
 	const { data: criteria } = useDetailCriteriaQuery({
@@ -39,7 +40,14 @@ export default function BreadCrumb() {
 	return (
 		<div className=" mt-5 flex flex-row gap-2">
 			{paths.map(({ title, name, link, value }) => (
-				<Button key={title} variant="light" className=" h-fit">
+				<Button
+					key={title}
+					variant="light"
+					className=" h-fit"
+					onClick={() => {
+						setUrlQuery(`/${link}`, {});
+					}}
+				>
 					<div className=" p-2 flex-col gap-2 items-start">
 						<p className=" text-black text-xs">{title}</p>
 						<p className=" h-auto max-w-[300px] whitespace-normal text-black font-semibold">
