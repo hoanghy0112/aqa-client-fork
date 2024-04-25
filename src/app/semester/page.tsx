@@ -3,14 +3,15 @@
 import BreadCrumb from "@/components/BreadCrumb";
 import ChildrenItems from "@/components/ChildrenItems";
 import { FilterProvider } from "@/contexts/FilterContext";
-import { useFacultiesQuery } from "@/gql/graphql";
+import { useFacultiesQuery, useSemestersQuery } from "@/gql/graphql";
 import { useFilterUrlQuery } from "@/hooks/useFilterUrlQuery";
+import { sortSemester } from "@/utils/sortSemester";
 
 export default function Page({ params }: { params: any }) {
 	const semester_id = params.id;
-	const { query, setUrlQuery } = useFilterUrlQuery();
+	const { setUrlQuery } = useFilterUrlQuery();
 
-	const { data } = useFacultiesQuery();
+	const { data } = useSemestersQuery();
 
 	return (
 		<FilterProvider>
@@ -19,21 +20,23 @@ export default function Page({ params }: { params: any }) {
 			<ChildrenItems
 				items={[
 					{
-						display_name: "Tất cả các khoa/bộ môn",
+						display_name: "Tất cả học kỳ",
 						value: "all",
 						onClick() {
-							setUrlQuery(`/faculty`, {});
+							setUrlQuery(`/semester`, {});
 						},
 					},
-					...(data?.faculties.data.map(({ display_name, faculty_id }) => ({
-						display_name,
-						value: faculty_id,
-						onClick() {
-							setUrlQuery(`/falculty/${faculty_id}`, {
-								faculty_id,
-							});
-						},
-					})) || []),
+					...(sortSemester(data?.semesters || [])
+						.reverse()
+						.map(({ display_name, semester_id }) => ({
+							display_name,
+							value: semester_id,
+							onClick() {
+								setUrlQuery(`/semester/${semester_id}`, {
+									semester_id,
+								});
+							},
+						})) || []),
 				]}
 			/>
 		</FilterProvider>

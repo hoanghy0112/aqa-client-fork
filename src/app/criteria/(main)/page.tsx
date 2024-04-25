@@ -31,10 +31,10 @@ export default function Page() {
 			<ChildrenItems
 				items={[
 					{
-						display_name: "Chọn tất cả",
+						display_name: "Chọn tất cả tiêu chí",
 						value: "all",
 						onClick() {
-							setUrlQuery(`/semester/all`, {
+							setUrlQuery(`/semester`, {
 								criteria_id: "",
 							});
 						},
