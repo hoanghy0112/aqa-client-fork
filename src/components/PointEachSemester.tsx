@@ -1,7 +1,5 @@
 import { FilterProvider, useFilter } from "@/contexts/FilterContext";
-import {
-    GroupedPoint
-} from "@/gql/graphql";
+import { GroupedPoint, usePointsEachSemesterLazyQuery } from "@/gql/graphql";
 import { LineChart } from "@tremor/react";
 import { ReactNode, useEffect, useState } from "react";
 import ChartLayout from "./chart/ChartLayout";
@@ -12,32 +10,35 @@ type Props = {
 	title: string;
 	legend: string;
 	selectors: ReactNode;
-	fetchFunction: (options: {
-		variables: {
-			class_type?: string;
-			faculty_id?: string;
-			lecturer_id?: string;
-			program?: string;
-            criteria_id?: string;
-			subjects?: string[];
-		};
-	}) => Promise<GroupedPoint[]>;
 };
 
-function InnerPointEachSemester({ title, legend, selectors, fetchFunction }: Props) {
-	const { semester, sort, faculty, program, subjects } = useFilter();
+function InnerPointEachSemester({ title, legend, selectors }: Props) {
+	const filter = useFilter();
 
 	const [data, setData] = useState<GroupedPoint[]>([]);
 	const [loading, setLoading] = useState(false);
 
+	const variables = {
+		program: filter.program,
+		faculty_id: filter.faculty?.faculty_id,
+		criteria_id: filter.criteria?.criteria_id,
+		groupEntity: "Semester",
+	};
+	console.log(JSON.stringify(variables));
+
+	const [fetchFunction] = usePointsEachSemesterLazyQuery();
+
 	useEffect(() => {
 		(async () => {
 			setLoading(true);
-			const response = await fetchFunction({ variables: {} });
-			setData(response);
+			const response = await fetchFunction({
+				variables,
+                fetchPolicy: 'cache-and-network'
+			});
+			setData(response.data?.groupedPoints.data || []);
 			setLoading(false);
 		})();
-	}, []);
+	}, [JSON.stringify(variables)]);
 
 	return (
 		<ChartLayout
@@ -92,19 +93,13 @@ function InnerPointEachSemester({ title, legend, selectors, fetchFunction }: Pro
 	);
 }
 
-export default function PointEachSemester({
-	title,
-	legend,
-	selectors,
-	fetchFunction,
-}: Props) {
+export default function PointEachSemester({ title, legend, selectors }: Props) {
 	return (
 		<FilterProvider>
 			<InnerPointEachSemester
 				title={title}
 				legend={legend}
 				selectors={selectors}
-				fetchFunction={fetchFunction}
 			/>
 		</FilterProvider>
 	);

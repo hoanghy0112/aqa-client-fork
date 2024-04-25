@@ -1,10 +1,9 @@
 "use client";
 
 import ProgramIcon from "@/assets/ProgramIcon";
-import { GET_PROGRAM_LIST } from "@/constants/api_endpoint";
 import { useFilter } from "@/contexts/FilterContext";
+import { useProgramsQuery } from "@/gql/graphql";
 import useNavigate from "@/hooks/useNavigate";
-import { defaultFetcher } from "@/utils/fetchers";
 import { Button } from "@nextui-org/button";
 import {
 	Dropdown,
@@ -16,8 +15,6 @@ import {
 import { Spinner } from "@nextui-org/spinner";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useMemo } from "react";
-import useSWR from "swr";
-import { Program, useProgramsQuery } from "@/gql/graphql";
 
 function ProgramSelector_({
 	program,

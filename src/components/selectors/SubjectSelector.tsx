@@ -23,6 +23,7 @@ import useSWR from "swr";
 import { useDebounce } from "usehooks-ts";
 import OptionButton from "../OptionButton";
 import { SortSelector } from "./SortSelector";
+import { Subject } from "@/gql/graphql";
 
 export default function SubjectSelector({ isNoBorder }: SubjectSelectorPropTypes) {
 	const { subjects: _subjects, setSubjects: _setSubjects, faculty } = useFilter();
@@ -53,12 +54,11 @@ export default function SubjectSelector({ isNoBorder }: SubjectSelectorPropTypes
 			debouncedKeyword,
 			page_size: 20,
 			filter_field: "subject_name",
-			faculty_name: faculty?.faculty_name,
+			faculty_name: faculty?.display_name,
 			direction: sort,
 		}),
 		(url) => fetch(url).then((res) => res.json())
 	);
-	console.log({ items });
 
 	return (
 		<>
@@ -112,10 +112,8 @@ export default function SubjectSelector({ isNoBorder }: SubjectSelectorPropTypes
 									<>
 										{items?.data.map(
 											({
-												subject_name,
-												faculty_name,
+												display_name,
 												faculty_id,
-												average_point,
 												subject_id,
 											}) => (
 												<div
@@ -123,7 +121,9 @@ export default function SubjectSelector({ isNoBorder }: SubjectSelectorPropTypes
 													className="w-full mb-2"
 												>
 													<Checkbox
-														aria-label={subject_name}
+														aria-label={
+															display_name || ""
+														}
 														classNames={{
 															base: cn(
 																"inline-flex w-full max-w-7xl bg-content1",
@@ -148,10 +148,8 @@ export default function SubjectSelector({ isNoBorder }: SubjectSelectorPropTypes
 																	subject_id,
 																	{
 																		subject_id,
-																		subject_name,
-																		faculty_name,
+																		display_name,
 																		faculty_id,
-																		average_point,
 																	}
 																);
 															setSubjects(
@@ -161,11 +159,11 @@ export default function SubjectSelector({ isNoBorder }: SubjectSelectorPropTypes
 													>
 														<div className="w-full flex flex-col justify-between gap-0">
 															<p className=" text-md font-semibold mb-1 text-start">
-																{subject_name}
+																{display_name}
 															</p>
-															<p className=" text-sm w-full font-normal text-start">
+															{/* <p className=" text-sm w-full font-normal text-start">
 																{faculty_name}
-															</p>
+															</p> */}
 														</div>
 													</Checkbox>
 												</div>
@@ -248,7 +246,7 @@ export default function SubjectSelector({ isNoBorder }: SubjectSelectorPropTypes
 							<ModalBody>
 								<div className=" ">
 									{Array.from(subjects.entries()).map(
-										([_, { subject_name, subject_id }]) => (
+										([_, { display_name, subject_id }]) => (
 											<Chip
 												key={subject_id}
 												className="m-2"
@@ -257,7 +255,7 @@ export default function SubjectSelector({ isNoBorder }: SubjectSelectorPropTypes
 													setSubjects(new Map(subjects));
 												}}
 											>
-												<p>{subject_name}</p>
+												<p>{display_name}</p>
 											</Chip>
 										)
 									)}

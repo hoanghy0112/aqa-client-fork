@@ -1,12 +1,11 @@
 "use client";
 
-import { useOverallCriteriaPointsEachSemesterLazyQuery } from "@/gql/graphql";
 import PointEachSemester from "../PointEachSemester";
+import FacultySelector from "../selectors/FacultySelector";
 import ProgramSelector from "../selectors/ProgramSelector";
+import SubjectSelector from "../selectors/SubjectSelector";
 
 export default function CriteriaOverallChart() {
-	const [getPoints] = useOverallCriteriaPointsEachSemesterLazyQuery();
-
 	return (
 		<PointEachSemester
 			title="Điểm đánh giá trung bình qua từng học kỳ"
@@ -14,11 +13,10 @@ export default function CriteriaOverallChart() {
 			selectors={
 				<>
 					<ProgramSelector />
+					<FacultySelector />
+					<SubjectSelector />
 				</>
 			}
-			fetchFunction={async (options) => {
-				return (await getPoints(options)).data?.groupedPoints.data || [];
-			}}
 		/>
 	);
 }
