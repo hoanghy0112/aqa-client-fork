@@ -1,12 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import {
-	GET_LECTURER_WITH_POINTS,
-	GET_SUBJECT_TABLE,
-} from "@/constants/api_endpoint";
 import { useFilter } from "@/contexts/FilterContext";
-import useIncrementalFetch from "@/hooks/useIncrementalFetch";
 import {
 	SortDescriptor,
 	Table,
@@ -19,16 +14,18 @@ import {
 } from "@nextui-org/table";
 import { Tooltip } from "@nextui-org/tooltip";
 
-import Link from "next/link";
+import { useLecturerstWithPointsLazyQuery } from "@/gql/graphql";
+import { useFilterUrlQuery } from "@/hooks/useFilterUrlQuery";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import Loading from "../Loading";
 import TableSketon from "../TableSkeleton";
-import { useRouter } from "next/navigation";
-import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
-import { useLecturerstWithPointsLazyQuery } from "@/gql/graphql";
 
 export default function LecturerList() {
 	const router = useRouter();
+
+	const { query, setUrlQuery } = useFilterUrlQuery();
 
 	const { semester, keyword, program, faculty } = useFilter();
 	const [columns, setColumns] = useState(defaultColumns);
@@ -180,19 +177,23 @@ export default function LecturerList() {
 							<TableRow
 								key={item.lecturer_id}
 								onClick={() =>
-									router.push(`/lecturer/${item.lecturer_id}`)
+									setUrlQuery(`/lecturer/${item.lecturer_id}`, {
+										lecturer_id: item.lecturer_id || "",
+									})
 								}
 							>
 								{(columnKey) => {
 									if (columnKey === "display_name") {
 										return (
 											<TableCell>
-												<Link
-													href={`/lecturer/${item.lecturer_id}`}
-													className=" py-3 hover:underline hover:underline-offset-1 hover:font-medium"
-												>
-													{getKeyValue(item, columnKey)}
-												</Link>
+												<div>
+													<p className=" cursor-pointer py-3 hover:underline hover:underline-offset-1 hover:font-medium">
+														{getKeyValue(
+															item,
+															columnKey
+														)}
+													</p>
+												</div>
 											</TableCell>
 										);
 									}
