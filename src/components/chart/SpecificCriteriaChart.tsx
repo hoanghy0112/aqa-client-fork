@@ -1,22 +1,14 @@
-import { GET_CRITERIA_POINT_ACROSS_SEMESTER } from "@/constants/api_endpoint";
 import { useFilter } from "@/contexts/FilterContext";
-import { defaultFetcher } from "@/utils/fetchers";
-import withQuery from "@/utils/withQuery";
-import { LineChart } from "@tremor/react";
-import useSWR from "swr";
-import Loading from "../Loading";
-import NoData from "../NoData";
-import FacultySelector from "../selectors/FacultySelector";
-import ProgramSelector from "../selectors/ProgramSelector";
-import SubjectSelector from "../selectors/SubjectSelector";
-import ChartLayout from "./ChartLayout";
-import { useEffect, useRef, useState } from "react";
+import { useFilterUrlQuery } from "@/hooks/useFilterUrlQuery";
+import { Button } from "@nextui-org/react";
+import { useEffect, useRef } from "react";
+import PointEachSemester from "../PointEachSemester";
 
 export default function SpecificCriteriaChart({ criteria }: { criteria: Criteria }) {
 	const { faculty, program } = useFilter();
 	const containerRef = useRef<HTMLDivElement>(null);
-	const [data, setData] = useState<any[]>([]);
-	const [isLoading, setIsLoading] = useState<boolean>(true);
+
+	const { query, setUrlQuery } = useFilterUrlQuery();
 
 	useEffect(() => {
 		const containerElement = containerRef.current;
@@ -24,16 +16,6 @@ export default function SpecificCriteriaChart({ criteria }: { criteria: Criteria
 
 		const observer = new IntersectionObserver(async ([entry]) => {
 			if (entry.isIntersecting) {
-				if (data.length == 0) setIsLoading(true);
-				const res = await fetch(
-					withQuery(GET_CRITERIA_POINT_ACROSS_SEMESTER, {
-						criteria_name: criteria.display_name,
-						faculty_id: faculty?.faculty_id,
-					})
-				);
-				const jsonData = await res.json();
-				setData(jsonData);
-				setIsLoading(false);
 			}
 		});
 
@@ -42,54 +24,34 @@ export default function SpecificCriteriaChart({ criteria }: { criteria: Criteria
 		return () => {
 			if (containerElement) observer.unobserve(containerElement);
 		};
-	}, [criteria.criteria_id, faculty?.faculty_id, program, data.length]);
-
-	useEffect(() => {
-		setData([]);
-		setIsLoading(true);
-	}, [criteria.criteria_id, faculty?.faculty_id, program]);
+	}, []);
 
 	return (
 		<div ref={containerRef} className="mt-10">
-			<h1 className="font-semibold text-xl">Tiêu chí {criteria.index}</h1>
-			<p className="mb-6">{criteria.display_name}</p>
-			<ChartLayout
-				primaryTitle={criteria.display_name}
-				secondaryTitle=""
-				height={350}
-				legends={[LEGEND_NAME]}
-				colors={["sky"]}
-				columnNum={data?.length || 0}
-				showLegend={true}
-				handlerButtons={
-					<>
-						<ProgramSelector />
-						<FacultySelector />
-						<SubjectSelector />
-					</>
-				}
+			<Button
+				variant="light"
+				className=" p-4 mb-6 h-fit"
+				onClick={() => {
+					setUrlQuery(`/criteria/${criteria.criteria_id}`, {
+						criteria_id: criteria.criteria_id,
+					});
+				}}
 			>
-				<LineChart
-					className=" h-full mt-4"
-					data={
-						isLoading
-							? []
-							: data?.map((d: any) => ({
-									...d,
-									[LEGEND_NAME]: d.avg * 100,
-							  })) || []
-					}
-					index="display_name"
-					categories={[LEGEND_NAME]}
-					colors={["sky"]}
-					yAxisWidth={80}
-					autoMinValue
-					valueFormatter={(d: number) => `${d.toFixed(2)}%`}
-					showLegend={true}
-					//@ts-ignore
-					noDataText={isLoading ? <Loading /> : <NoData />}
+				<div className=" flex-col items-start gap-2">
+					<h1 className="font-semibold text-xl text-start">
+						Tiêu chí {criteria.index}
+					</h1>
+					<p className="">{criteria.display_name}</p>
+				</div>
+			</Button>
+			<div className=" h-[400px]">
+				<PointEachSemester
+					title="Điểm đánh giá trung bình qua từng học kỳ"
+					legend="Điểm đánh giá"
+					query={{ criteria_id: criteria.criteria_id }}
+					selectors={<></>}
 				/>
-			</ChartLayout>
+			</div>
 		</div>
 	);
 }

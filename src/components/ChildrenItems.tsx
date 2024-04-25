@@ -18,7 +18,7 @@ export default function ChildrenItems({ items }: Props) {
 						color={value === "all" ? "primary" : "default"}
 						onClick={() => onClick(value)}
 					>
-						<p className=" text-start">{display_name}</p>
+						<p className=" text-start font-semibold">{display_name}</p>
 					</Button>
 				</>
 			))}

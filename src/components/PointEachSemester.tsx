@@ -4,7 +4,7 @@ import {
 	GroupedPoint,
 	usePointsEachSemesterLazyQuery,
 } from "@/gql/graphql";
-import { AreaChart, LineChart } from "@tremor/react";
+import { AreaChart } from "@tremor/react";
 import { ReactNode, useEffect, useState } from "react";
 import ChartLayout from "./chart/ChartLayout";
 import Loading from "./Loading";
@@ -14,9 +14,10 @@ type Props = {
 	title: string;
 	legend: string;
 	selectors: ReactNode;
+	query?: FilterArgs;
 };
 
-function InnerPointEachSemester({ title, legend, selectors }: Props) {
+function InnerPointEachSemester({ title, legend, selectors, query = {} }: Props) {
 	const filter = useFilter();
 
 	const [data, setData] = useState<GroupedPoint[]>([]);
@@ -40,13 +41,19 @@ function InnerPointEachSemester({ title, legend, selectors }: Props) {
 		(async () => {
 			setLoading(true);
 			const response = await fetchFunction({
-				variables,
+				variables: {
+					...query,
+					...Object.fromEntries(
+						Object.entries(variables).filter(([key, value]) => value)
+					),
+					groupEntity: "Semester",
+				},
 				fetchPolicy: "cache-and-network",
 			});
 			setData(response.data?.groupedPoints.data || []);
 			setLoading(false);
 		})();
-	}, [JSON.stringify(variables)]);
+	}, [JSON.stringify(query)]);
 
 	return (
 		<ChartLayout
@@ -101,13 +108,19 @@ function InnerPointEachSemester({ title, legend, selectors }: Props) {
 	);
 }
 
-export default function PointEachSemester({ title, legend, selectors }: Props) {
+export default function PointEachSemester({
+	title,
+	legend,
+	selectors,
+	query,
+}: Props) {
 	return (
 		<FilterProvider>
 			<InnerPointEachSemester
 				title={title}
 				legend={legend}
 				selectors={selectors}
+				query={query}
 			/>
 		</FilterProvider>
 	);
