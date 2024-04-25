@@ -34,7 +34,7 @@ export default function Page() {
 						display_name: "Chọn tất cả",
 						value: "all",
 						onClick() {
-							setUrlQuery(`/semester`, {
+							setUrlQuery(`/semester/all`, {
 								criteria_id: "",
 							});
 						},

@@ -4,6 +4,7 @@ import {
 	useDetailCriteriaQuery,
 	useDetailLecturerQuery,
 	useDetailSubjectQuery,
+	useSemestersQuery,
 } from "@/gql/graphql";
 import { useFilterUrlQuery } from "@/hooks/useFilterUrlQuery";
 import { Button } from "@nextui-org/react";
@@ -17,6 +18,10 @@ export default function BreadCrumb() {
 	const { data: criteria } = useDetailCriteriaQuery({
 		variables: { id: query?.criteria_id || "" },
 		skip: !query?.criteria_id,
+	});
+
+	const { data: semesters } = useSemestersQuery({
+		skip: !query?.semester_id,
 	});
 
 	const { data: subject } = useDetailSubjectQuery({
@@ -36,7 +41,14 @@ export default function BreadCrumb() {
 			value: query?.criteria_id,
 			name: criteria?.criteria?.display_name,
 		},
-		{ title: "Học kỳ", link: "semester", value: query?.semester_id, name: "" },
+		{
+			title: "Học kỳ",
+			link: "semester",
+			value: query?.semester_id,
+			name: semesters?.semesters?.find(
+				(semester) => semester.semester_id === query.semester_id
+			)?.display_name,
+		},
 		{ title: "Khoa", link: "faculty", value: query?.faculty_id, name: "" },
 		{
 			title: "Môn học",

@@ -3,6 +3,7 @@
 import ChildrenItems from "@/components/ChildrenItems";
 import { useDetailCriteriaQuery } from "@/gql/graphql";
 import { useFilterUrlQuery } from "@/hooks/useFilterUrlQuery";
+import { sortSemester } from "@/utils/sortSemester";
 
 export default function Page({
 	params: { criteria_id },
@@ -18,9 +19,17 @@ export default function Page({
 	return (
 		<div>
 			<ChildrenItems
-				items={
-					data?.criteria?.semester.map(
-						({ display_name, semester_id }) => ({
+				items={[
+					{
+						display_name: "Tất cả học kỳ",
+						value: "all",
+						onClick() {
+							setUrlQuery(`/semester`, {});
+						},
+					},
+					...(sortSemester(data?.criteria?.semester || [])
+						.reverse()
+						.map(({ display_name, semester_id }) => ({
 							display_name,
 							value: semester_id,
 							onClick() {
@@ -28,9 +37,8 @@ export default function Page({
 									semester_id,
 								});
 							},
-						})
-					) || []
-				}
+						})) || []),
+				]}
 			/>
 		</div>
 	);
