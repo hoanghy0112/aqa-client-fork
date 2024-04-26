@@ -1,3 +1,4 @@
+import { useFilterUrlQuery } from "@/hooks/useFilterUrlQuery";
 import Link from "next/link";
 import { ReactNode } from "react";
 
@@ -8,11 +9,12 @@ export default function TextLink({
 	href: string;
 	children: ReactNode;
 }) {
+	const { setUrlQuery } = useFilterUrlQuery();
 	return (
-		<Link href={href}>
+		<div onClick={() => setUrlQuery(href, {})}>
 			<span className=" underline font-medium hover:text-sky-600 hover:dark:text-sky-500">
 				{children}
 			</span>
-		</Link>
+		</div>
 	);
 }
