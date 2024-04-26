@@ -444,6 +444,14 @@ export type UserEntity = {
   username: Scalars['String']['output'];
 };
 
+export type AllClassesQueryVariables = Exact<{
+  filter?: InputMaybe<FilterArgs>;
+  sort?: InputMaybe<SortArgs>;
+}>;
+
+
+export type AllClassesQuery = { __typename?: 'Query', classes: { __typename?: 'PaginatedClass', data: Array<{ __typename?: 'Class', class_id: string, class_type: string, display_name: string, participating_student: number, program: string, total_student: number }> } };
+
 export type CommentQuantityQueryVariables = Exact<{
   filter?: InputMaybe<FilterArgs>;
 }>;
@@ -514,6 +522,14 @@ export type DetailLecturerQueryVariables = Exact<{
 
 export type DetailLecturerQuery = { __typename?: 'Query', lecturer?: { __typename?: 'Lecturer', birth_date?: any | null, display_name?: string | null, email?: string | null, faculty_id?: string | null, gender?: boolean | null, learning?: string | null, learning_position?: string | null, lecturer_id: string, mscb?: number | null, ngach?: string | null, phone?: string | null, position?: string | null, total_point?: number | null, username?: string | null } | null };
 
+export type AllLecturersQueryVariables = Exact<{
+  filter?: InputMaybe<FilterArgs>;
+  sort?: InputMaybe<SortArgs>;
+}>;
+
+
+export type AllLecturersQuery = { __typename?: 'Query', lecturers: { __typename?: 'PaginatedLecturer', data: Array<{ __typename?: 'Lecturer', birth_date?: any | null, display_name?: string | null, email?: string | null, faculty_id?: string | null, gender?: boolean | null, learning?: string | null, learning_position?: string | null, lecturer_id: string, mscb?: number | null, ngach?: string | null, phone?: string | null, position?: string | null, total_point?: number | null, username?: string | null }> } };
+
 export type LecturerstWithPointsQueryVariables = Exact<{
   filter?: InputMaybe<FilterArgs>;
   sort?: InputMaybe<SortArgs>;
@@ -580,6 +596,57 @@ export type SubjectsWithPointsQueryVariables = Exact<{
 export type SubjectsWithPointsQuery = { __typename?: 'Query', subjects: { __typename?: 'PaginatedSubject', data: Array<{ __typename?: 'Subject', display_name?: string | null, faculty_id?: string | null, subject_id: string, total_point?: number | null, faculty?: { __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null } | null, points?: Array<{ __typename?: 'GroupedPoint', average_point: number, class_num: number, id: string, max_point?: number | null, point?: number | null, display_name?: string | null }> | null }>, meta: { __typename?: 'PaginatedMetaData', hasNext: boolean, hasPrev: boolean, page: number, size: number, total_item: number, total_page: number } } };
 
 
+export const AllClassesDocument = gql`
+    query AllClasses($filter: FilterArgs, $sort: SortArgs) {
+  classes(filter: $filter, sort: $sort, pagination: {page: 0, size: 1000}) {
+    data {
+      class_id
+      class_type
+      display_name
+      participating_student
+      program
+      total_student
+    }
+  }
+}
+    `;
+
+/**
+ * __useAllClassesQuery__
+ *
+ * To run a query within a React component, call `useAllClassesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllClassesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllClassesQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      sort: // value for 'sort'
+ *   },
+ * });
+ */
+export function useAllClassesQuery(baseOptions?: Apollo.QueryHookOptions<AllClassesQuery, AllClassesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AllClassesQuery, AllClassesQueryVariables>(AllClassesDocument, options);
+      }
+export function useAllClassesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllClassesQuery, AllClassesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AllClassesQuery, AllClassesQueryVariables>(AllClassesDocument, options);
+        }
+export function useAllClassesSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<AllClassesQuery, AllClassesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<AllClassesQuery, AllClassesQueryVariables>(AllClassesDocument, options);
+        }
+export type AllClassesQueryHookResult = ReturnType<typeof useAllClassesQuery>;
+export type AllClassesLazyQueryHookResult = ReturnType<typeof useAllClassesLazyQuery>;
+export type AllClassesSuspenseQueryHookResult = ReturnType<typeof useAllClassesSuspenseQuery>;
+export type AllClassesQueryResult = Apollo.QueryResult<AllClassesQuery, AllClassesQueryVariables>;
+export function refetchAllClassesQuery(variables?: AllClassesQueryVariables) {
+      return { query: AllClassesDocument, variables: variables }
+    }
 export const CommentQuantityDocument = gql`
     query CommentQuantity($filter: FilterArgs) {
   positive: commentQuantity(type: "positive", filter: $filter) {
@@ -1071,6 +1138,65 @@ export type DetailLecturerSuspenseQueryHookResult = ReturnType<typeof useDetailL
 export type DetailLecturerQueryResult = Apollo.QueryResult<DetailLecturerQuery, DetailLecturerQueryVariables>;
 export function refetchDetailLecturerQuery(variables: DetailLecturerQueryVariables) {
       return { query: DetailLecturerDocument, variables: variables }
+    }
+export const AllLecturersDocument = gql`
+    query AllLecturers($filter: FilterArgs, $sort: SortArgs) {
+  lecturers(filter: $filter, sort: $sort, pagination: {page: 0, size: 1000}) {
+    data {
+      birth_date
+      display_name
+      email
+      faculty_id
+      gender
+      learning
+      learning_position
+      lecturer_id
+      mscb
+      ngach
+      phone
+      position
+      total_point
+      username
+    }
+  }
+}
+    `;
+
+/**
+ * __useAllLecturersQuery__
+ *
+ * To run a query within a React component, call `useAllLecturersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllLecturersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllLecturersQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      sort: // value for 'sort'
+ *   },
+ * });
+ */
+export function useAllLecturersQuery(baseOptions?: Apollo.QueryHookOptions<AllLecturersQuery, AllLecturersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AllLecturersQuery, AllLecturersQueryVariables>(AllLecturersDocument, options);
+      }
+export function useAllLecturersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllLecturersQuery, AllLecturersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AllLecturersQuery, AllLecturersQueryVariables>(AllLecturersDocument, options);
+        }
+export function useAllLecturersSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<AllLecturersQuery, AllLecturersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<AllLecturersQuery, AllLecturersQueryVariables>(AllLecturersDocument, options);
+        }
+export type AllLecturersQueryHookResult = ReturnType<typeof useAllLecturersQuery>;
+export type AllLecturersLazyQueryHookResult = ReturnType<typeof useAllLecturersLazyQuery>;
+export type AllLecturersSuspenseQueryHookResult = ReturnType<typeof useAllLecturersSuspenseQuery>;
+export type AllLecturersQueryResult = Apollo.QueryResult<AllLecturersQuery, AllLecturersQueryVariables>;
+export function refetchAllLecturersQuery(variables?: AllLecturersQueryVariables) {
+      return { query: AllLecturersDocument, variables: variables }
     }
 export const LecturerstWithPointsDocument = gql`
     query LecturerstWithPoints($filter: FilterArgs, $sort: SortArgs, $page: Int) {

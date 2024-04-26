@@ -46,6 +46,9 @@ export default function BreadCrumb() {
 			link: "criteria",
 			value: query?.criteria_id,
 			name: criteria?.criteria?.display_name,
+			onClickValue: {
+				criteria_id: "",
+			},
 		},
 		{
 			title: "Học kỳ",
@@ -54,36 +57,48 @@ export default function BreadCrumb() {
 			name: semesters?.semesters?.find(
 				(semester) => semester.semester_id === query.semester_id
 			)?.display_name,
+			onClickValue: {
+				semester_id: "",
+			},
 		},
 		{
 			title: "Khoa",
 			link: "faculty",
 			value: query?.faculty_id,
 			name: faculty?.faculty?.display_name,
+			onClickValue: {
+				faculty_id: "",
+			},
 		},
 		{
 			title: "Môn học",
 			link: "subject",
 			value: query?.subjects?.at(0),
 			name: subject?.subject?.display_name,
+			onClickValue: {
+				subjects: undefined,
+			},
 		},
 		{
 			title: "Giảng viên",
 			link: "lecturer",
 			value: query?.lecturer_id,
 			name: lecturer?.lecturer?.display_name,
+			onClickValue: {
+				lecturer_id: "",
+			},
 		},
 	];
 
 	return (
 		<div className=" mt-5 flex flex-row gap-2">
-			{paths.map(({ title, name, link, value }) => (
+			{paths.map(({ title, name, link, value, onClickValue }) => (
 				<Button
 					key={title}
 					variant="light"
 					className=" h-fit"
 					onClick={() => {
-						setUrlQuery(`/${link}`, {});
+						setUrlQuery(`/${link}`, onClickValue);
 					}}
 				>
 					<div className=" p-2 flex-col gap-2 items-start">

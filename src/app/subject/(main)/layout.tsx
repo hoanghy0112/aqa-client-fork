@@ -10,6 +10,10 @@ import { ReactNode, useEffect } from "react";
 export const tabs = [
 	{
 		link: "",
+		title: "Trang chủ",
+	},
+	{
+		link: "average-point",
 		title: "Biểu đồ điểm trung bình",
 	},
 	{
@@ -33,9 +37,9 @@ export default function Layout({ children }: { children: ReactNode }) {
 			<div className=" w-full mt-5 p-0 h-[420px]">
 				<FilterProvider>{children}</FilterProvider>
 			</div>
-			<FilterProvider>
+			{/* <FilterProvider>
 				<SubjectTable />
-			</FilterProvider>
+			</FilterProvider> */}
 		</>
 	);
 }

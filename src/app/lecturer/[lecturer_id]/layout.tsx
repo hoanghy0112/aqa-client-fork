@@ -27,7 +27,11 @@ export default async function Layout({
 				</Link>
 			</h2> */}
 			<BreadCrumb />
-			<PageTabs defaultPath={`lecturer/${lecturer_id}`} tabs={tabs} />
+			<PageTabs
+				lastIndex={3}
+				defaultPath={`lecturer/${lecturer_id}`}
+				tabs={tabs}
+			/>
 			<div className="mt-14"> {children}</div>
 		</div>
 	);
@@ -36,7 +40,19 @@ export default async function Layout({
 export const tabs = [
 	{
 		link: "",
-		title: "Điểm các lớp",
+		title: "Trang chủ",
+	},
+	{
+		link: "classes",
+		title: "Tất cả các lớp",
+	},
+	{
+		link: "lecturers",
+		title: "Các giảng viên",
+	},
+	{
+		link: "points",
+		title: "Điểm đánh giá",
 	},
 	{
 		link: "comments",

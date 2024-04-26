@@ -1,0 +1,12 @@
+query AllClasses($filter: FilterArgs, $sort: SortArgs) {
+	classes(filter: $filter, sort: $sort, pagination: { page: 0, size: 1000 }) {
+		data {
+			class_id
+			class_type
+			display_name
+			participating_student
+			program
+			total_student
+		}
+	}
+}

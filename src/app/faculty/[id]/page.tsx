@@ -3,7 +3,7 @@
 import BreadCrumb from "@/components/BreadCrumb";
 import ChildrenItems from "@/components/ChildrenItems";
 import { FilterProvider } from "@/contexts/FilterContext";
-import { useAllSubjectsQuery, useFacultiesQuery } from "@/gql/graphql";
+import { useAllSubjectsQuery } from "@/gql/graphql";
 import { useFilterUrlQuery } from "@/hooks/useFilterUrlQuery";
 
 export default function Page({ params }: { params: any }) {
