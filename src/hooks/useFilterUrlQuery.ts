@@ -8,16 +8,20 @@ export function useFilterUrlQuery() {
 	const router = useRouter();
 	const params = useSearchParams();
 
-	const [query, setQuery] = useState<FilterArgs>({
-		criteria_id: "",
-		semester_id: "",
-		faculty_id: "",
-		subjects: undefined,
-		lecturer_id: "",
-		program: "",
-		class_type: "",
-		class_id: "",
-	});
+	const [query, setQuery] = useState<FilterArgs>(
+		params.has("tree")
+			? JSON.parse(decodeURI(params.get("tree")?.toString() || ""))
+			: {
+					criteria_id: "",
+					semester_id: "",
+					faculty_id: "",
+					subjects: undefined,
+					lecturer_id: "",
+					program: "",
+					class_type: "",
+					class_id: "",
+			  }
+	);
 
 	const setUrlQuery = useCallback(
 		(pathname: string, newQuery: Partial<FilterArgs>) => {

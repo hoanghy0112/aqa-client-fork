@@ -25,9 +25,34 @@ export default function Page() {
 				}
 			/>
 			<PointWithGroupedEntity
-				query={query}
+				query={{ ...query, criteria_id: "" }}
 				groupEntity="Criteria"
-				title="Điểm đánh giá trung bình qua từng học kỳ"
+				title="Điểm đánh giá của các tiêu chí"
+				legend="Điểm đánh giá"
+				selectors={
+					<>
+						<CriteriaSelector />
+						<ProgramSelector />
+						<SubjectSelector />
+					</>
+				}
+			/>
+			<PointWithGroupedEntity
+				query={query}
+				groupEntity="Subject"
+				title="Điểm đánh giá của các môn học"
+				legend="Điểm đánh giá"
+				selectors={
+					<>
+						<CriteriaSelector />
+						<ProgramSelector />
+					</>
+				}
+			/>
+			<PointWithGroupedEntity
+				query={query}
+				groupEntity="Lecturer"
+				title="Điểm đánh giá của các giảng viên"
 				legend="Điểm đánh giá"
 				selectors={
 					<>

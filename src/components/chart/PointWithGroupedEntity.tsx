@@ -3,8 +3,9 @@ import {
 	FilterArgs,
 	GroupedPoint,
 	usePointsEachSemesterLazyQuery,
+	usePointsWithGroupByLazyQuery,
 } from "@/gql/graphql";
-import { AreaChart } from "@tremor/react";
+import { AreaChart, BarChart } from "@tremor/react";
 import { ReactNode, useEffect, useState } from "react";
 import ChartLayout from "@/components/chart/ChartLayout";
 import Loading from "@components/Loading";
@@ -45,20 +46,32 @@ function InnerPointWithGroupedEntity({
 		groupEntity: "Semester",
 	};
 
-	const [fetchFunction] = usePointsEachSemesterLazyQuery();
+	const [fetchFunction] = usePointsWithGroupByLazyQuery();
 
 	useEffect(() => {
 		(async () => {
-			setLoading(true);
-			const response = await fetchFunction({
-				variables: {
+			console.log({
+				query,
+				filter,
+				variables,
+				d: {
 					...query,
 					...Object.fromEntries(
 						Object.entries(variables).filter(([key, value]) => value)
 					),
 					groupEntity: groupEntity,
 				},
-				fetchPolicy: "cache-and-network",
+			});
+			setLoading(true);
+			const response = await fetchFunction({
+				variables: {
+					...query,
+					// ...Object.fromEntries(
+					// 	Object.entries(variables).filter(([key, value]) => !!value)
+					// ),
+					groupEntity: groupEntity,
+				},
+				fetchPolicy: "network-only",
 			});
 			setData(response.data?.groupedPoints.data || []);
 			setLoading(false);
@@ -72,10 +85,12 @@ function InnerPointWithGroupedEntity({
 				secondaryTitle={""}
 				legends={[legend]}
 				colors={["sky"]}
+				columnNum={data.length || 0}
+				columnSize={100}
 				isFullWidth
 				handlerButtons={selectors}
 			>
-				<AreaChart
+				<BarChart
 					className=" h-full mt-4"
 					data={
 						[...data]
@@ -89,11 +104,13 @@ function InnerPointWithGroupedEntity({
 					categories={[xTitle]}
 					colors={["sky"]}
 					yAxisWidth={80}
-					minValue={3.3}
+					// minValue={3}
+					autoMinValue
 					valueFormatter={(number: number) => {
 						return `${number.toFixed(2)}`;
 					}}
-					showLegend={false}
+					enableLegendSlider
+					showLegend
 					//@ts-ignore
 					noDataText={loading ? <Loading /> : <NoData />}
 				/>
