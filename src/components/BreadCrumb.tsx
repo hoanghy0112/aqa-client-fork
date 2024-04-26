@@ -2,6 +2,7 @@
 
 import {
 	useDetailCriteriaQuery,
+	useDetailFacultyQuery,
 	useDetailLecturerQuery,
 	useDetailSubjectQuery,
 	useSemestersQuery,
@@ -22,6 +23,11 @@ export default function BreadCrumb() {
 
 	const { data: semesters } = useSemestersQuery({
 		skip: !query?.semester_id,
+	});
+
+	const { data: faculty } = useDetailFacultyQuery({
+		variables: { id: query?.faculty_id || "" },
+		skip: !query.faculty_id,
 	});
 
 	const { data: subject } = useDetailSubjectQuery({
@@ -49,7 +55,12 @@ export default function BreadCrumb() {
 				(semester) => semester.semester_id === query.semester_id
 			)?.display_name,
 		},
-		{ title: "Khoa", link: "faculty", value: query?.faculty_id, name: "" },
+		{
+			title: "Khoa",
+			link: "faculty",
+			value: query?.faculty_id,
+			name: faculty?.faculty?.display_name,
+		},
 		{
 			title: "Môn học",
 			link: "subject",

@@ -11,32 +11,30 @@ export default function Page({ params }: { params: any }) {
 	const semester_id = params.id;
 	const { setUrlQuery } = useFilterUrlQuery();
 
-	const { data } = useSemestersQuery();
+	const { data } = useFacultiesQuery();
 
 	return (
 		<FilterProvider>
-			<h1 className="font-semibold text-3xl text-slate-500">Học kỳ</h1>
+			<h1 className="font-semibold text-3xl text-slate-500">Khoa/Bộ môn</h1>
 			<BreadCrumb />
 			<ChildrenItems
 				items={[
 					{
-						display_name: "Tất cả học kỳ",
+						display_name: "Tất cả khoa/bộ môn",
 						value: "all",
 						onClick() {
-							setUrlQuery(`/faculty`, {});
+							setUrlQuery(`/subject`, {});
 						},
 					},
-					...(sortSemester(data?.semesters || [])
-						.reverse()
-						.map(({ display_name, semester_id }) => ({
-							display_name,
-							value: semester_id,
-							onClick() {
-								setUrlQuery(`/semester/${semester_id}`, {
-									semester_id,
-								});
-							},
-						})) || []),
+					...(data?.faculties.data.map(({ display_name, faculty_id }) => ({
+						display_name,
+						value: faculty_id,
+						onClick() {
+							setUrlQuery(`/faculty/${faculty_id}`, {
+								semester_id: faculty_id,
+							});
+						},
+					})) || []),
 				]}
 			/>
 		</FilterProvider>

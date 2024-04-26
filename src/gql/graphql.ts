@@ -500,6 +500,13 @@ export type FacultiesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type FacultiesQuery = { __typename?: 'Query', faculties: { __typename?: 'PaginatedFaculty', data: Array<{ __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null }> } };
 
+export type DetailFacultyQueryVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type DetailFacultyQuery = { __typename?: 'Query', faculty?: { __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null } | null };
+
 export type DetailLecturerQueryVariables = Exact<{
   id: Scalars['String']['input'];
 }>;
@@ -554,6 +561,14 @@ export type SubjectsQueryVariables = Exact<{
 
 
 export type SubjectsQuery = { __typename?: 'Query', subjects: { __typename?: 'PaginatedSubject', data: Array<{ __typename?: 'Subject', display_name?: string | null, faculty_id?: string | null, subject_id: string, total_point?: number | null, faculty?: { __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null } | null }>, meta: { __typename?: 'PaginatedMetaData', hasNext: boolean, hasPrev: boolean, page: number, size: number, total_item: number, total_page: number } } };
+
+export type AllSubjectsQueryVariables = Exact<{
+  filter?: InputMaybe<FilterArgs>;
+  sort?: InputMaybe<SortArgs>;
+}>;
+
+
+export type AllSubjectsQuery = { __typename?: 'Query', subjects: { __typename?: 'PaginatedSubject', data: Array<{ __typename?: 'Subject', display_name?: string | null, faculty_id?: string | null, subject_id: string, total_point?: number | null }> } };
 
 export type SubjectsWithPointsQueryVariables = Exact<{
   filter?: InputMaybe<FilterArgs>;
@@ -956,6 +971,51 @@ export type FacultiesQueryResult = Apollo.QueryResult<FacultiesQuery, FacultiesQ
 export function refetchFacultiesQuery(variables?: FacultiesQueryVariables) {
       return { query: FacultiesDocument, variables: variables }
     }
+export const DetailFacultyDocument = gql`
+    query DetailFaculty($id: String!) {
+  faculty(id: $id) {
+    display_name
+    faculty_id
+    full_name
+  }
+}
+    `;
+
+/**
+ * __useDetailFacultyQuery__
+ *
+ * To run a query within a React component, call `useDetailFacultyQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDetailFacultyQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDetailFacultyQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDetailFacultyQuery(baseOptions: Apollo.QueryHookOptions<DetailFacultyQuery, DetailFacultyQueryVariables> & ({ variables: DetailFacultyQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DetailFacultyQuery, DetailFacultyQueryVariables>(DetailFacultyDocument, options);
+      }
+export function useDetailFacultyLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DetailFacultyQuery, DetailFacultyQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DetailFacultyQuery, DetailFacultyQueryVariables>(DetailFacultyDocument, options);
+        }
+export function useDetailFacultySuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<DetailFacultyQuery, DetailFacultyQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<DetailFacultyQuery, DetailFacultyQueryVariables>(DetailFacultyDocument, options);
+        }
+export type DetailFacultyQueryHookResult = ReturnType<typeof useDetailFacultyQuery>;
+export type DetailFacultyLazyQueryHookResult = ReturnType<typeof useDetailFacultyLazyQuery>;
+export type DetailFacultySuspenseQueryHookResult = ReturnType<typeof useDetailFacultySuspenseQuery>;
+export type DetailFacultyQueryResult = Apollo.QueryResult<DetailFacultyQuery, DetailFacultyQueryVariables>;
+export function refetchDetailFacultyQuery(variables: DetailFacultyQueryVariables) {
+      return { query: DetailFacultyDocument, variables: variables }
+    }
 export const DetailLecturerDocument = gql`
     query DetailLecturer($id: String!) {
   lecturer(id: $id) {
@@ -1357,6 +1417,55 @@ export type SubjectsSuspenseQueryHookResult = ReturnType<typeof useSubjectsSuspe
 export type SubjectsQueryResult = Apollo.QueryResult<SubjectsQuery, SubjectsQueryVariables>;
 export function refetchSubjectsQuery(variables?: SubjectsQueryVariables) {
       return { query: SubjectsDocument, variables: variables }
+    }
+export const AllSubjectsDocument = gql`
+    query AllSubjects($filter: FilterArgs, $sort: SortArgs) {
+  subjects(filter: $filter, sort: $sort, pagination: {page: 0, size: 1000}) {
+    data {
+      display_name
+      faculty_id
+      subject_id
+      total_point
+    }
+  }
+}
+    `;
+
+/**
+ * __useAllSubjectsQuery__
+ *
+ * To run a query within a React component, call `useAllSubjectsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllSubjectsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllSubjectsQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      sort: // value for 'sort'
+ *   },
+ * });
+ */
+export function useAllSubjectsQuery(baseOptions?: Apollo.QueryHookOptions<AllSubjectsQuery, AllSubjectsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AllSubjectsQuery, AllSubjectsQueryVariables>(AllSubjectsDocument, options);
+      }
+export function useAllSubjectsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllSubjectsQuery, AllSubjectsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AllSubjectsQuery, AllSubjectsQueryVariables>(AllSubjectsDocument, options);
+        }
+export function useAllSubjectsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<AllSubjectsQuery, AllSubjectsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<AllSubjectsQuery, AllSubjectsQueryVariables>(AllSubjectsDocument, options);
+        }
+export type AllSubjectsQueryHookResult = ReturnType<typeof useAllSubjectsQuery>;
+export type AllSubjectsLazyQueryHookResult = ReturnType<typeof useAllSubjectsLazyQuery>;
+export type AllSubjectsSuspenseQueryHookResult = ReturnType<typeof useAllSubjectsSuspenseQuery>;
+export type AllSubjectsQueryResult = Apollo.QueryResult<AllSubjectsQuery, AllSubjectsQueryVariables>;
+export function refetchAllSubjectsQuery(variables?: AllSubjectsQueryVariables) {
+      return { query: AllSubjectsDocument, variables: variables }
     }
 export const SubjectsWithPointsDocument = gql`
     query SubjectsWithPoints($filter: FilterArgs, $sort: SortArgs, $page: Int) {

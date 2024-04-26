@@ -34,3 +34,14 @@ query Subjects($keyword: String, $isAscending: Boolean, $page: Int) {
 		}
 	}
 }
+
+query AllSubjects($filter: FilterArgs, $sort: SortArgs) {
+	subjects(filter: $filter, sort: $sort, pagination: { page: 0, size: 1000 }) {
+		data {
+			display_name
+			faculty_id
+			subject_id
+			total_point
+		}
+	}
+}
