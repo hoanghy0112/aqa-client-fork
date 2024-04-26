@@ -1,15 +1,14 @@
+import ChartLayout from "@/components/chart/ChartLayout";
 import { FilterProvider, useFilter } from "@/contexts/FilterContext";
 import {
 	FilterArgs,
 	GroupedPoint,
-	usePointsEachSemesterLazyQuery,
 	usePointsWithGroupByLazyQuery,
 } from "@/gql/graphql";
-import { AreaChart, BarChart } from "@tremor/react";
-import { ReactNode, useEffect, useState } from "react";
-import ChartLayout from "@/components/chart/ChartLayout";
 import Loading from "@components/Loading";
 import NoData from "@components/NoData";
+import { BarChart } from "@tremor/react";
+import { ReactNode, useEffect, useState } from "react";
 
 type Props = {
 	title: string;
@@ -18,6 +17,7 @@ type Props = {
 	query?: FilterArgs;
 	xTitle?: string;
 	groupEntity: string;
+	onClick?: (item: GroupedPoint) => any;
 };
 
 function InnerPointWithGroupedEntity({
@@ -27,6 +27,7 @@ function InnerPointWithGroupedEntity({
 	query = {},
 	xTitle = "Điểm",
 	groupEntity,
+	onClick = () => {},
 }: Props) {
 	const filter = useFilter();
 
@@ -50,25 +51,13 @@ function InnerPointWithGroupedEntity({
 
 	useEffect(() => {
 		(async () => {
-			console.log({
-				query,
-				filter,
-				variables,
-				d: {
-					...query,
-					...Object.fromEntries(
-						Object.entries(variables).filter(([key, value]) => value)
-					),
-					groupEntity: groupEntity,
-				},
-			});
 			setLoading(true);
 			const response = await fetchFunction({
 				variables: {
 					...query,
-					// ...Object.fromEntries(
-					// 	Object.entries(variables).filter(([key, value]) => !!value)
-					// ),
+					...Object.fromEntries(
+						Object.entries(variables).filter(([key, value]) => !!value)
+					),
 					groupEntity: groupEntity,
 				},
 				fetchPolicy: "network-only",
@@ -104,10 +93,15 @@ function InnerPointWithGroupedEntity({
 					categories={[xTitle]}
 					colors={["sky"]}
 					yAxisWidth={80}
-					// minValue={3}
 					autoMinValue
 					valueFormatter={(number: number) => {
 						return `${number.toFixed(2)}`;
+					}}
+					onValueChange={(v) => {
+						const item = data.find(
+							(point) => point.display_name == v?.name
+						);
+						if (item) onClick?.(item);
 					}}
 					enableLegendSlider
 					showLegend
