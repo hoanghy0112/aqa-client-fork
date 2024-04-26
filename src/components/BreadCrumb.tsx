@@ -48,6 +48,10 @@ export default function BreadCrumb() {
 			name: criteria?.criteria?.display_name,
 			onClickValue: {
 				criteria_id: "",
+				semester_id: "",
+				faculty_id: "",
+				subjects: undefined,
+				lecturer_id: "",
 			},
 		},
 		{
