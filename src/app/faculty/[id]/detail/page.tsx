@@ -13,7 +13,7 @@ export default function Page() {
 	return (
 		<div className=" flex flex-col gap-5">
 			<PointEachSemester
-				query={query}
+				query={{ ...query, semester_id: "" }}
 				title="Điểm đánh giá trung bình qua từng học kỳ"
 				legend="Điểm đánh giá"
 				selectors={
