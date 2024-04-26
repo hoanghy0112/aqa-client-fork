@@ -14,7 +14,7 @@ export default function ChildrenItems({ items }: Props) {
 			{items.map(({ display_name, value, onClick }) => (
 				<>
 					<Button
-						variant={value === "all" ? "shadow" : "light"}
+						variant={value === "all" ? "shadow" : "ghost"}
 						color={value === "all" ? "primary" : "default"}
 						onClick={() => onClick(value)}
 					>
