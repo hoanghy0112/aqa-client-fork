@@ -1,7 +1,7 @@
 "use client";
 
 import BreadCrumb from "@/components/BreadCrumb";
-import PageTabs from "@/components/Tabs";
+import PageTabs from "@/components/PageTabs";
 import { FilterProvider } from "@/contexts/FilterContext";
 import { ReactNode } from "react";
 
@@ -11,7 +11,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 			<h1 className="font-semibold text-3xl">Tiêu chí</h1>
 			<BreadCrumb />
 			<PageTabs
-				baseTab="criteria"
+				defaultPath="criteria"
 				tabs={[
 					{
 						link: "",

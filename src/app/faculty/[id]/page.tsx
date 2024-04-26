@@ -1,6 +1,5 @@
 "use client";
 
-import BreadCrumb from "@/components/BreadCrumb";
 import ChildrenItems from "@/components/ChildrenItems";
 import { FilterProvider } from "@/contexts/FilterContext";
 import { useAllSubjectsQuery } from "@/gql/graphql";
@@ -18,8 +17,7 @@ export default function Page({ params }: { params: any }) {
 
 	return (
 		<FilterProvider>
-			<h1 className="font-semibold text-3xl text-slate-500">Khoa/Bộ môn</h1>
-			<BreadCrumb />
+			<p className=" font-semibold">Các môn học</p>
 			<Input
 				value={keyword}
 				onChange={(e) => setKeyword(e.target.value)}

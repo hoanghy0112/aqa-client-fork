@@ -4,6 +4,7 @@ query PointsEachSemester(
 	$faculty_id: String
 	$lecturer_id: String
 	$criteria_id: String
+	$semester_id: String
 	$program: String
 	$subjects: [String!]
 ) {
@@ -14,6 +15,7 @@ query PointsEachSemester(
 		faculty_id: $faculty_id
 		lecturer_id: $lecturer_id
 		criteria_id: $criteria_id
+		semester_id: $semester_id
 		program: $program
 		subjects: $subjects
 	) {

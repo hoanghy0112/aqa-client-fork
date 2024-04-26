@@ -3,9 +3,8 @@
 import BreadCrumb from "@/components/BreadCrumb";
 import ChildrenItems from "@/components/ChildrenItems";
 import { FilterProvider } from "@/contexts/FilterContext";
-import { useFacultiesQuery, useSemestersQuery } from "@/gql/graphql";
+import { useFacultiesQuery } from "@/gql/graphql";
 import { useFilterUrlQuery } from "@/hooks/useFilterUrlQuery";
-import { sortSemester } from "@/utils/sortSemester";
 
 export default function Page({ params }: { params: any }) {
 	const semester_id = params.id;
@@ -31,7 +30,7 @@ export default function Page({ params }: { params: any }) {
 						value: faculty_id,
 						onClick() {
 							setUrlQuery(`/faculty/${faculty_id}`, {
-								semester_id: faculty_id,
+								faculty_id,
 							});
 						},
 					})) || []),

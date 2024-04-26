@@ -545,6 +545,7 @@ export type PointsEachSemesterQueryVariables = Exact<{
   faculty_id?: InputMaybe<Scalars['String']['input']>;
   lecturer_id?: InputMaybe<Scalars['String']['input']>;
   criteria_id?: InputMaybe<Scalars['String']['input']>;
+  semester_id?: InputMaybe<Scalars['String']['input']>;
   program?: InputMaybe<Scalars['String']['input']>;
   subjects?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
 }>;
@@ -1280,7 +1281,7 @@ export function refetchLecturerstWithPointsQuery(variables?: LecturerstWithPoint
       return { query: LecturerstWithPointsDocument, variables: variables }
     }
 export const PointsEachSemesterDocument = gql`
-    query PointsEachSemester($groupEntity: String!, $class_type: String, $faculty_id: String, $lecturer_id: String, $criteria_id: String, $program: String, $subjects: [String!]) {
+    query PointsEachSemester($groupEntity: String!, $class_type: String, $faculty_id: String, $lecturer_id: String, $criteria_id: String, $semester_id: String, $program: String, $subjects: [String!]) {
   groupedPoints(
     groupEntity: $groupEntity
     size: 30
@@ -1288,6 +1289,7 @@ export const PointsEachSemesterDocument = gql`
     faculty_id: $faculty_id
     lecturer_id: $lecturer_id
     criteria_id: $criteria_id
+    semester_id: $semester_id
     program: $program
     subjects: $subjects
   ) {
@@ -1320,6 +1322,7 @@ export const PointsEachSemesterDocument = gql`
  *      faculty_id: // value for 'faculty_id'
  *      lecturer_id: // value for 'lecturer_id'
  *      criteria_id: // value for 'criteria_id'
+ *      semester_id: // value for 'semester_id'
  *      program: // value for 'program'
  *      subjects: // value for 'subjects'
  *   },

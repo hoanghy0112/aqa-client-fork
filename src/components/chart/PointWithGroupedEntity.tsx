@@ -6,18 +6,27 @@ import {
 } from "@/gql/graphql";
 import { AreaChart } from "@tremor/react";
 import { ReactNode, useEffect, useState } from "react";
-import ChartLayout from "./chart/ChartLayout";
-import Loading from "./Loading";
-import NoData from "./NoData";
+import ChartLayout from "@/components/chart/ChartLayout";
+import Loading from "@components/Loading";
+import NoData from "@components/NoData";
 
 type Props = {
 	title: string;
 	legend: string;
 	selectors: ReactNode;
 	query?: FilterArgs;
+	xTitle?: string;
+	groupEntity: string;
 };
 
-function InnerPointEachSemester({ title, legend, selectors, query = {} }: Props) {
+function InnerPointWithGroupedEntity({
+	title,
+	legend,
+	selectors,
+	query = {},
+	xTitle = "Điểm",
+	groupEntity,
+}: Props) {
 	const filter = useFilter();
 
 	const [data, setData] = useState<GroupedPoint[]>([]);
@@ -47,7 +56,7 @@ function InnerPointEachSemester({ title, legend, selectors, query = {} }: Props)
 					...Object.fromEntries(
 						Object.entries(variables).filter(([key, value]) => value)
 					),
-					groupEntity: "Semester",
+					groupEntity: groupEntity,
 				},
 				fetchPolicy: "cache-and-network",
 			});
@@ -70,38 +79,14 @@ function InnerPointEachSemester({ title, legend, selectors, query = {} }: Props)
 					className=" h-full mt-4"
 					data={
 						[...data]
-							.sort((a, b) => {
-								const [semesterA, yearA] = a.display_name?.split(
-									", "
-								) || [0, 0];
-								const [semesterB, yearB] = b.display_name?.split(
-									", "
-								) || [0, 0];
-								if (yearA == yearB) {
-									return (
-										parseInt(
-											semesterA.toString().at(-1) || "",
-											10
-										) -
-										parseInt(
-											semesterB.toString().at(-1) || "",
-											10
-										)
-									);
-								} else {
-									return (
-										parseInt(yearA.toString(), 10) -
-										parseInt(yearB.toString(), 10)
-									);
-								}
-							})
+							.sort((a, b) => b.average_point - a.average_point)
 							.map((point) => ({
-								Điểm: point.average_point * 4,
-								semester_name: point.display_name,
+								[xTitle]: point.average_point * 4,
+								name: point.display_name,
 							})) || []
 					}
-					index="semester_name"
-					categories={["Điểm"]}
+					index="name"
+					categories={[xTitle]}
 					colors={["sky"]}
 					yAxisWidth={80}
 					minValue={3.3}
@@ -117,20 +102,10 @@ function InnerPointEachSemester({ title, legend, selectors, query = {} }: Props)
 	);
 }
 
-export default function PointEachSemester({
-	title,
-	legend,
-	selectors,
-	query,
-}: Props) {
+export default function PointWithGroupedEntity(props: Props) {
 	return (
 		<FilterProvider>
-			<InnerPointEachSemester
-				title={title}
-				legend={legend}
-				selectors={selectors}
-				query={query}
-			/>
+			<InnerPointWithGroupedEntity {...props} />
 		</FilterProvider>
 	);
 }

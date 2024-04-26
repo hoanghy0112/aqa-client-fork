@@ -95,7 +95,7 @@ export default function BreadCrumb() {
 	];
 
 	return (
-		<div className=" mt-5 flex flex-row gap-2">
+		<div className=" -ml-4 mt-5 flex flex-row gap-2">
 			{paths.map(({ title, name, link, value, onClickValue }) => (
 				<Button
 					key={title}
