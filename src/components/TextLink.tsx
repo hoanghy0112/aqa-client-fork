@@ -1,5 +1,6 @@
+"use client";
+
 import { useFilterUrlQuery } from "@/hooks/useFilterUrlQuery";
-import Link from "next/link";
 import { ReactNode } from "react";
 
 export default function TextLink({
