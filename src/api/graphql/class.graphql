@@ -10,3 +10,14 @@ query AllClasses($filter: FilterArgs, $sort: SortArgs) {
 		}
 	}
 }
+
+query DetailClass($id: String!) {
+	class(id: $id) {
+		class_id
+		class_type
+		display_name
+		participating_student
+		program
+		total_student
+	}
+}

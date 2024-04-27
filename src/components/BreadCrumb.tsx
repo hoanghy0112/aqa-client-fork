@@ -1,6 +1,7 @@
 "use client";
 
 import {
+	useDetailClassQuery,
 	useDetailCriteriaQuery,
 	useDetailFacultyQuery,
 	useDetailLecturerQuery,
@@ -40,6 +41,11 @@ export default function BreadCrumb() {
 		skip: !query?.lecturer_id,
 	});
 
+	const { data: classData } = useDetailClassQuery({
+		variables: { id: query?.class_id || "" },
+		skip: !query?.class_id,
+	});
+
 	const paths = [
 		{
 			title: "Tiêu chí",
@@ -52,6 +58,7 @@ export default function BreadCrumb() {
 				faculty_id: "",
 				subjects: undefined,
 				lecturer_id: "",
+				class_id: "",
 			},
 		},
 		{
@@ -63,6 +70,10 @@ export default function BreadCrumb() {
 			)?.display_name,
 			onClickValue: {
 				semester_id: "",
+				faculty_id: "",
+				subjects: undefined,
+				lecturer_id: "",
+				class_id: "",
 			},
 		},
 		{
@@ -72,6 +83,9 @@ export default function BreadCrumb() {
 			name: faculty?.faculty?.display_name,
 			onClickValue: {
 				faculty_id: "",
+				subjects: undefined,
+				lecturer_id: "",
+				class_id: "",
 			},
 		},
 		{
@@ -81,6 +95,8 @@ export default function BreadCrumb() {
 			name: subject?.subject?.display_name,
 			onClickValue: {
 				subjects: undefined,
+				lecturer_id: "",
+				class_id: "",
 			},
 		},
 		{
@@ -90,6 +106,16 @@ export default function BreadCrumb() {
 			name: lecturer?.lecturer?.display_name,
 			onClickValue: {
 				lecturer_id: "",
+				class_id: "",
+			},
+		},
+		{
+			title: "Lớp",
+			link: "class",
+			value: query?.class_id,
+			name: classData?.class?.display_name,
+			onClickValue: {
+				class_id: "",
 			},
 		},
 	];

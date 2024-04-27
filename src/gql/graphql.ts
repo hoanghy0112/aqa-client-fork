@@ -452,6 +452,13 @@ export type AllClassesQueryVariables = Exact<{
 
 export type AllClassesQuery = { __typename?: 'Query', classes: { __typename?: 'PaginatedClass', data: Array<{ __typename?: 'Class', class_id: string, class_type: string, display_name: string, participating_student: number, program: string, total_student: number }> } };
 
+export type DetailClassQueryVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type DetailClassQuery = { __typename?: 'Query', class?: { __typename?: 'Class', class_id: string, class_type: string, display_name: string, participating_student: number, program: string, total_student: number } | null };
+
 export type CommentQuantityQueryVariables = Exact<{
   filter?: InputMaybe<FilterArgs>;
 }>;
@@ -661,6 +668,54 @@ export type AllClassesSuspenseQueryHookResult = ReturnType<typeof useAllClassesS
 export type AllClassesQueryResult = Apollo.QueryResult<AllClassesQuery, AllClassesQueryVariables>;
 export function refetchAllClassesQuery(variables?: AllClassesQueryVariables) {
       return { query: AllClassesDocument, variables: variables }
+    }
+export const DetailClassDocument = gql`
+    query DetailClass($id: String!) {
+  class(id: $id) {
+    class_id
+    class_type
+    display_name
+    participating_student
+    program
+    total_student
+  }
+}
+    `;
+
+/**
+ * __useDetailClassQuery__
+ *
+ * To run a query within a React component, call `useDetailClassQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDetailClassQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDetailClassQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDetailClassQuery(baseOptions: Apollo.QueryHookOptions<DetailClassQuery, DetailClassQueryVariables> & ({ variables: DetailClassQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DetailClassQuery, DetailClassQueryVariables>(DetailClassDocument, options);
+      }
+export function useDetailClassLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DetailClassQuery, DetailClassQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DetailClassQuery, DetailClassQueryVariables>(DetailClassDocument, options);
+        }
+export function useDetailClassSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<DetailClassQuery, DetailClassQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<DetailClassQuery, DetailClassQueryVariables>(DetailClassDocument, options);
+        }
+export type DetailClassQueryHookResult = ReturnType<typeof useDetailClassQuery>;
+export type DetailClassLazyQueryHookResult = ReturnType<typeof useDetailClassLazyQuery>;
+export type DetailClassSuspenseQueryHookResult = ReturnType<typeof useDetailClassSuspenseQuery>;
+export type DetailClassQueryResult = Apollo.QueryResult<DetailClassQuery, DetailClassQueryVariables>;
+export function refetchDetailClassQuery(variables: DetailClassQueryVariables) {
+      return { query: DetailClassDocument, variables: variables }
     }
 export const CommentQuantityDocument = gql`
     query CommentQuantity($filter: FilterArgs) {
