@@ -47,14 +47,6 @@ export const tabs = [
 		title: "Tất cả các lớp",
 	},
 	{
-		link: "lecturers",
-		title: "Các giảng viên",
-	},
-	{
-		link: "points",
-		title: "Điểm đánh giá",
-	},
-	{
 		link: "comments",
 		title: "Bình luận",
 	},
