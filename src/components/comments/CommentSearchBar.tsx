@@ -1,36 +1,27 @@
 "use client";
 
+import { useFilter } from "@/contexts/FilterContext";
 import useNavigate from "@/hooks/useNavigate";
 import { Button, Card, Input, Spinner } from "@nextui-org/react";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-export default function CommentSearchBar({
-	isLoading: defaultLoading,
-}: {
-	isLoading: boolean;
-}) {
-	const navigate = useNavigate();
+export default function CommentSearchBar({ isLoading }: { isLoading: boolean }) {
+	const { setKeyword } = useFilter();
 
 	const searchParams = useSearchParams();
 
-	const [isLoading, setIsLoading] = useState(true);
+	// const [isLoading, setIsLoading] = useState(false);
 	const [searchText, setSearchText] = useState(searchParams.get("keyword") || "");
 
 	const keyword = searchParams.get("keyword") || "";
 	useEffect(() => {
 		setSearchText(keyword);
-		setIsLoading(true);
 	}, [keyword]);
 
-	useEffect(() => {
-		if (!defaultLoading) setIsLoading(false);
-	}, [defaultLoading]);
-
-	const setKeyword = useCallback(
-		(newKeyword: string) => navigate.replace({ keyword: newKeyword }),
-		[navigate]
-	);
+	// useEffect(() => {
+	// 	if (!defaultLoading) setIsLoading(false);
+	// }, [defaultLoading]);
 
 	return (
 		<div className="flex flex-row items-center mt-12 gap-5">
@@ -41,7 +32,7 @@ export default function CommentSearchBar({
 					onKeyDown={(e) => {
 						if (e.key === "Enter") {
 							setKeyword(searchText);
-							setIsLoading(true);
+							// setIsLoading(true);
 						}
 					}}
 					onClear={() => {
@@ -60,7 +51,7 @@ export default function CommentSearchBar({
 				onPress={() => {
 					if (searchText == "" || isLoading) return;
 					setKeyword(searchText);
-					setIsLoading(true);
+					// setIsLoading(true);
 				}}
 				disabled={isLoading}
 				className=""

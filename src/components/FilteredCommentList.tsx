@@ -32,6 +32,7 @@ function Inner({ defaultFilter, selectors }: Props) {
 			  )
 			: undefined,
 		program: filter.program,
+		keyword: filter.keyword,
 	};
 
 	const query = {
@@ -64,7 +65,7 @@ function Inner({ defaultFilter, selectors }: Props) {
 					{selectors}
 				</div>
 			</div>
-			<CommentSearchBar isLoading={!data} />
+			<CommentSearchBar isLoading={isLoading} />
 			<Card className="mt-8 mb-20 w-full p-5">
 				{comments.map(
 					({ comment_id, display_name, type, class: class_ }) => (
