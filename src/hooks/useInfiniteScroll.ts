@@ -33,7 +33,10 @@ export function useInfiniteScroll<T>({
 		queryFunction({
 			variables: { page: 0, ...variables },
 			onCompleted: (value) => {
-				setDataList((prev) => [...prev, ...(value?.comments?.data || [])]);
+				setDataList((prev) => [
+					...prev,
+					...((Object.values(value)?.[0] as any).data || []),
+				]);
 			},
 		});
 		setDataList([]);
@@ -50,7 +53,8 @@ export function useInfiniteScroll<T>({
 							onCompleted: (value) => {
 								setDataList((prev) => [
 									...prev,
-									...(value?.comments?.data || []),
+									...((Object.values(value)?.[0] as any).data ||
+										[]),
 								]);
 							},
 						});
