@@ -24,12 +24,13 @@ export function useFilterUrlQuery() {
 	);
 
 	const setUrlQuery = useCallback(
-		(pathname: string, newQuery: Partial<FilterArgs>) => {
+		(pathname: string, newQuery: Partial<FilterArgs> = {}, queryParams = {}) => {
 			// setQuery({ ...query, ...newQuery });
 			router.push(
 				withQuery(pathname, {
 					...Object.fromEntries(params.entries()),
 					tree: encodeURI(JSON.stringify({ ...query, ...newQuery })),
+					...queryParams,
 				})
 			);
 		},

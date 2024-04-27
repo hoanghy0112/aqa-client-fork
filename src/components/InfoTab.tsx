@@ -1,5 +1,6 @@
 "use client";
 
+import { useFilterUrlQuery } from "@/hooks/useFilterUrlQuery";
 import useNavigate from "@/hooks/useNavigate";
 import { Card } from "@nextui-org/card";
 import { Spinner } from "@nextui-org/spinner";
@@ -21,7 +22,10 @@ export default function InfoTab({
 	defaultChecked?: boolean;
 }) {
 	const navigate = useNavigate();
+	const pathname = usePathname();
 	const searchParams = useSearchParams();
+
+	const { setUrlQuery } = useFilterUrlQuery();
 
 	return (
 		<Card radius="none" shadow="none" isPressable>
@@ -29,7 +33,8 @@ export default function InfoTab({
 				htmlFor={title}
 				className="w-fit hover:bg-slate-200 dark:hover:bg-slate-700 hover:cursor-pointer transition-all rounded-md pt-2"
 				onClick={() => {
-					navigate.push({ type });
+					// navigate.push({ type });
+					setUrlQuery(pathname, {}, { type });
 				}}
 			>
 				<input

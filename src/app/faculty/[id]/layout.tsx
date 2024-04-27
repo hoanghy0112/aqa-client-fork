@@ -32,6 +32,10 @@ export default function Layout({ children }: { children: ReactNode }) {
 						link: `detail`,
 						title: "Chi tiết",
 					},
+					{
+						link: `comment`,
+						title: "Bình luận",
+					},
 				]}
 			/>
 			<div className=" w-full mt-5 p-0 h-[420px]">{children}</div>

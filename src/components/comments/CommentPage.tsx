@@ -7,7 +7,7 @@ import CommentSearchBar from "@/components/comments/CommentSearchBar";
 import { FacultySelectorWithSearchParams } from "@/components/selectors/FacultySelector";
 import { ProgramSelectorWithSearchParam } from "@/components/selectors/ProgramSelector";
 import { SingleSubjectSelectorWithSearchParam } from "@/components/selectors/SingleSubjectSelector";
-import { useCommentListLazyQuery } from "@/gql/graphql";
+import { FilterArgs, useCommentListLazyQuery } from "@/gql/graphql";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { Card } from "@nextui-org/card";
 import { useSearchParams } from "next/navigation";
@@ -101,6 +101,6 @@ export default function CommentPage({ defaultFilter = {}, selectors = [] }: IPro
 }
 
 interface IProps {
-	defaultFilter?: IFilter;
+	defaultFilter?: FilterArgs;
 	selectors?: SelectorType[];
 }

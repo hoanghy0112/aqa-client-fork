@@ -12,7 +12,10 @@ export function useInfiniteScroll<T>({
 	meta,
 	enabled = true,
 }: {
-	queryFunction: (options: { variables: Record<string, any> }) => any;
+	queryFunction: (options: {
+		variables: Record<string, any>;
+		onCompleted?: (value: any) => any;
+	}) => any;
 	variables: Record<string, any>;
 	isLoading: boolean;
 	data?: T[];
@@ -27,7 +30,12 @@ export function useInfiniteScroll<T>({
 
 	useDeepCompareEffect(() => {
 		isQuerying.current = true;
-		queryFunction({ variables: { page: 0, ...variables } });
+		queryFunction({
+			variables: { page: 0, ...variables },
+			onCompleted: (value) => {
+				setDataList((prev) => [...prev, ...(value?.comments?.data || [])]);
+			},
+		});
 		setDataList([]);
 	}, [variables, enabled]);
 
@@ -39,6 +47,12 @@ export function useInfiniteScroll<T>({
 						isQuerying.current = true;
 						queryFunction({
 							variables: { page: meta.page + 1, ...variables },
+							onCompleted: (value) => {
+								setDataList((prev) => [
+									...prev,
+									...(value?.comments?.data || []),
+								]);
+							},
 						});
 					}
 					observer.unobserve(entry.target);
@@ -49,12 +63,12 @@ export function useInfiniteScroll<T>({
 		}
 	}, [dataList, enabled]);
 
-	useDeepCompareEffect(() => {
-		if (!isLoading && data) {
-			if (meta?.page === 0) setDataList(data || []);
-			else setDataList((prev) => [...prev, ...(data || [])]);
-		}
-	}, [isLoading, data, enabled]);
+	// useDeepCompareEffect(() => {
+	// 	if (!isLoading && data) {
+	// 		if (meta?.page === 0) setDataList(data || []);
+	// 		else setDataList((prev) => [...prev, ...(data || [])]);
+	// 	}
+	// }, [isLoading, data, enabled]);
 
 	useDeepCompareEffect(() => {
 		if (meta) {
