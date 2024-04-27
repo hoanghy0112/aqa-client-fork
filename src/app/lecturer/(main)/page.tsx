@@ -31,7 +31,7 @@ export default function Page({ params }: { params: any }) {
 			<ChildrenItems
 				items={[
 					{
-						display_name: "Tất cả các môn học",
+						display_name: "Tất cả giảng viên",
 						value: "all",
 						onClick() {
 							setUrlQuery(`/subject`, {});

@@ -12,18 +12,18 @@ import { ReactNode, useEffect, useState } from "react";
 
 type Props = {
 	title: string;
-	legend: string;
-	selectors: ReactNode;
+	groupEntity: string;
+	legend?: string;
+	selectors?: ReactNode;
 	query?: FilterArgs;
 	xTitle?: string;
-	groupEntity: string;
 	onClick?: (item: GroupedPoint) => any;
 };
 
 function InnerPointWithGroupedEntity({
 	title,
-	legend,
-	selectors,
+	legend = "Điểm",
+	selectors = <></>,
 	query = {},
 	xTitle = "Điểm",
 	groupEntity,
