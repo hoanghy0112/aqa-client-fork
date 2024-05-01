@@ -1,8 +1,7 @@
 import { FilterArgs } from "@/gql/graphql";
 import withQuery from "@/utils/withQuery";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import usePersistentState from "./usePersistentState";
 
 export function useFilterUrlQuery() {
 	const router = useRouter();

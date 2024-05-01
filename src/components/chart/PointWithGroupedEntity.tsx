@@ -1,3 +1,5 @@
+"use client";
+
 import ChartLayout from "@/components/chart/ChartLayout";
 import { FilterProvider, useFilter } from "@/contexts/FilterContext";
 import {
