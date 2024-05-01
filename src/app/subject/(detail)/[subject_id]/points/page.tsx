@@ -4,83 +4,110 @@ import { BarChart } from "@components/chart/BarChart";
 
 import CriteriaPointTable from "@/components/CriteriaPointTable";
 import TableSketon from "@/components/TableSkeleton";
-import { CriteriaSelectorWithSearchParam } from "@/components/selectors/CriteriaSelector";
+import CriteriaSelector, {
+	CriteriaSelectorWithSearchParam,
+} from "@/components/selectors/CriteriaSelector";
 import { GET_CLASSES } from "@/constants/api_endpoint";
 import { FilterProvider, useFilter } from "@/contexts/FilterContext";
 import withQuery from "@/utils/withQuery";
 import Loading from "@components/Loading";
 import NoData from "@components/NoData";
 import ChartLayout from "@components/chart/ChartLayout";
-import { ProgramSelectorWithSearchParam } from "@components/selectors/ProgramSelector";
-import { SemesterSelectorWithSearchParam } from "@components/selectors/SemesterSelector";
+import ProgramSelector, {
+	ProgramSelectorWithSearchParam,
+} from "@components/selectors/ProgramSelector";
+import SemesterSelector, {
+	SemesterSelectorWithSearchParam,
+} from "@components/selectors/SemesterSelector";
 import { SortSelector } from "@/components/selectors/SortSelector";
 import { SortDescriptor } from "@nextui-org/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import useSWR from "swr";
+import { useFilterUrlQuery } from "@/hooks/useFilterUrlQuery";
+import {
+	usePointsWithGroupByLazyQuery,
+	usePointsWithGroupByQuery,
+} from "@/gql/graphql";
+import PointWithGroupedEntity from "@/components/chart/PointWithGroupedEntity";
 
 function Page_({ subject_id }: { subject_id: string }) {
-	const router = useRouter();
+	const { query, setUrlQuery } = useFilterUrlQuery();
 
-	const searchParams = useSearchParams();
-	const { sort } = useFilter();
+	// const router = useRouter();
 
-	const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
-		column: "subject_name",
-		direction: "ascending",
-	});
+	// const searchParams = useSearchParams();
+	// const { sort } = useFilter();
 
-	const { data, isLoading } = useSWR<IChartData>(
-		withQuery(GET_CLASSES, {
-			subject_id,
-			semester_id: searchParams.get("semester"),
-			program: searchParams.get("program"),
-		}),
-		(url: string) => fetch(url).then((r) => r.json())
-	);
+	// const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
+	// 	column: "subject_name",
+	// 	direction: "ascending",
+	// });
 
-	const criteria = useMemo(() => searchParams.get("criteria"), [searchParams]);
+	// const { data, isLoading } = useSWR<IChartData>(
+	// 	withQuery(GET_CLASSES, {
+	// 		subject_id,
+	// 		semester_id: searchParams.get("semester"),
+	// 		program: searchParams.get("program"),
+	// 	}),
+	// 	(url: string) => fetch(url).then((r) => r.json())
+	// );
 
-	const chartData = useMemo(() => {
-		if (data?.data.length === 0) return [];
-		const index = data?.data[0].points.find(
-			(v) => v.criteria_id == criteria
-		)?.index;
-		if (index) {
-			return data.data.map((v) => ({
-				...v,
-				point: v.points.find((v) => v.index === index)?.point || 0,
-			}));
-		}
-		if (!criteria) {
-			return data?.data.map((v) => ({
-				...v,
-				point:
-					v.points.reduce((total, { point }) => (total += point), 0) /
-					v.points.length,
-			}));
-		}
-		return [];
-	}, [data, criteria]);
+	// const criteria = useMemo(() => searchParams.get("criteria"), [searchParams]);
 
-	const columns = useMemo(
-		() =>
-			data?.data && data.data.length > 0
-				? [
-						...defaultColumns,
-						...data.data[0].points.map((v, index) => ({
-							key: v.criteria_id,
-							index: index + 1,
-							label: v.criteria_name,
-						})),
-				  ]
-				: defaultColumns,
-		[data]
-	);
+	// const chartData = useMemo(() => {
+	// 	if (data?.data.length === 0) return [];
+	// 	const index = data?.data[0].points.find(
+	// 		(v) => v.criteria_id == criteria
+	// 	)?.index;
+	// 	if (index) {
+	// 		return data.data.map((v) => ({
+	// 			...v,
+	// 			point: v.points.find((v) => v.index === index)?.point || 0,
+	// 		}));
+	// 	}
+	// 	if (!criteria) {
+	// 		return data?.data.map((v) => ({
+	// 			...v,
+	// 			point:
+	// 				v.points.reduce((total, { point }) => (total += point), 0) /
+	// 				v.points.length,
+	// 		}));
+	// 	}
+	// 	return [];
+	// }, [data, criteria]);
+
+	// const columns = useMemo(
+	// 	() =>
+	// 		data?.data && data.data.length > 0
+	// 			? [
+	// 					...defaultColumns,
+	// 					...data.data[0].points.map((v, index) => ({
+	// 						key: v.criteria_id,
+	// 						index: index + 1,
+	// 						label: v.criteria_name,
+	// 					})),
+	// 			  ]
+	// 			: defaultColumns,
+	// 	[data]
+	// );
 
 	return (
 		<>
-			<ChartLayout
+			<PointWithGroupedEntity
+				title="Điểm trung bình của từng lớp"
+				groupEntity="Class"
+				query={query}
+				onClick={(item) => setUrlQuery(`/class/${item.id}`)}
+				selectors={
+					<>
+						<SemesterSelector />
+						<CriteriaSelector />
+						<ProgramSelector />
+					</>
+				}
+			/>
+			{/* <ChartLayout
 				primaryTitle="Biểu đồ điểm trung bình các lớp"
 				legends={[LEGEND_NAME]}
 				colors={["sky"]}
@@ -119,9 +146,9 @@ function Page_({ subject_id }: { subject_id: string }) {
 						router.push(`/class/${data[0]?.id}`)
 					}
 				/>
-			</ChartLayout>
+			</ChartLayout> */}
 
-			<div className="pt-10">
+			{/* <div className="pt-10">
 				{columns.length > 2 || !isLoading ? (
 					<CriteriaPointTable
 						sortDescriptor={sortDescriptor}
@@ -137,7 +164,7 @@ function Page_({ subject_id }: { subject_id: string }) {
 				) : (
 					<TableSketon lines={6} />
 				)}
-			</div>
+			</div> */}
 		</>
 	);
 }
