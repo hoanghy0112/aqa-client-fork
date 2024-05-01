@@ -1,6 +1,7 @@
 import BreadCrumb from "@/components/BreadCrumb";
 import PageTabs from "@/components/PageTabs";
 import { GET_SUBJECT_INFO } from "@/constants/api_endpoint";
+import { FilterProvider } from "@/contexts/FilterContext";
 import Link from "next/link";
 import { ReactNode } from "react";
 
@@ -32,7 +33,9 @@ export default async function Layout({
 				defaultPath={`subject/${subject_id}`}
 				tabs={tabs}
 			/>
-			<div className="mt-4"> {children}</div>
+			<div className="mt-4">
+				<FilterProvider>{children}</FilterProvider>
+			</div>
 		</div>
 	);
 }
@@ -49,6 +52,10 @@ export const tabs = [
 	{
 		link: "lecturers",
 		title: "Điểm các giảng viên",
+	},
+	{
+		link: "semesters",
+		title: "Điểm trung bình qua các kỳ",
 	},
 	{
 		link: "comments",

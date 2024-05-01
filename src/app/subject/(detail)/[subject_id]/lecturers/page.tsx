@@ -2,36 +2,111 @@
 
 import { BarChart } from "@components/chart/BarChart";
 
-import { CriteriaSelectorWithSearchParam } from "@/components/selectors/CriteriaSelector";
+import CriteriaSelector from "@/components/selectors/CriteriaSelector";
 import { SortSelector } from "@/components/selectors/SortSelector";
-import { GET_SUBJECT_LECTURER_POINT } from "@/constants/api_endpoint";
 import { FilterProvider, useFilter } from "@/contexts/FilterContext";
-import withQuery from "@/utils/withQuery";
+import {
+	FilterArgs,
+	GroupedPoint,
+	usePointsWithGroupByLazyQuery,
+} from "@/gql/graphql";
+import { useFilterUrlQuery } from "@/hooks/useFilterUrlQuery";
 import Loading from "@components/Loading";
 import NoData from "@components/NoData";
 import ChartLayout from "@components/chart/ChartLayout";
-import { ProgramSelectorWithSearchParam } from "@components/selectors/ProgramSelector";
-import { SemesterSelectorWithSearchParam } from "@components/selectors/SemesterSelector";
+import ProgramSelector from "@components/selectors/ProgramSelector";
+import SemesterSelector from "@components/selectors/SemesterSelector";
 import { Color } from "@tremor/react";
-import { useRouter, useSearchParams } from "next/navigation";
-import useSWR from "swr";
+import { useEffect, useState } from "react";
 
 function Page_({ subject_id }: { subject_id: string }) {
-	const router = useRouter();
+	// const router = useRouter();
 
-	const searchParams = useSearchParams();
+	// const searchParams = useSearchParams();
 	const { sort } = useFilter();
 
-	const { data: chartData, isLoading } = useSWR<IChartData>(
-		withQuery(GET_SUBJECT_LECTURER_POINT, {
-			subject_id,
-			semester_id: searchParams.get("semester"),
-			program: searchParams.get("program"),
-			criteria_id: searchParams.get("criteria"),
-			sort,
-		}),
-		(url: string) => fetch(url).then((r) => r.json())
-	);
+	// const { data: chartData, isLoading } = useSWR<IChartData>(
+	// 	withQuery(GET_SUBJECT_LECTURER_POINT, {
+	// 		subject_id,
+	// 		semester_id: searchParams.get("semester"),
+	// 		program: searchParams.get("program"),
+	// 		criteria_id: searchParams.get("criteria"),
+	// 		sort,
+	// 	}),
+	// 	(url: string) => fetch(url).then((r) => r.json())
+	// );
+	const { query, setUrlQuery } = useFilterUrlQuery();
+	const filter = useFilter();
+
+	const [data, setData] = useState<GroupedPoint[]>([]);
+	const [loading, setLoading] = useState(false);
+
+	const variables: FilterArgs & { groupEntity: string } = {
+		criteria_id: filter.criteria?.criteria_id,
+		faculty_id: filter.faculty?.faculty_id,
+		semester_id: filter.semester?.semester_id,
+		subjects: Array.from(filter.subjects.values()).length
+			? Array.from(filter.subjects.values()).map(
+					(subject) => subject.subject_id
+			  )
+			: undefined,
+		program: filter.program,
+		groupEntity: "Semester",
+	};
+
+	const [fetchFunction] = usePointsWithGroupByLazyQuery();
+
+	useEffect(() => {
+		(async () => {
+			setLoading(true);
+			const response = await fetchFunction({
+				variables: {
+					...query,
+					...Object.fromEntries(
+						Object.entries(variables).filter(([key, value]) => !!value)
+					),
+					groupEntity: "Lecturer",
+				},
+				fetchPolicy: "network-only",
+			});
+			setData(
+				[...(response.data?.groupedPoints.data || [])].sort((a, b) =>
+					sort === "asc"
+						? a.average_point - b.average_point
+						: b.average_point - a.average_point
+				)
+			);
+			setLoading(false);
+		})();
+	}, [JSON.stringify(query), JSON.stringify(variables), sort]);
+
+	// const mappedData = useMemo<
+	// 	{
+	// 		point: number;
+	// 		num: number;
+	// 		display_name: string;
+	// 		id: string;
+	// 		class_num: string;
+	// 	}[]
+	// >(() => {
+	// 	const mapped = new Map();
+	// 	data.forEach((d) => {
+	// 		if (mapped.has(d.id)) {
+	// 			mapped.set(d.id, {
+	// 				...d,
+	// 				point: mapped.get(d.id).point + d.average_point,
+	// 				num: mapped.get(d.id).num + 1,
+	// 			});
+	// 		} else {
+	// 			mapped.set(d.id, {
+	// 				...d,
+	// 				point: d.average_point,
+	// 				num: 1,
+	// 			});
+	// 		}
+	// 	});
+	// 	return Array.from(mapped.entries()).map(([key, value]) => value);
+	// }, [data]);
 
 	return (
 		<>
@@ -39,50 +114,56 @@ function Page_({ subject_id }: { subject_id: string }) {
 				primaryTitle="Biểu đồ điểm trung bình các giảng viên"
 				legends={LEGEND_NAMES}
 				colors={CHART_COLORS}
-				columnNum={chartData?.length || 0}
+				columnNum={data?.length || 0}
 				height={450}
 				showLegend
 				handlerButtons={
 					<>
-						<SemesterSelectorWithSearchParam />
-						<CriteriaSelectorWithSearchParam />
-						<ProgramSelectorWithSearchParam />
+						<SemesterSelector />
+						<CriteriaSelector />
+						<ProgramSelector />
 						<SortSelector />
 					</>
 				}
 			>
 				<BarChart
 					className=" h-full mt-4"
+					//@ts-ignore
 					data={
-						chartData && chartData?.length
+						data && data?.length
 							? [
-									{
-										label: LEGEND_NAMES[0],
-										data:
-											chartData?.map((d) => ({
-												x: d.lecturer_id,
-												y: d.point * 100,
-												id: d.lecturer_id,
-											})) || [],
-									},
 									{
 										label: LEGEND_NAMES[1],
 										data:
-											chartData?.map((d) => ({
-												x: d.lecturer_id,
-												y: d.class_num,
-												id: d.lecturer_id,
+											data?.map((d) => ({
+												x: d.display_name || "",
+												y: d.class_num as number,
+												type: "line",
+												id: d.id,
 											})) || [],
 										yAxisID: "y1",
 										backgroundColor: "rgba(255, 99, 132, 0.7)",
+										borderColor: "rgba(255, 99, 132, 0.7)",
+										type: "line",
+									},
+									{
+										label: LEGEND_NAMES[0],
+										data:
+											data?.map((d) => ({
+												x: d.display_name || "",
+												y: (d.average_point * 4).toFixed(2),
+												id: d.id,
+											})) || [],
+										type: "bar",
 									},
 							  ]
 							: undefined
 					}
 					valueFormatter={[dataFormatter, (d: any) => d]}
-					noDataText={isLoading ? <Loading /> : <NoData />}
+					noDataText={loading ? <Loading /> : <NoData />}
 					onClick={({ index, data }) =>
-						router.push(`/lecturer/${data[0]?.id}`)
+						// router.push(`/lecturer/${data[0]?.id}`)
+						setUrlQuery(`/lecturer/${data[0]?.id}`)
 					}
 				/>
 			</ChartLayout>
@@ -103,7 +184,7 @@ export default function Page({
 }
 
 const dataFormatter = (number: number) => {
-	return `${Math.round(number)}%`;
+	return `${number}`;
 };
 
 type IChartData = {
@@ -130,4 +211,4 @@ const defaultColumns: {
 ];
 
 const CHART_COLORS = ["sky", "pink"] as Color[];
-const LEGEND_NAMES = ["Độ hài lòng", "Số lớp đã dạy"];
+const LEGEND_NAMES = ["Điểm", "Số lớp đã dạy"];

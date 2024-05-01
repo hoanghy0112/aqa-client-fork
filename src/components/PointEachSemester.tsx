@@ -1,3 +1,5 @@
+"use client";
+
 import { FilterProvider, useFilter } from "@/contexts/FilterContext";
 import {
 	FilterArgs,
@@ -11,13 +13,18 @@ import Loading from "./Loading";
 import NoData from "./NoData";
 
 type Props = {
-	title: string;
-	legend: string;
-	selectors: ReactNode;
+	title?: string;
+	legend?: string;
+	selectors?: ReactNode;
 	query?: FilterArgs;
 };
 
-function InnerPointEachSemester({ title, legend, selectors, query = {} }: Props) {
+function InnerPointEachSemester({
+	title = "Điểm trung bình qua các học kỳ",
+	legend = "Điểm",
+	selectors = <></>,
+	query = {},
+}: Props) {
 	const filter = useFilter();
 
 	const [data, setData] = useState<GroupedPoint[]>([]);
