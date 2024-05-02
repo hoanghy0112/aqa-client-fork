@@ -16,10 +16,10 @@ export const tabs = [
 		link: "average-point",
 		title: "Biểu đồ điểm trung bình",
 	},
-	{
-		link: "point-per-year",
-		title: "Thống kê điểm trung bình qua các năm",
-	},
+	// {
+	// 	link: "point-per-year",
+	// 	title: "Thống kê điểm trung bình qua các năm",
+	// },
 ];
 
 export default function Layout({ children }: { children: ReactNode }) {

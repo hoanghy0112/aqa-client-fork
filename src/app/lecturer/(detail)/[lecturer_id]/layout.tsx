@@ -47,6 +47,10 @@ export const tabs = [
 		title: "Tất cả các lớp",
 	},
 	{
+		link: "semesters",
+		title: "Điểm trung bình qua các học kỳ",
+	},
+	{
 		link: "comments",
 		title: "Bình luận",
 	},
