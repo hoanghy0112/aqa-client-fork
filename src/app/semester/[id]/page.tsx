@@ -14,10 +14,6 @@ export default function Page({ params }: { params: any }) {
 
 	return (
 		<FilterProvider>
-			{/* <h1 className="font-semibold text-3xl text-slate-500">Học kỳ</h1> */}
-			<div className=" -ml-4">
-				<BreadCrumb />
-			</div>
 			<p className=" mt-5 font-semibold text-base">Chọn khoa/bộ môn</p>
 			<ChildrenItems
 				items={[

@@ -6,9 +6,10 @@ type Props = {
 		value: string;
 		onClick: (value: string) => any;
 	}[];
+	isSort?: boolean;
 };
 
-export default function ChildrenItems({ items }: Props) {
+export default function ChildrenItems({ items, isSort = true }: Props) {
 	return (
 		<div className=" py-6 flex flex-col items-start gap-4">
 			<Button
@@ -23,7 +24,9 @@ export default function ChildrenItems({ items }: Props) {
 				</p>
 			</Button>
 			{[...items]
-				.sort((a, b) => (a.display_name < b.display_name ? -1 : 1))
+				.sort((a, b) =>
+					isSort ? (a.display_name < b.display_name ? -1 : 1) : 0
+				)
 				.filter((v) => v.value !== "all")
 				.map(({ display_name, value, onClick }) => (
 					<>

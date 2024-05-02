@@ -18,6 +18,7 @@ export default function Page({ params }: { params: any }) {
 			<h1 className="font-semibold text-3xl text-slate-500">Học kỳ</h1>
 			<BreadCrumb />
 			<ChildrenItems
+				isSort={false}
 				items={[
 					{
 						display_name: "Tất cả học kỳ",
