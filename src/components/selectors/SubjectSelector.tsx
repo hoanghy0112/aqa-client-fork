@@ -1,8 +1,9 @@
 "use client";
 
-import { GET_SUBJECT_TABLE } from "@/constants/api_endpoint";
 import { FilterProvider, useFilter } from "@/contexts/FilterContext";
-import withQuery from "@/utils/withQuery";
+import { Subject, useSubjectsLazyQuery } from "@/gql/graphql";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import { useRememberValue } from "@/hooks/useRememberValue";
 import { Button } from "@nextui-org/button";
 import { Checkbox } from "@nextui-org/checkbox";
 import { Chip } from "@nextui-org/chip";
@@ -19,13 +20,9 @@ import { cn } from "@nextui-org/react";
 import { Skeleton } from "@nextui-org/skeleton";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import useSWR from "swr";
 import { useDebounce } from "usehooks-ts";
 import OptionButton from "../OptionButton";
 import { SortSelector } from "./SortSelector";
-import { Subject, useSubjectsLazyQuery } from "@/gql/graphql";
-import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
-import { useRememberValue } from "@/hooks/useRememberValue";
 
 export default function SubjectSelector({ isNoBorder }: SubjectSelectorPropTypes) {
 	const { subjects: _subjects, setSubjects: _setSubjects, faculty } = useFilter();
@@ -51,16 +48,6 @@ export default function SubjectSelector({ isNoBorder }: SubjectSelectorPropTypes
 		onOpenChange: onOpenChangeDetail,
 	} = useDisclosure();
 
-	// const { data: items, isLoading } = useSWR<{ data: Subject[] }>(
-	// 	withQuery(GET_SUBJECT_TABLE, {
-	// 		debouncedKeyword,
-	// 		page_size: 20,
-	// 		filter_field: "subject_name",
-	// 		faculty_name: faculty?.display_name,
-	// 		direction: sort,
-	// 	}),
-	// 	(url) => fetch(url).then((res) => res.json())
-	// );
 	const [getSubjects, { data, loading: isLoading }] = useSubjectsLazyQuery();
 	const { dataList, bottomRef } = useInfiniteScroll({
 		queryFunction: getSubjects,

@@ -20,21 +20,8 @@ import { Color } from "@tremor/react";
 import { useEffect, useState } from "react";
 
 function Page_({ subject_id }: { subject_id: string }) {
-	// const router = useRouter();
-
-	// const searchParams = useSearchParams();
 	const { sort } = useFilter();
 
-	// const { data: chartData, isLoading } = useSWR<IChartData>(
-	// 	withQuery(GET_SUBJECT_LECTURER_POINT, {
-	// 		subject_id,
-	// 		semester_id: searchParams.get("semester"),
-	// 		program: searchParams.get("program"),
-	// 		criteria_id: searchParams.get("criteria"),
-	// 		sort,
-	// 	}),
-	// 	(url: string) => fetch(url).then((r) => r.json())
-	// );
 	const { query, setUrlQuery } = useFilterUrlQuery();
 	const filter = useFilter();
 

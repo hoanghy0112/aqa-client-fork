@@ -1,16 +1,14 @@
 "use client";
 
-import { GET_LECTURER_CLASSES, GET_SEMESTER_LIST } from "@/constants/api_endpoint";
 import { FilterProvider } from "@/contexts/FilterContext";
-import withQuery from "@/utils/withQuery";
 import Loading from "@components/Loading";
 import { Accordion, AccordionItem, Button } from "@nextui-org/react";
 import React from "react";
-import useSWR from "swr";
 
-import { useRouter } from "next/navigation";
+import { useAllClassesQuery, useSemestersQuery } from "@/gql/graphql";
+import { useFilterUrlQuery } from "@/hooks/useFilterUrlQuery";
 
-async function SemesterClass({
+function SemesterClass({
 	semester_id,
 	lecturer_id,
 	onPress,
@@ -19,26 +17,22 @@ async function SemesterClass({
 	lecturer_id: string;
 	onPress: (id: string) => any;
 }) {
-	const classesRes = await fetch(
-		withQuery(GET_LECTURER_CLASSES(lecturer_id), { semester_id }),
-		{ cache: "force-cache" }
-	);
-
-	const classesData = (await classesRes.json()) as unknown as {
-		meta: any;
-		data: IClass[];
-	};
+	const { query } = useFilterUrlQuery();
+	const { data } = useAllClassesQuery({
+		variables: { filter: { ...query, semester_id } },
+	});
+	const classesData = data?.classes.data;
 
 	return (
 		<div className=" flex flex-wrap gap-2 pb-2">
-			{classesData.data.length ? (
-				classesData.data.map(({ class_id, class_name }) => (
+			{classesData?.length ? (
+				classesData?.map?.(({ class_id, display_name }) => (
 					<Button
 						className=" bg-gray-200 dark:bg-zinc-800"
 						key={class_id}
 						onPress={() => onPress(class_id)}
 					>
-						{class_name}
+						{display_name}
 					</Button>
 				))
 			) : (
@@ -53,16 +47,8 @@ export default function Page({
 }: {
 	params: { lecturer_id: string };
 }) {
-	const router = useRouter();
-
-	const { data: semesters, isLoading } = useSWR<Semester[]>(
-		withQuery(GET_SEMESTER_LIST, { lecturer_id }),
-		(url) =>
-			fetch(url).then((res) => {
-				console.log({ res });
-				return res.json();
-			})
-	);
+	const { setUrlQuery } = useFilterUrlQuery();
+	const { data: semesters, loading: isLoading } = useSemestersQuery();
 
 	return (
 		<FilterProvider>
@@ -70,12 +56,12 @@ export default function Page({
 				<Loading />
 			) : (
 				<Accordion variant="splitted" selectionMode="multiple" isCompact>
-					{semesters?.map(({ semester_id, semester_name }) => (
+					{semesters?.semesters?.map(({ semester_id, display_name }) => (
 						<AccordionItem
 							key={semester_id}
-							aria-label={semester_name}
+							aria-label={display_name}
 							title={
-								<p className="py-1 font-medium">{semester_name}</p>
+								<p className="py-1 font-medium">{display_name}</p>
 							}
 						>
 							<React.Suspense
@@ -89,7 +75,7 @@ export default function Page({
 									semester_id={semester_id}
 									lecturer_id={lecturer_id}
 									onPress={(class_id) =>
-										router.push(`/class/${class_id}`)
+										setUrlQuery(`/class/${class_id}`)
 									}
 								/>
 							</React.Suspense>

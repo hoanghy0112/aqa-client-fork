@@ -1,16 +1,11 @@
 "use client";
 
-import useSWR from "swr";
-
 import InfoTab from "@/components/InfoTab";
 
 import ALL_COMMENT_ICON from "@assets/all_comment.svg";
 import NEGATIVE_COMMENT_ICON from "@assets/negative_comment.svg";
 import POSITIVE_COMMENT_ICON from "@assets/positive_comment.svg";
 
-import { GET_COMMENT_QUANTITY } from "@/constants/api_endpoint";
-import withQuery from "@/utils/withQuery";
-import { useSearchParams } from "next/navigation";
 import { useCommentQuantityQuery } from "@/gql/graphql";
 import { useRememberValue } from "@/hooks/useRememberValue";
 

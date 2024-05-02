@@ -24,7 +24,6 @@ function ProgramSelector_({
 	program?: string;
 	setProgram?: (d: string) => any;
 } & ProgramSelectorPropTypes) {
-	// const { data, isLoading } = useSWR<string[]>(GET_PROGRAM_LIST, defaultFetcher);
 	const { data, loading: isLoading } = useProgramsQuery();
 
 	const hasValue = Boolean(program);

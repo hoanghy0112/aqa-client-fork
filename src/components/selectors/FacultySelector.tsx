@@ -156,7 +156,6 @@ export function FacultySelectorWithSearchParams(props: FacultySelectorPropTypes)
 	const searchParams = useSearchParams();
 	const navigate = useNavigate();
 
-	// const { data, isLoading } = useSWR<Faculty[]>(GET_FACULTY_LIST, defaultFetcher);
 	const { data, loading } = useFacultiesQuery();
 
 	const faculty = useMemo(() => {
