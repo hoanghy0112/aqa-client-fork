@@ -85,6 +85,7 @@ export type Faculty = {
   display_name: Scalars['String']['output'];
   faculty_id: Scalars['String']['output'];
   full_name?: Maybe<Scalars['String']['output']>;
+  is_displayed?: Maybe<Scalars['Boolean']['output']>;
   lecturers?: Maybe<PaginatedLecturer>;
   points?: Maybe<PaginatedGroupedPoint>;
   subjects?: Maybe<PaginatedSubject>;
@@ -474,7 +475,7 @@ export type CommentListQueryVariables = Exact<{
 }>;
 
 
-export type CommentListQuery = { __typename?: 'Query', comments: { __typename?: 'PaginatedComment', data: Array<{ __typename?: 'Comment', comment_id: string, display_name: string, type: string, class?: { __typename?: 'Class', class_id: string, class_type: string, display_name: string, participating_student: number, program: string, total_student: number } | null }>, meta: { __typename?: 'PaginatedMetaData', hasNext: boolean, hasPrev: boolean, page: number, size: number, total_item: number, total_page: number } } };
+export type CommentListQuery = { __typename?: 'Query', comments: { __typename?: 'PaginatedComment', data: Array<{ __typename?: 'Comment', comment_id: string, display_name: string, type: string, class?: { __typename?: 'Class', class_id: string, class_type: string, display_name: string, participating_student: number, program: string, total_student: number, lecturer: { __typename?: 'Lecturer', birth_date?: any | null, display_name?: string | null, email?: string | null, faculty_id?: string | null, gender?: boolean | null, learning?: string | null, learning_position?: string | null, lecturer_id: string, mscb?: number | null, ngach?: string | null, phone?: string | null, position?: string | null, total_point?: number | null, username?: string | null }, subject: { __typename?: 'Subject', display_name?: string | null, faculty_id?: string | null, subject_id: string, total_point?: number | null, faculty?: { __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null } | null }, semester: { __typename?: 'Semester', display_name: string, semester_id: string, type?: string | null, year?: string | null } } | null }>, meta: { __typename?: 'PaginatedMetaData', hasNext: boolean, hasPrev: boolean, page: number, size: number, total_item: number, total_page: number } } };
 
 export type DetailCriteriaQueryVariables = Exact<{
   id: Scalars['String']['input'];
@@ -783,6 +784,39 @@ export const CommentListDocument = gql`
         participating_student
         program
         total_student
+        lecturer {
+          birth_date
+          display_name
+          email
+          faculty_id
+          gender
+          learning
+          learning_position
+          lecturer_id
+          mscb
+          ngach
+          phone
+          position
+          total_point
+          username
+        }
+        subject {
+          display_name
+          faculty_id
+          subject_id
+          total_point
+          faculty {
+            display_name
+            faculty_id
+            full_name
+          }
+        }
+        semester {
+          display_name
+          semester_id
+          type
+          year
+        }
       }
     }
     meta {

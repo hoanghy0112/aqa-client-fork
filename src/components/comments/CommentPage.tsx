@@ -83,6 +83,7 @@ export default function CommentPage({ defaultFilter = {}, selectors = [] }: IPro
 							comment_id={comment_id}
 							class_id={class_?.class_id}
 							isLast={false}
+							classData={class_}
 						/>
 					)
 				)}

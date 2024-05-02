@@ -76,6 +76,7 @@ function Inner({ defaultFilter, selectors }: Props) {
 							comment_id={comment_id}
 							class_id={class_?.class_id}
 							isLast={false}
+							classData={class_}
 						/>
 					)
 				)}
