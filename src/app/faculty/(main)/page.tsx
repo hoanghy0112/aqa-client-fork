@@ -14,8 +14,6 @@ export default function Page({ params }: { params: any }) {
 
 	return (
 		<FilterProvider>
-			<h1 className="font-semibold text-3xl text-slate-500">Khoa/Bộ môn</h1>
-			<BreadCrumb />
 			<ChildrenItems
 				items={[
 					{

@@ -29,7 +29,7 @@ export default function Page({ params }: { params: any }) {
 					...(sortSemester(data?.semesters || [])
 						.reverse()
 						.map(({ display_name, semester_id }) => ({
-							display_name,
+							display_name: display_name || "",
 							value: semester_id,
 							onClick() {
 								setUrlQuery(`/semester/${semester_id}`, {
