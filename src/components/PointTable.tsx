@@ -1,5 +1,6 @@
 "use client";
 
+import { GroupedPoint } from "@/gql/graphql";
 import {
 	Table,
 	TableBody,
@@ -11,7 +12,7 @@ import {
 } from "@nextui-org/react";
 
 interface IProps {
-	data: IPoint[];
+	data: GroupedPoint[];
 }
 
 export default function PointTable({ data }: IProps) {
@@ -30,10 +31,10 @@ export default function PointTable({ data }: IProps) {
 			</TableHeader>
 			<TableBody items={data}>
 				{data.map((point, index) => (
-					<TableRow key={point.criteria_id}>
+					<TableRow key={point.id}>
 						<TableCell>{index + 1}</TableCell>
-						<TableCell>{point.criteria_name}</TableCell>
-						<TableCell>{point.point}</TableCell>
+						<TableCell>{point.display_name}</TableCell>
+						<TableCell>{point.average_point * 4}</TableCell>
 					</TableRow>
 				))}
 			</TableBody>

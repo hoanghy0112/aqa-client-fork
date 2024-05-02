@@ -1,6 +1,8 @@
 "use client";
 
 import TextLink from "@/components/TextLink";
+import { Class } from "@/gql/graphql";
+import { DeepPartial } from "@apollo/client/utilities";
 import {
 	Table,
 	TableBody,
@@ -12,19 +14,9 @@ import {
 
 type IProps = {
 	className?: string;
-} & Partial<IClass>;
+} & DeepPartial<Class>;
 
-export default function ClassDetail({
-	className,
-	faculty_id,
-	faculty_name,
-	subject_id,
-	subject_name,
-	semester_name,
-	attend,
-	total,
-	class_type,
-}: IProps) {
+export default function ClassDetail({ className, ...classInfo }: IProps) {
 	return (
 		<div className="grid gap-5 lg:grid-cols-2 xl:grid-cols-3">
 			<Table
@@ -41,23 +33,29 @@ export default function ClassDetail({
 					<TableRow>
 						<TableCell>Môn</TableCell>
 						<TableCell>
-							<TextLink href={`/subject/${subject_id}`}>
-								{subject_name}
+							<TextLink
+								href={`/subject/${classInfo.subject?.subject_id}`}
+							>
+								{classInfo.subject?.display_name}
 							</TextLink>
 						</TableCell>
 					</TableRow>
 					<TableRow>
 						<TableCell>Khoa</TableCell>
 						<TableCell>
-							<TextLink href={`/faculty/${faculty_id}`}>
-								{faculty_name}
+							<TextLink
+								href={`/faculty/${classInfo.subject?.faculty?.faculty_id}`}
+							>
+								{classInfo.subject?.faculty?.display_name}
 							</TextLink>
 						</TableCell>
 					</TableRow>
 					<TableRow>
 						<TableCell>Học kỳ</TableCell>
 						<TableCell>
-							<p className=" font-medium">{semester_name}</p>
+							<p className=" font-medium">
+								{classInfo.semester?.display_name}
+							</p>
 						</TableCell>
 					</TableRow>
 				</TableBody>
@@ -77,19 +75,19 @@ export default function ClassDetail({
 						<TableCell>Tham gia</TableCell>
 						<TableCell>
 							<p className=" font-medium text-zinc-500 dark:text-zinc-400">
-								{attend}
+								{classInfo.participating_student}
 							</p>
 						</TableCell>
 					</TableRow>
 					<TableRow>
 						<TableCell>Tổng số học sinh</TableCell>
 						<TableCell>
-							<p className=" font-medium">{total}</p>
+							<p className=" font-medium">{classInfo.total_student}</p>
 						</TableCell>
 					</TableRow>
 					<TableRow>
 						<TableCell>Loại lớp</TableCell>
-						<TableCell>{class_type}</TableCell>
+						<TableCell>{classInfo.class_type}</TableCell>
 					</TableRow>
 				</TableBody>
 			</Table>

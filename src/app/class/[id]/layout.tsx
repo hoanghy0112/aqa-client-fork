@@ -1,36 +1,38 @@
-import BreadCrumb from "@/components/BreadCrumb";
-import PointTable from "@/components/PointTable";
-import TextLink from "@/components/TextLink";
-import { GET_CLASS_INFORMATION } from "@/constants/api_endpoint";
-import { ReactNode } from "react";
-import ClassDetail from "./ClassDetail";
-import PageTabs from "@/components/PageTabs";
+"use client";
 
-export default async function DetailClassPage({
-	params,
+import BreadCrumb from "@/components/BreadCrumb";
+import PageTabs from "@/components/PageTabs";
+import TextLink from "@/components/TextLink";
+import { useDetailClassQuery } from "@/gql/graphql";
+import { ReactNode } from "react";
+
+export default function DetailClassPage({
+	params: { id },
 	children,
 }: {
 	params: { id: string };
 	children: ReactNode;
 }) {
-	const response = await fetch(GET_CLASS_INFORMATION(params.id));
-	const classInfo: ClassInfo = await response.json();
+	// const response = await fetch(GET_CLASS_INFORMATION(params.id));
+	// const classInfo: ClassInfo = await response.json();
+	const { data: classData } = useDetailClassQuery({ variables: { id } });
+	const classInfo = classData?.class;
 
 	return (
 		<div>
 			<h1 className="font-semibold text-2xl">
-				{classInfo.class_name} - {classInfo.subject_name}
+				{classInfo?.display_name} - {classInfo?.subject.display_name}
 			</h1>
 			<h2 className="mt-3 text-gray-600 dark:text-gray-300">
 				Giảng viên{" "}
-				<TextLink href={`/lecturer/${classInfo.lecturer_id}`}>
-					{classInfo.lecturer_id}
+				<TextLink href={`/lecturer/${classInfo?.lecturer.lecturer_id}`}>
+					{classInfo?.lecturer.display_name}
 				</TextLink>
 			</h2>
 			<BreadCrumb />
 			<PageTabs
 				lastIndex={3}
-				defaultPath={`class/${params.id}`}
+				defaultPath={`class/${id}`}
 				tabs={[
 					{
 						link: "",

@@ -458,7 +458,7 @@ export type DetailClassQueryVariables = Exact<{
 }>;
 
 
-export type DetailClassQuery = { __typename?: 'Query', class?: { __typename?: 'Class', class_id: string, class_type: string, display_name: string, participating_student: number, program: string, total_student: number } | null };
+export type DetailClassQuery = { __typename?: 'Query', class?: { __typename?: 'Class', class_id: string, class_type: string, display_name: string, participating_student: number, program: string, total_student: number, lecturer: { __typename?: 'Lecturer', birth_date?: any | null, display_name?: string | null, email?: string | null, faculty_id?: string | null, gender?: boolean | null, learning?: string | null, learning_position?: string | null, lecturer_id: string, mscb?: number | null, ngach?: string | null, phone?: string | null, position?: string | null, total_point?: number | null, username?: string | null }, subject: { __typename?: 'Subject', display_name?: string | null, faculty_id?: string | null, subject_id: string, total_point?: number | null, faculty?: { __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null } | null }, semester: { __typename?: 'Semester', display_name: string, semester_id: string, type?: string | null, year?: string | null }, points: Array<{ __typename?: 'GroupedPoint', average_point: number, class_num: number, display_name?: string | null, id: string, max_point?: number | null, point?: number | null }> } | null };
 
 export type CommentQuantityQueryVariables = Exact<{
   filter?: InputMaybe<FilterArgs>;
@@ -679,6 +679,47 @@ export const DetailClassDocument = gql`
     participating_student
     program
     total_student
+    lecturer {
+      birth_date
+      display_name
+      email
+      faculty_id
+      gender
+      learning
+      learning_position
+      lecturer_id
+      mscb
+      ngach
+      phone
+      position
+      total_point
+      username
+    }
+    subject {
+      display_name
+      faculty_id
+      subject_id
+      total_point
+      faculty {
+        display_name
+        faculty_id
+        full_name
+      }
+    }
+    semester {
+      display_name
+      semester_id
+      type
+      year
+    }
+    points {
+      average_point
+      class_num
+      display_name
+      id
+      max_point
+      point
+    }
   }
 }
     `;

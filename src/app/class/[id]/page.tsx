@@ -1,16 +1,20 @@
+"use client";
+
 import PointTable from "@/components/PointTable";
-import { GET_CLASS_INFORMATION } from "@/constants/api_endpoint";
+import { useDetailClassQuery } from "@/gql/graphql";
 import ClassDetail from "./ClassDetail";
 
-export default async function Page({ params }: { params: { id: string } }) {
-	const response = await fetch(GET_CLASS_INFORMATION(params.id));
-	const classInfo: ClassInfo = await response.json();
+export default function Page({ params: { id } }: { params: { id: string } }) {
+	// const response = await fetch(GET_CLASS_INFORMATION(params.id));
+	// const classInfo: ClassInfo = await response.json();
+	const { data: classData } = useDetailClassQuery({ variables: { id } });
+	const classInfo = classData?.class;
 
 	return (
 		<div>
 			<ClassDetail className="" {...classInfo} />
 			<div className=" grid grid-cols-1 3xl:grid-cols-2 mt-10">
-				<PointTable data={classInfo.points || []} />
+				<PointTable data={classInfo?.points || []} />
 			</div>
 		</div>
 	);

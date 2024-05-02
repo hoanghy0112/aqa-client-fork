@@ -19,5 +19,46 @@ query DetailClass($id: String!) {
 		participating_student
 		program
 		total_student
+		lecturer {
+			birth_date
+			display_name
+			email
+			faculty_id
+			gender
+			learning
+			learning_position
+			lecturer_id
+			mscb
+			ngach
+			phone
+			position
+			total_point
+			username
+		}
+		subject {
+			display_name
+			faculty_id
+			subject_id
+			total_point
+			faculty {
+				display_name
+				faculty_id
+				full_name
+			}
+		}
+		semester {
+			display_name
+			semester_id
+			type
+			year
+		}
+		points {
+			average_point
+			class_num
+			display_name
+			id
+			max_point
+			point
+		}
 	}
 }
