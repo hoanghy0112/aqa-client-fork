@@ -12,6 +12,7 @@ import CriteriaIcon from "@assets/CriteriaIcon";
 import { Suspense } from "react";
 import LecturerNavIcon from "@/assets/LecturerNavIcon";
 import { API_BASE_URL } from "@/constants/api_endpoint";
+import { auth } from "@/auth/auth";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,6 +28,9 @@ export default async function RootLayout({
 }) {
 	try {
 		const pingResponse = await fetch(API_BASE_URL);
+
+		const session = await auth();
+		console.log({ session: session?.user });
 
 		return (
 			<html lang="en" suppressHydrationWarning>

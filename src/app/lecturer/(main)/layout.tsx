@@ -2,7 +2,6 @@
 
 import BreadCrumb from "@/components/BreadCrumb";
 import PageTabs from "@/components/PageTabs";
-import { FilterProvider } from "@/contexts/FilterContext";
 import { useRouter } from "next/navigation";
 import { ReactNode, useEffect } from "react";
 

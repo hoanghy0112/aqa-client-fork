@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { persistCache } from "apollo-cache-persist";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import { API_URL_V2 } from "@/constants/api_endpoint";
 
 const queryClient = new QueryClient();
 
@@ -14,10 +15,10 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 
-	const [cache, setCache] = useState(new InMemoryCache())
+	const [cache, setCache] = useState(new InMemoryCache());
 
 	const client = new ApolloClient({
-		uri: "http://localhost:3001/graphql",
+		uri: API_URL_V2,
 		cache,
 	});
 
