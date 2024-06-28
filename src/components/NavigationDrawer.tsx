@@ -50,7 +50,7 @@ export default function NavigationDrawer({ children }: { children?: ReactNode })
 					</div>
 				</div>
 				<div
-					className={`-mt-20 h-full flex flex-col gap-4 ${
+					className={`-mt-20 h-full flex flex-col gap-2 ${
 						open ? "justify-center" : "justify-center"
 					}`}
 				>
@@ -96,7 +96,7 @@ export function NavItem({ title, link, icon: Icon, subItems }: INavItemProps) {
 						: {}
 				}
 			>
-				<CardBody className="flex flex-col h-fit p-4">
+				<CardBody className="flex flex-col h-fit p-3">
 					<div className={` flex flex-row items-start transition-all`}>
 						<div className="w-[20px]">
 							{Icon ? (
@@ -114,7 +114,7 @@ export function NavItem({ title, link, icon: Icon, subItems }: INavItemProps) {
 								isOpen ? " w-48" : "w-0"
 							} h-5 relative  overflow-hidden transition-all`}
 						>
-							<p className="whitespace-nowrap h-fit w-fit absolute top-0 left-3">
+							<p className="whitespace-nowrap font-medium text-base h-fit w-fit absolute top-0 left-3">
 								{title}
 							</p>
 						</div>
@@ -140,13 +140,13 @@ export function NavItem({ title, link, icon: Icon, subItems }: INavItemProps) {
 						{subItems?.map(({ title, link }) => (
 							<Link href={link} key={link}>
 								<li
-									className={` my-1 rounded-xl p-3 hover:bg-slate-200 dark:hover:bg-slate-700 cursor-pointer transition-all ${
+									className={` my-1 rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700 cursor-pointer transition-all ${
 										pathname === link
 											? " bg-blue-300 dark:bg-blue-900 text-black dark:text-white hover:text-black dark:hover:text-white"
 											: ""
 									}`}
 								>
-									{title}
+									<p className=" font-semibold text-sm"> {title}</p>
 								</li>
 							</Link>
 						))}
