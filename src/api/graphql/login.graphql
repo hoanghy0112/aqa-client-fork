@@ -1,0 +1,12 @@
+mutation Login($username: String!, $password: String!) {
+	login(password: $password, username: $username) {
+		access_token
+		user {
+			displayName
+			id
+			password
+			role
+			username
+		}
+	}
+}

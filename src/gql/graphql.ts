@@ -191,7 +191,14 @@ export type LecturerPointsArgs = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  login: AuthDto;
   register: UserEntity;
+};
+
+
+export type MutationLoginArgs = {
+  password: Scalars['String']['input'];
+  username: Scalars['String']['input'];
 };
 
 
@@ -285,7 +292,7 @@ export type Query = {
   lecturer?: Maybe<Lecturer>;
   /** List all lecturer */
   lecturers: PaginatedLecturer;
-  login: AuthDto;
+  profile: UserEntity;
   programs: Array<Program>;
   /** List all semester */
   semesters?: Maybe<Array<Semester>>;
@@ -379,12 +386,6 @@ export type QueryLecturersArgs = {
 };
 
 
-export type QueryLoginArgs = {
-  password: Scalars['String']['input'];
-  username: Scalars['String']['input'];
-};
-
-
 export type QuerySubjectArgs = {
   id: Scalars['String']['input'];
 };
@@ -395,6 +396,12 @@ export type QuerySubjectsArgs = {
   pagination?: InputMaybe<PaginationArgs>;
   sort?: InputMaybe<SortArgs>;
 };
+
+export enum Role {
+  Admin = 'ADMIN',
+  Faculty = 'FACULTY',
+  Lecturer = 'LECTURER'
+}
 
 export type Semester = {
   __typename?: 'Semester';
@@ -432,16 +439,18 @@ export type SubjectPointsArgs = {
 };
 
 export type UserDto = {
+  displayName?: InputMaybe<Scalars['String']['input']>;
   password: Scalars['String']['input'];
-  role: Scalars['String']['input'];
+  role: Role;
   username: Scalars['String']['input'];
 };
 
 export type UserEntity = {
   __typename?: 'UserEntity';
+  displayName: Scalars['String']['output'];
   id: Scalars['String']['output'];
   password: Scalars['String']['output'];
-  role: Scalars['String']['output'];
+  role: Role;
   username: Scalars['String']['output'];
 };
 
@@ -546,6 +555,14 @@ export type LecturerstWithPointsQueryVariables = Exact<{
 
 
 export type LecturerstWithPointsQuery = { __typename?: 'Query', lecturers: { __typename?: 'PaginatedLecturer', data: Array<{ __typename?: 'Lecturer', birth_date?: any | null, display_name?: string | null, email?: string | null, faculty_id?: string | null, gender?: boolean | null, learning?: string | null, learning_position?: string | null, lecturer_id: string, mscb?: number | null, ngach?: string | null, phone?: string | null, position?: string | null, total_point?: number | null, username?: string | null, faculty: { __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null }, points: Array<{ __typename?: 'GroupedPoint', average_point: number, class_num: number, id: string, max_point?: number | null, point?: number | null, display_name?: string | null }> }>, meta: { __typename?: 'PaginatedMetaData', hasNext: boolean, hasPrev: boolean, page: number, size: number, total_item: number, total_page: number } } };
+
+export type LoginMutationVariables = Exact<{
+  username: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+}>;
+
+
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthDto', access_token: string, user: { __typename?: 'UserEntity', displayName: string, id: string, password: string, role: Role, username: string } } };
 
 export type PointsEachSemesterQueryVariables = Exact<{
   groupEntity: Scalars['String']['input'];
@@ -1424,6 +1441,47 @@ export type LecturerstWithPointsQueryResult = Apollo.QueryResult<LecturerstWithP
 export function refetchLecturerstWithPointsQuery(variables?: LecturerstWithPointsQueryVariables) {
       return { query: LecturerstWithPointsDocument, variables: variables }
     }
+export const LoginDocument = gql`
+    mutation Login($username: String!, $password: String!) {
+  login(password: $password, username: $username) {
+    access_token
+    user {
+      displayName
+      id
+      password
+      role
+      username
+    }
+  }
+}
+    `;
+export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutationVariables>;
+
+/**
+ * __useLoginMutation__
+ *
+ * To run a mutation, you first call `useLoginMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLoginMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [loginMutation, { data, loading, error }] = useLoginMutation({
+ *   variables: {
+ *      username: // value for 'username'
+ *      password: // value for 'password'
+ *   },
+ * });
+ */
+export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginMutation, LoginMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, options);
+      }
+export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
+export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
+export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
 export const PointsEachSemesterDocument = gql`
     query PointsEachSemester($groupEntity: String!, $class_type: String, $faculty_id: String, $lecturer_id: String, $criteria_id: String, $semester_id: String, $program: String, $subjects: [String!]) {
   groupedPoints(

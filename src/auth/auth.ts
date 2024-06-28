@@ -61,9 +61,9 @@ const providers: Provider[] = [
 export const { handlers, signIn, signOut, auth } = NextAuth({
 	secret: "secret",
 	providers,
-	// pages: {
-	// 	signIn: "/signin",
-	// },
+	pages: {
+		signIn: "/signin",
+	},
 	callbacks: {
 		session({ session, token, user }) {
 			return {

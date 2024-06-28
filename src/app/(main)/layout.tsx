@@ -1,17 +1,24 @@
+"use client";
+
 import LecturerNavIcon from "@/assets/LecturerNavIcon";
-import { auth, signIn } from "@/auth/auth";
 import NavigationDrawer, { NavItem } from "@/components/NavigationDrawer";
+import { useAuth } from "@/stores/auth.store";
 import CommentIcon from "@assets/CommentIcon";
 import CriteriaIcon from "@assets/CriteriaIcon";
 import HomeIcon from "@assets/HomeIcon";
 import SubjectIcon from "@assets/SubjectIcon";
-import { Suspense } from "react";
+import { useRouter } from "next/navigation";
+import { Suspense, useEffect } from "react";
 
-export default async function Layout({ children }: { children: React.ReactNode }) {
-	const session = await auth();
+export default function Layout({ children }: { children: React.ReactNode }) {
+	const router = useRouter();
+	const { authData, isLogin } = useAuth();
 
-	console.log({ session });
-	if (!session) await signIn();
+	useEffect(() => {
+		if (isLogin === false) {
+			router.replace("/signin");
+		}
+	}, [isLogin, router]);
 
 	return (
 		<>
