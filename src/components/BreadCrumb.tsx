@@ -4,13 +4,14 @@ import {
 	useDetailClassQuery,
 	useDetailCriteriaQuery,
 	useDetailFacultyQuery,
-	useDetailLecturerQuery,
 	useDetailSubjectQuery,
-	useSemestersQuery,
+	useSemestersQuery
 } from "@/gql/graphql";
 import { useFilterUrlQuery } from "@/hooks/useFilterUrlQuery";
+import useLecturerInfo from "@/hooks/useLecturerInfo";
 import { Button } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
+import { twMerge } from "tailwind-merge";
 
 export default function BreadCrumb() {
 	const router = useRouter();
@@ -36,10 +37,7 @@ export default function BreadCrumb() {
 		skip: !query?.subjects?.length,
 	});
 
-	const { data: lecturer } = useDetailLecturerQuery({
-		variables: { id: query?.lecturer_id || "" },
-		skip: !query?.lecturer_id,
-	});
+	const { lecturer } = useLecturerInfo(query.lecturer_id || "");
 
 	const { data: classData } = useDetailClassQuery({
 		variables: { id: query?.class_id || "" },
@@ -50,6 +48,7 @@ export default function BreadCrumb() {
 		{
 			title: "Tiêu chí",
 			link: "criteria",
+			className: "flex-initial w-[300px]",
 			value: query?.criteria_id,
 			name: criteria?.criteria?.display_name,
 			onClickValue: {
@@ -103,7 +102,7 @@ export default function BreadCrumb() {
 			title: "Giảng viên",
 			link: "lecturer",
 			value: query?.lecturer_id,
-			name: lecturer?.lecturer?.display_name,
+			name: lecturer?.display_name,
 			onClickValue: {
 				lecturer_id: "",
 				class_id: "",
@@ -121,12 +120,12 @@ export default function BreadCrumb() {
 	];
 
 	return (
-		<div className=" -ml-4 mt-5 flex flex-row gap-2">
-			{paths.map(({ title, name, link, value, onClickValue }) => (
+		<div className=" -ml-4 mt-5 w-fit flex flex-row gap-2">
+			{paths.map(({ className, title, name, link, value, onClickValue }) => (
 				<Button
 					key={title}
 					variant="light"
-					className=" h-fit"
+					className={twMerge(" flex-1 h-fit", className)}
 					onClick={() => {
 						setUrlQuery(`/${link}`, onClickValue);
 					}}
