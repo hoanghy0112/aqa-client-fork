@@ -17,6 +17,6 @@ export default function Page() {
 	);
 }
 
-export const metadata: Metadata = {
-	title: "Biểu đồ điểm trung bình",
-};
+// export const metadata: Metadata = {
+// 	title: "Biểu đồ điểm trung bình",
+// };

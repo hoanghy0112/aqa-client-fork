@@ -5,7 +5,7 @@ import {
 	useDetailCriteriaQuery,
 	useDetailFacultyQuery,
 	useDetailSubjectQuery,
-	useSemestersQuery
+	useSemestersQuery,
 } from "@/gql/graphql";
 import { useFilterUrlQuery } from "@/hooks/useFilterUrlQuery";
 import useLecturerInfo from "@/hooks/useLecturerInfo";
@@ -48,7 +48,7 @@ export default function BreadCrumb() {
 		{
 			title: "Tiêu chí",
 			link: "criteria",
-			className: "flex-initial w-[300px]",
+			className: " flex-initial w-[300px]",
 			value: query?.criteria_id,
 			name: criteria?.criteria?.display_name,
 			onClickValue: {
@@ -63,6 +63,7 @@ export default function BreadCrumb() {
 		{
 			title: "Học kỳ",
 			link: "semester",
+			className: " flex-initial w-[150px]",
 			value: query?.semester_id,
 			name: semesters?.semesters?.find(
 				(semester) => semester.semester_id === query.semester_id
@@ -78,6 +79,7 @@ export default function BreadCrumb() {
 		{
 			title: "Khoa",
 			link: "faculty",
+			className: " flex-initial w-[150px]",
 			value: query?.faculty_id,
 			name: faculty?.faculty?.display_name,
 			onClickValue: {
@@ -125,7 +127,7 @@ export default function BreadCrumb() {
 				<Button
 					key={title}
 					variant="light"
-					className={twMerge(" flex-1 h-fit", className)}
+					className={twMerge(" flex-1 h-fit", name ? className : "")}
 					onClick={() => {
 						setUrlQuery(`/${link}`, onClickValue);
 					}}
