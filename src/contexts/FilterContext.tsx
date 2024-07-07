@@ -2,6 +2,8 @@
 
 import { ReactNode, createContext, useContext, useEffect, useState } from "react";
 
+import { Faculty, Semester, Subject } from "@/gql/graphql";
+
 export const FilterContext = createContext<IFilterContext>({
 	setKeyword: (d: string) => {},
 	setIsLoading: (d: boolean) => {},
@@ -11,7 +13,7 @@ export const FilterContext = createContext<IFilterContext>({
 	setProgram: (d: string) => {},
 	setFaculty: (d: Faculty) => {},
 	setSemester: (d: Semester | undefined) => {},
-	setSort: (d: string) => {},
+	setSort: (d: ISortOptions) => {},
 });
 
 export function useFilter() {
@@ -28,10 +30,10 @@ export function FilterProvider({
 	program: default_program,
 	faculty: default_faculty = {
 		faculty_id: "",
-		faculty_name: "",
+		display_name: "",
 	},
 	semester: default_semester = {
-		semester_name: "",
+		display_name: "",
 		semester_id: "",
 	} as Semester,
 	sort: default_sort = "desc",
@@ -45,8 +47,8 @@ export function FilterProvider({
 	program?: string;
 	faculty?: Faculty;
 	semester?: Semester;
-	sort?: string;
-	setSort?: (d: string) => any;
+	sort?: ISortOptions;
+	setSort?: (d: ISortOptions) => any;
 	children: ReactNode;
 }) {
 	const [keyword, setKeyword] = useState(default_keyword);
@@ -56,7 +58,7 @@ export function FilterProvider({
 	const [program, setProgram] = useState(default_program);
 	const [faculty, setFaculty] = useState(default_faculty);
 	const [semester, setSemester] = useState(default_semester);
-	const [sort, setSort] = useState(default_sort);
+	const [sort, setSort] = useState<ISortOptions>(default_sort);
 
 	useEffect(() => {
 		default_setSort?.(sort);
@@ -103,6 +105,6 @@ export interface IFilterContext {
 	setFaculty: (d: Faculty) => any;
 	semester?: Semester;
 	setSemester: (d: Semester | undefined) => any;
-	sort?: string;
-	setSort: (d: string) => any;
+	sort?: ISortOptions;
+	setSort: (d: ISortOptions) => any;
 }

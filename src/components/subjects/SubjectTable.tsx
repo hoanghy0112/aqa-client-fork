@@ -23,6 +23,11 @@ export default function SubjectTable() {
 				<Card className=" w-fit" shadow="md">
 					<Input
 						onChange={(e) => (searchText.current = e.target.value)}
+						onKeyDown={(e) => {
+							if (e.key === "Enter") {
+								handleSearch();
+							}
+						}}
 						onClear={() => {
 							searchText.current = "";
 							handleSearch();

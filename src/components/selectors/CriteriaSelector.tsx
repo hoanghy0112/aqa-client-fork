@@ -1,9 +1,11 @@
 "use client";
 
-import { GET_CRITERIA_NAME } from "@/constants/api_endpoint";
-import { useFilter } from "@/contexts/FilterContext";
-import withQuery from "@/utils/withQuery";
-import { Button } from "@nextui-org/button";
+import CriteriaIcon from "@/assets/CriteriaIcon";
+import { FilterProvider, useFilter } from "@/contexts/FilterContext";
+import { useCriteriasLazyQuery } from "@/gql/graphql";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import useNavigate from "@/hooks/useNavigate";
+import { useRememberValue } from "@/hooks/useRememberValue";
 import { Card } from "@nextui-org/card";
 import { Input } from "@nextui-org/input";
 import {
@@ -14,54 +16,60 @@ import {
 	useDisclosure,
 } from "@nextui-org/modal";
 import { Skeleton } from "@nextui-org/skeleton";
-import { Tooltip } from "@nextui-org/tooltip";
 import { motion } from "framer-motion";
-import { useMemo, useState } from "react";
-import useSWR from "swr";
+import { useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { useDebounce } from "usehooks-ts";
+import OptionButton from "../OptionButton";
 
-export default function CriteriaSelector() {
-	const { criteria, setCriteria } = useFilter();
+type Props = {
+	criteria?: Criteria;
+	criteria_name?: string | null;
+	setCriteria: (d: Criteria) => any;
+};
+
+function CriteriaSelector_({ criteria, criteria_name, setCriteria }: Props) {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-	const { semester } = useFilter();
-
-	const { data, isLoading, error } = useSWR<Criteria[]>(
-		withQuery(GET_CRITERIA_NAME, {
-			semester_id: semester?.semester_id,
-		}),
-		(url: string) => fetch(url).then((r) => r.json())
-	);
-
 	const [keyword, setKeyword] = useState("");
+	const debouncedKeyword = useDebounce<string>(keyword || "", 500);
 
-	const criterias = useMemo<Criteria[]>(
-		() =>
-			data?.filter((criteria) => criteria.display_name.includes(keyword)) ||
-			[],
-		[keyword, data]
-	);
+	const hasValue = Boolean(criteria?.index || criteria_name);
+	const buttonText = hasValue ? `Tiêu chí` : "Tiêu chí";
+
+	const [getCriterias, { data, loading: isLoading, error }] =
+		useCriteriasLazyQuery();
+
+	const { dataList, bottomRef } = useInfiniteScroll({
+		queryFunction: getCriterias,
+		variables: { filter: { keyword: debouncedKeyword } },
+		isLoading,
+		data: data?.criterias.data,
+		meta: data?.criterias.meta,
+		enabled: isOpen,
+	});
+
+	const criterias = useRememberValue(dataList);
 
 	return (
 		<>
-			<Tooltip
-				content={
-					<div className="">
-						<p className=" max-w-md h-auto">
-							{criteria
-								? criteria.display_name
-								: "Nếu không chọn, tất cả các tiêu chí sẽ được xét"}
-						</p>
-					</div>
+			<OptionButton
+				tooltip={
+					hasValue
+						? criteria?.display_name || criteria_name
+						: "Tất cả các tiêu chí"
+				}
+				hasValue={hasValue}
+				onPress={onOpen}
+				startContent={
+					<CriteriaIcon
+						color={hasValue ? "white" : undefined}
+						width={20}
+					/>
 				}
 			>
-				<Button onPress={onOpen} className="">
-					<p className="">
-						{criteria?.index
-							? `Tiêu chí ${criteria.index}`
-							: "Tất cả tiêu chí"}
-					</p>
-				</Button>
-			</Tooltip>
+				{buttonText}
+			</OptionButton>
 			<Modal
 				isOpen={isOpen}
 				className="h-full"
@@ -88,61 +96,54 @@ export default function CriteriaSelector() {
 								/>
 							</ModalHeader>
 							<ModalBody className="mb-5">
-								{!isLoading && !error ? (
-									<>
-										<div>
+								<div>
+									<Card
+										isPressable
+										onPress={() => {
+											setCriteria({
+												criteria_id: "",
+												display_name: "Tất cả tiêu chí",
+												index: 0,
+											});
+											onClose();
+										}}
+										className="py-3 px-4 w-full"
+										radius="sm"
+									>
+										<p className=" text-md font-semibold mb-1 text-start">
+											Tất cả
+										</p>
+										<p className=" text-sm w-full font-normal text-start">
+											Chọn tất cả các tiêu chí
+										</p>
+									</Card>
+								</div>
+								{criterias?.map(
+									({ criteria_id, display_name }, index) => (
+										<div key={criteria_id} className="">
 											<Card
 												isPressable
 												onPress={() => {
 													setCriteria({
-														criteria_id: "",
-														display_name:
-															"Tất cả tiêu chí",
-														index: 0,
+														criteria_id,
+														display_name,
 													});
 													onClose();
 												}}
 												className="py-3 px-4 w-full"
 												radius="sm"
 											>
-												<p className=" text-md font-semibold mb-1 text-start">
-													Tất cả
-												</p>
-												<p className=" text-sm w-full font-normal text-start">
-													Chọn tất cả các tiêu chí
-												</p>
+												<p className=" text-md font-semibold mb-1 text-start">{`Tiêu chí ${
+													index + 1
+												}`}</p>
+												<h1 className=" text-sm w-full font-normal text-start">
+													{display_name}
+												</h1>
 											</Card>
 										</div>
-										{criterias?.map(
-											({
-												criteria_id,
-												display_name,
-												index,
-											}) => (
-												<div key={index} className="">
-													<Card
-														isPressable
-														onPress={() => {
-															setCriteria({
-																criteria_id,
-																display_name,
-																index,
-															});
-															onClose();
-														}}
-														className="py-3 px-4 w-full"
-														radius="sm"
-													>
-														<p className=" text-md font-semibold mb-1 text-start">{`Tiêu chí ${index}`}</p>
-														<h1 className=" text-sm w-full font-normal text-start">
-															{display_name}
-														</h1>
-													</Card>
-												</div>
-											)
-										)}
-									</>
-								) : (
+									)
+								)}
+								{isLoading ? (
 									Array(6)
 										.fill(0)
 										.map((_, index) => (
@@ -165,6 +166,8 @@ export default function CriteriaSelector() {
 												</Skeleton>
 											</div>
 										))
+								) : (
+									<div ref={bottomRef} />
 								)}
 							</ModalBody>
 						</>
@@ -172,5 +175,31 @@ export default function CriteriaSelector() {
 				</ModalContent>
 			</Modal>
 		</>
+	);
+}
+
+export default function CriteriaSelector() {
+	const { criteria, setCriteria } = useFilter();
+
+	return (
+		<FilterProvider>
+			<CriteriaSelector_ criteria={criteria} setCriteria={setCriteria} />
+		</FilterProvider>
+	);
+}
+
+export function CriteriaSelectorWithSearchParam() {
+	const navigate = useNavigate();
+	const searchParams = useSearchParams();
+
+	return (
+		<FilterProvider>
+			<CriteriaSelector_
+				criteria_name={searchParams.get("criteria")}
+				setCriteria={(d: Criteria) => {
+					navigate.push({ criteria: d.criteria_id });
+				}}
+			/>
+		</FilterProvider>
 	);
 }

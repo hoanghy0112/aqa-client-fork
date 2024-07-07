@@ -29,7 +29,7 @@ export default function NavigationDrawer({ children }: { children?: ReactNode })
 
 	return (
 		<NavigationDrawerContext.Provider value={{ isOpen: open }}>
-			<nav className="w-fit group py-5 px-5 flex flex-col shadow-none transition-all hover:shadow-2xl">
+			<nav className="group w-fit group px-5 pt-12 flex flex-col shadow-none transition-all hover:shadow-2xl">
 				<div className="flex flex-row items-center">
 					<Button className="ml-1" isIconOnly onPress={toggleDrawer}>
 						<Image
@@ -50,7 +50,7 @@ export default function NavigationDrawer({ children }: { children?: ReactNode })
 					</div>
 				</div>
 				<div
-					className={`-mt-20 h-full flex flex-col gap-4 ${
+					className={`-mt-20 h-full flex flex-col gap-2 ${
 						open ? "justify-center" : "justify-center"
 					}`}
 				>
@@ -78,14 +78,16 @@ export function NavItem({ title, link, icon: Icon, subItems }: INavItemProps) {
 		<div
 			className="group/nav h-fit w-fit"
 			onMouseOver={() => setIsHover(true)}
-			onMouseLeave={() => setIsHover(false)}
+			onMouseLeave={() => setTimeout(() => setIsHover(false), 0)}
 		>
 			<Card
 				isPressable
 				onPress={() => router.push(link)}
-				className={`h-fit transition-all ${isOpen ? "shadow-none" : ""} ${
+				className={`h-fit transition-all hover:bg-slate-100 dark:hover:bg-slate-900 group-hover:shadow-none ${
+					isOpen ? "shadow-none" : ""
+				} ${
 					pathname.split("/")[1] === link.split("/")[1]
-						? " bg-blue-600"
+						? " !bg-blue-600"
 						: ""
 				}`}
 				style={
@@ -94,7 +96,7 @@ export function NavItem({ title, link, icon: Icon, subItems }: INavItemProps) {
 						: {}
 				}
 			>
-				<CardBody className="flex flex-col h-fit p-4">
+				<CardBody className="flex flex-col h-fit p-3">
 					<div className={` flex flex-row items-start transition-all`}>
 						<div className="w-[20px]">
 							{Icon ? (
@@ -112,7 +114,7 @@ export function NavItem({ title, link, icon: Icon, subItems }: INavItemProps) {
 								isOpen ? " w-48" : "w-0"
 							} h-5 relative  overflow-hidden transition-all`}
 						>
-							<p className="whitespace-nowrap h-fit w-fit absolute top-0 left-3">
+							<p className="whitespace-nowrap font-medium text-base h-fit w-fit absolute top-0 left-3">
 								{title}
 							</p>
 						</div>
@@ -121,8 +123,8 @@ export function NavItem({ title, link, icon: Icon, subItems }: INavItemProps) {
 			</Card>
 			{subItems ? (
 				<div
-					className={` opacity-0 pl-3 ${
-						isOpen ? "group-hover/nav:opacity-100" : "w-0"
+					className={`  pl-3 ${
+						isOpen ? "" : "w-0"
 					} overflow-hidden transition-all`}
 					style={{
 						height:
@@ -138,13 +140,13 @@ export function NavItem({ title, link, icon: Icon, subItems }: INavItemProps) {
 						{subItems?.map(({ title, link }) => (
 							<Link href={link} key={link}>
 								<li
-									className={` my-1 rounded-xl p-3 hover:bg-slate-200 dark:hover:bg-slate-700 cursor-pointer transition-all ${
+									className={` my-1 rounded-xl p-2 hover:bg-slate-200 dark:hover:bg-slate-700 cursor-pointer transition-all ${
 										pathname === link
 											? " bg-blue-300 dark:bg-blue-900 text-black dark:text-white hover:text-black dark:hover:text-white"
 											: ""
 									}`}
 								>
-									{title}
+									<p className=" font-semibold text-sm"> {title}</p>
 								</li>
 							</Link>
 						))}

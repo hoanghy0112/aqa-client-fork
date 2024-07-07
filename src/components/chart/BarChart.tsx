@@ -12,10 +12,25 @@ import {
 	TooltipPositionerFunction,
 	ChartType,
 	ChartDataset,
+	LineController,
+	LineElement,
+	PointElement,
+	BarController,
 } from "chart.js";
-import { Bar, getElementAtEvent } from "react-chartjs-2";
+import { Bar, Chart, getElementAtEvent } from "react-chartjs-2";
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(
+	CategoryScale,
+	LinearScale,
+	BarElement,
+	LineElement,
+	PointElement,
+	Title,
+	Tooltip,
+	Legend,
+	LineController,
+	BarController
+);
 
 declare module "chart.js" {
 	interface TooltipPositionerMap {
@@ -42,26 +57,34 @@ Tooltip.positioners.center = function (items, eventPosition) {
 type IData = {
 	x: string;
 	y: number;
+	id?: string;
 	tooltipTitle?: string;
+	yAxisID?: string;
+};
+
+type Props = {
+	className?: React.ComponentProps<"div">["className"];
+	data?: {
+		label: string;
+		data: IData[];
+		borderColor?: string;
+		backgroundColor?: string;
+		sort?: "asc" | "desc";
+		yAxisID?: string;
+		type?: "bar" | "line";
+	}[];
+	noDataText: ReactNode;
+	valueFormatter?: ((d: number) => string | number)[];
+	onClick?: (d: IClickData) => any;
 };
 
 export function BarChart({
 	className,
 	data,
 	noDataText,
-	valueFormatter = (d: number) => d,
+	valueFormatter = [(d: number) => d],
 	onClick,
-}: {
-	className?: React.ComponentProps<"div">["className"];
-	data?: {
-		label: string;
-		data: IData[];
-		backgroundColor?: string;
-	}[];
-	noDataText: ReactNode;
-	valueFormatter?: (d: number) => string | number;
-	onClick?: (d: number) => any;
-}) {
+}: Props) {
 	const ref = useRef<any>();
 
 	const options: ChartOptions = {
@@ -89,6 +112,18 @@ export function BarChart({
 					display: false,
 				},
 				beginAtZero: false,
+			},
+			y1: {
+				border: {
+					display: false,
+				},
+				beginAtZero: true,
+				display: true,
+				position: "right" as const,
+				min: -5,
+				grid: {
+					drawOnChartArea: false,
+				},
 			},
 		},
 		plugins: {
@@ -120,7 +155,9 @@ export function BarChart({
 							label += ": ";
 						}
 						if (context.parsed.y !== null) {
-							label += valueFormatter(context.parsed.y);
+							label += valueFormatter[context.datasetIndex](
+								context.parsed.y
+							);
 						}
 						return label;
 					},
@@ -137,28 +174,51 @@ export function BarChart({
 		},
 	};
 
-	const chartData: ChartData<"bar", IData[], string> = {
+	const chartData: any = {
 		// labels,
-		datasets: (data || []).map(({ label, data, backgroundColor }) => ({
-			label: label || "No label",
-			data,
-			backgroundColor: backgroundColor || "#0ea5e9",
-		})) as ChartDataset<"bar", IData[]>[],
+		datasets: (data || []).map(
+			({
+				label,
+				data,
+				backgroundColor,
+				borderColor,
+				sort,
+				yAxisID,
+				type,
+			}) => ({
+				label: label || "No label",
+				data: sort
+					? data.sort((a, b) => (sort === "asc" ? a.y - b.y : b.y - a.y))
+					: data,
+				backgroundColor: backgroundColor || "#0ea5e9dd",
+				borderColor: borderColor || "#0ea5e9dd",
+				yAxisID: yAxisID || "y",
+				//@ts-ignore
+				type,
+			})
+		) as any,
 	};
 
 	return (
 		<div className={`pl-5 w-full h-full flex items-center ${className || ""}`}>
 			{data ? (
-				<Bar
+				<Chart
 					ref={ref}
 					//@ts-ignore
 					options={options}
 					data={chartData}
+					type={"bar"}
 					onClick={(event) => {
 						const eventList = getElementAtEvent(ref.current, event);
 						if (eventList.length > 0) {
 							const index = eventList[0].index;
-							onClick?.(index);
+							const clickData = chartData.datasets.map((d: any) =>
+								d.data.at(index)
+							);
+							onClick?.({
+								index,
+								data: clickData,
+							});
 						}
 					}}
 				/>
@@ -167,4 +227,9 @@ export function BarChart({
 			)}
 		</div>
 	);
+}
+
+interface IClickData {
+	index: number;
+	data: (IData | undefined)[];
 }
