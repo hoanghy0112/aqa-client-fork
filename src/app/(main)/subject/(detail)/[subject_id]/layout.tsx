@@ -40,7 +40,7 @@ export default async function Layout({
 	);
 }
 
-export const tabs = [
+const tabs = [
 	{
 		link: "",
 		title: "Trang chủ",
