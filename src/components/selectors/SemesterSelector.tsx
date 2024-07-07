@@ -1,9 +1,11 @@
 "use client";
 
 import { getSemesterList } from "@/api/semester";
+import SemesterIcon from "@/assets/SemesterIcon";
 import { useFilter } from "@/contexts/FilterContext";
+import { Semester, useSemestersQuery } from "@/gql/graphql";
 import useNavigate from "@/hooks/useNavigate";
-import withQuery from "@/utils/withQuery";
+import { useRememberValue } from "@/hooks/useRememberValue";
 import { Button } from "@nextui-org/button";
 import {
 	Dropdown,
@@ -11,23 +13,27 @@ import {
 	DropdownMenu,
 	DropdownSection,
 	DropdownTrigger,
+	Spinner,
 } from "@nextui-org/react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import OptionButton from "../OptionButton";
-import SemesterIcon from "@/assets/SemesterIcon";
+
+type FilterType = {
+	lecturer_id?: string;
+};
 
 function SemesterSelector_({
 	semester,
 	setSemester,
 	semesters,
+	isNoBorder = false,
 }: {
 	semester?: Semester;
 	setSemester: (d?: Semester) => any;
 	semesters: Semester[];
-}) {
-	const hasValue = Boolean(semester?.semester_name);
-	const buttonText = semester?.semester_name || "Tất cả học kỳ";
+} & SemesterPropType) {
+	const hasValue = Boolean(semester?.display_name);
+	const buttonText = semester?.display_name || "Tất cả học kỳ";
 
 	return (
 		<Dropdown backdrop="blur" shouldBlockScroll={false}>
@@ -41,29 +47,44 @@ function SemesterSelector_({
 							width={20}
 						/>
 					}
-					className={hasValue ? "" : "bg-white"}
+					className={`${
+						hasValue
+							? ""
+							: isNoBorder
+							? " bg-white dark:bg-zinc-800 border-0 dark:hover:!bg-zinc-700 hover:!bg-zinc-100"
+							: " border-0 bg-slate-100 dark:bg-slate-800 dark:hover:!bg-slate-700 hover:!bg-slate-200"
+					} rounded-lg`}
 				>
-					{buttonText}
+					{semesters.length ? (
+						buttonText
+					) : (
+						<Spinner
+							className={hasValue ? " text-white" : ""}
+							color={hasValue ? "default" : "primary"}
+							size="sm"
+						/>
+					)}
 				</Button>
 			</DropdownTrigger>
 			<DropdownMenu
 				variant="faded"
 				aria-label="Semester dropwdown"
+				className=" max-h-96 overflow-auto"
 				selectionMode="single"
 				selectedKeys={new Set([semester?.semester_id || ""])}
 				onAction={(key) => {
 					if (key === "")
 						setSemester?.({
-							semester_name: "Tất cả học kỳ",
+							display_name: "Tất cả học kỳ",
 							semester_id: "",
 						});
 					else setSemester(semesters.find((v) => v.semester_id === key));
 				}}
 			>
 				<DropdownSection title="Chọn học kỳ">
-					{semesters.map(({ semester_name, semester_id }) => (
+					{semesters.map(({ display_name, semester_id }) => (
 						<DropdownItem className={`py-2`} key={semester_id}>
-							<p className="font-medium"> {semester_name}</p>
+							<p className="font-medium"> {display_name}</p>
 						</DropdownItem>
 					))}
 				</DropdownSection>
@@ -77,48 +98,43 @@ function SemesterSelector_({
 	);
 }
 
-export default function SemesterSelector() {
+export default function SemesterSelector({
+	lecturer_id,
+	...props
+}: SemesterPropType & FilterType) {
 	const { semester, setSemester } = useFilter();
-	const [semesters, setSemesters] = useState<Semester[]>([]);
-
-	useEffect(() => {
-		(async () => {
-			const semesterList = await getSemesterList();
-			setSemesters(semesterList);
-		})();
-	}, []);
+	const { data } = useSemestersQuery();
 
 	return (
 		<SemesterSelector_
 			semester={semester}
 			setSemester={setSemester}
-			semesters={semesters}
+			semesters={data?.semesters || []}
+			{...props}
 		/>
 	);
 }
 
-export function SemesterSelectorWithSearchParam() {
+export function SemesterSelectorWithSearchParam({
+	lecturer_id,
+	...props
+}: SemesterPropType & FilterType) {
 	const searchParams = useSearchParams();
 	const navigate = useNavigate();
 
-	const [semesters, setSemesters] = useState<Semester[]>([]);
+	const semesterId = searchParams.get("semester");
 
-	const semester = useMemo<Semester | undefined>(() => {
-		if (semesters.length > 0) {
-			if (searchParams.has("semester")) {
-				const semesterId = searchParams.get("semester");
-				return semesters.find((v) => v.semester_id == semesterId);
-			} else {
-				if (searchParams.get("semester") == "") {
-					return {
-						semester_id: "",
-						semester_name: "",
-					};
-				}
-			}
+	const { data: semesters } = useSemestersQuery();
+	const data = useRememberValue(semesters);
+
+	const semester_ = useMemo<Semester | undefined>(() => {
+		const semesterList = data?.semesters;
+		if (semesterList?.length || 0 > 0) {
+			if (semesterId)
+				return semesterList?.find((v) => v.semester_id == semesterId);
 		}
-		return undefined;
-	}, [searchParams, semesters]);
+	}, [semesterId, data?.semesters?.length]);
+	const semester = useRememberValue(semester_);
 
 	const setSemester = useCallback(
 		(semester: Semester | undefined) => {
@@ -128,18 +144,16 @@ export function SemesterSelectorWithSearchParam() {
 		[navigate]
 	);
 
-	useEffect(() => {
-		(async () => {
-			const semesterList = await getSemesterList();
-			setSemesters(semesterList);
-		})();
-	}, []);
-
 	return (
 		<SemesterSelector_
 			semester={semester}
 			setSemester={setSemester}
-			semesters={semesters}
+			semesters={data?.semesters || []}
+			{...props}
 		/>
 	);
 }
+
+type SemesterPropType = {
+	isNoBorder?: boolean;
+};

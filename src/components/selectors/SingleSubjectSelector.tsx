@@ -1,38 +1,37 @@
 "use client";
 
-import { GET_SUBJECT_TABLE } from "@/constants/api_endpoint";
 import { FilterProvider, useFilter } from "@/contexts/FilterContext";
-import useIncrementalFetch from "@/hooks/useIncrementalFetch";
-import { Button } from "@nextui-org/button";
+import { Subject, useSubjectsLazyQuery } from "@/gql/graphql";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import useNavigate from "@/hooks/useNavigate";
+import { useRememberValue } from "@/hooks/useRememberValue";
 import { Input } from "@nextui-org/input";
 import {
 	Modal,
 	ModalBody,
 	ModalContent,
-	ModalFooter,
 	ModalHeader,
 	useDisclosure,
 } from "@nextui-org/modal";
-import { Card } from "@nextui-org/react";
-import { Skeleton } from "@nextui-org/skeleton";
-import { motion } from "framer-motion";
+import { Card, Spinner } from "@nextui-org/react";
+import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useDebounce } from "usehooks-ts";
-import Loading from "../Loading";
-import NoData from "../NoData";
 import OptionButton from "../OptionButton";
+import SubjectSelectorSkeleton from "../skeleton/SubjectSelectorSkeleton";
 import { SortSelector } from "./SortSelector";
-import { useSearchParams } from "next/navigation";
-import useNavigate from "@/hooks/useNavigate";
 
 type Props = {
 	subjectId?: string | null;
 	setSubject: (d: Subject) => any;
+} & FilterType;
+
+type FilterType = {
+	lecturer_id?: string;
+	defaultFilter?: IFilter;
 };
 
-function SingleSubjectSelector_({ subjectId, setSubject }: Props) {
-	const [faculty, setFaculty] = useState<string>();
-
+function SingleSubjectSelector_({ subjectId, setSubject, defaultFilter }: Props) {
 	const [keyword, setKeyword] = useState<string | undefined>();
 	const debouncedKeyword = useDebounce<string>(keyword || "", 500);
 
@@ -40,30 +39,21 @@ function SingleSubjectSelector_({ subjectId, setSubject }: Props) {
 
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-	const [isClient, setIsClient] = useState(false);
-
-	useEffect(() => {
-		setIsClient(true);
-	}, []);
-
-	const { items, isLoading, hasMore, bottomRef } = useIncrementalFetch<Subject>({
-		url: GET_SUBJECT_TABLE,
-		query: {
-			debouncedKeyword,
-			page_size: 20,
-			filter_field: "subject_name",
-			faculty_name: faculty,
-			direction: sort,
-		},
+	const [getSubjects, { data, loading: isLoading }] = useSubjectsLazyQuery();
+	const { dataList, bottomRef } = useInfiniteScroll({
+		queryFunction: getSubjects,
+		variables: { keyword: debouncedKeyword, isAscending: sort != "desc" },
+		isLoading,
+		data: data?.subjects.data,
+		meta: data?.subjects.meta,
+		enabled: isOpen,
 	});
+	const items = useRememberValue(dataList);
 
-	const subject =
-		items.find((v) => v.subject_id == subjectId) || isClient
-			? JSON.parse(localStorage.getItem("single_subject") || "{}")
-			: undefined;
+	const subject = items?.find?.((v) => v.subject_id == subjectId) || undefined;
 
 	const hasValue = Boolean(subject);
-	const buttonText = hasValue ? subject?.subject_name : "Chọn môn học";
+	const buttonText = hasValue ? subject?.display_name : "Chọn môn học";
 
 	return (
 		<>
@@ -72,7 +62,7 @@ function SingleSubjectSelector_({ subjectId, setSubject }: Props) {
 				onPress={onOpen}
 				hasValue={hasValue}
 			>
-				{buttonText}
+				{buttonText ?? <Spinner size="sm" />}
 			</OptionButton>
 			<Modal
 				isOpen={isOpen}
@@ -110,84 +100,61 @@ function SingleSubjectSelector_({ subjectId, setSubject }: Props) {
 								</div>
 							</ModalHeader>
 							<ModalBody className="mb-5">
-								{items.length > 0 || !isLoading ? (
-									<>
-										<div className="w-full mb-2">
+								<div className="w-full mb-2">
+									<Card
+										isPressable
+										onPress={() => {
+											onClose();
+											setSubject({
+												subject_id: "",
+												display_name: "",
+											} as Subject);
+										}}
+										className="w-full flex flex-col justify-between cursor-pointer rounded-lg gap-2 px-4 py-3 border-2 border-transparent"
+									>
+										<p className=" text-md font-semibold mb-1 text-start">
+											Tất cả môn học
+										</p>
+									</Card>
+								</div>
+								{items?.map(
+									({
+										display_name,
+										faculty_id,
+										subject_id,
+										faculty,
+									}) => (
+										<div
+											key={subject_id}
+											className="w-full mb-2"
+										>
 											<Card
 												isPressable
 												onPress={() => {
 													onClose();
 													setSubject({
-														subject_id: "",
-														subject_name: "",
+														subject_id,
+														display_name,
+														faculty_id,
 													} as Subject);
 												}}
 												className="w-full flex flex-col justify-between cursor-pointer rounded-lg gap-2 px-4 py-3 border-2 border-transparent"
 											>
 												<p className=" text-md font-semibold mb-1 text-start">
-													Không chọn
+													{display_name}
+												</p>
+												<p className=" text-sm w-full font-normal text-start">
+													{faculty?.display_name}
 												</p>
 											</Card>
 										</div>
-										{items?.map(
-											({
-												subject_name,
-												faculty_name,
-												subject_id,
-											}) => (
-												<div
-													key={subject_id}
-													className="w-full mb-2"
-												>
-													<Card
-														isPressable
-														onPress={() => {
-															onClose();
-															setSubject({
-																subject_id,
-																subject_name,
-																faculty_name,
-															} as Subject);
-														}}
-														className="w-full flex flex-col justify-between cursor-pointer rounded-lg gap-2 px-4 py-3 border-2 border-transparent"
-													>
-														<p className=" text-md font-semibold mb-1 text-start">
-															{subject_name}
-														</p>
-														<p className=" text-sm w-full font-normal text-start">
-															{faculty_name}
-														</p>
-													</Card>
-												</div>
-											)
-										)}
-									</>
-								) : (
-									Array(6)
-										.fill(0)
-										.map((_, index) => (
-											<div key={index} className="rounded-md">
-												<Skeleton className="w-fit h-fit rounded-md">
-													<motion.div
-														className="h-12"
-														initial={{ width: 0 }}
-														animate={{
-															width: Math.floor(
-																Math.random() * 500 +
-																	100
-															),
-														}}
-														transition={{
-															ease: "easeOut",
-															duration: 0.3,
-														}}
-													/>
-												</Skeleton>
-											</div>
-										))
+									)
 								)}
-								{hasMore ? <Loading /> : <NoData />}
-								<div ref={bottomRef} />
+								{isLoading ? (
+									<SubjectSelectorSkeleton />
+								) : (
+									<div ref={bottomRef} />
+								)}
 							</ModalBody>
 						</>
 					)}
@@ -219,19 +186,19 @@ export default function SingleSubjectSelector({
 
 export function SingleSubjectSelectorWithSearchParam({
 	onSelect,
+	...props
 }: {
 	onSelect?: (d: Subject) => any;
-}) {
+} & FilterType) {
 	const searchParams = useSearchParams();
 	const navigate = useNavigate();
 
 	const setSubject = useCallback(
 		(d: Subject) => {
 			onSelect?.(d);
-			if (d.faculty_name)
+			if (d.display_name)
 				navigate.replace({
 					subject_id: d.subject_id,
-					faculty: d.faculty_name,
 				});
 			else navigate.replace({ subject_id: d.subject_id });
 		},
@@ -242,6 +209,7 @@ export function SingleSubjectSelectorWithSearchParam({
 		<SingleSubjectSelector_
 			subjectId={searchParams.get("subject_id")}
 			setSubject={setSubject}
+			{...props}
 		/>
 	);
 }
@@ -249,10 +217,11 @@ export function SingleSubjectSelectorWithSearchParam({
 export function SingleSubjectSelectorWithProps({
 	subjectId,
 	setSubjectId,
+	...props
 }: {
 	subjectId?: string;
 	setSubjectId?: (d: string) => any;
-}) {
+} & FilterType) {
 	const [isClient, setIsClient] = useState(false);
 
 	useEffect(() => {
@@ -267,5 +236,11 @@ export function SingleSubjectSelectorWithProps({
 		[isClient]
 	);
 
-	return <SingleSubjectSelector_ subjectId={subjectId} setSubject={setSubject} />;
+	return (
+		<SingleSubjectSelector_
+			subjectId={subjectId}
+			setSubject={setSubject}
+			{...props}
+		/>
+	);
 }

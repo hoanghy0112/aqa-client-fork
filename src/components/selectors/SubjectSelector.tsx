@@ -1,8 +1,9 @@
 "use client";
 
-import { GET_SUBJECT_TABLE } from "@/constants/api_endpoint";
 import { FilterProvider, useFilter } from "@/contexts/FilterContext";
-import useIncrementalFetch from "@/hooks/useIncrementalFetch";
+import { Subject, useSubjectsLazyQuery } from "@/gql/graphql";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import { useRememberValue } from "@/hooks/useRememberValue";
 import { Button } from "@nextui-org/button";
 import { Checkbox } from "@nextui-org/checkbox";
 import { Chip } from "@nextui-org/chip";
@@ -17,14 +18,13 @@ import {
 } from "@nextui-org/modal";
 import { cn } from "@nextui-org/react";
 import { Skeleton } from "@nextui-org/skeleton";
-import { Spinner } from "@nextui-org/spinner";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useDebounce } from "usehooks-ts";
 import OptionButton from "../OptionButton";
 import { SortSelector } from "./SortSelector";
 
-export default function SubjectSelector() {
+export default function SubjectSelector({ isNoBorder }: SubjectSelectorPropTypes) {
 	const { subjects: _subjects, setSubjects: _setSubjects, faculty } = useFilter();
 
 	const [subjects, setSubjects] = useState<Map<string, Subject>>(_subjects);
@@ -48,16 +48,16 @@ export default function SubjectSelector() {
 		onOpenChange: onOpenChangeDetail,
 	} = useDisclosure();
 
-	const { items, isLoading, hasMore, bottomRef } = useIncrementalFetch<Subject>({
-		url: GET_SUBJECT_TABLE,
-		query: {
-			debouncedKeyword,
-			page_size: 20,
-			filter_field: "subject_name",
-			faculty_name: faculty?.faculty_name,
-			direction: sort,
-		},
+	const [getSubjects, { data, loading: isLoading }] = useSubjectsLazyQuery();
+	const { dataList, bottomRef } = useInfiniteScroll({
+		queryFunction: getSubjects,
+		variables: { keyword: debouncedKeyword, isAscending: sort != "desc" },
+		isLoading,
+		data: data?.subjects.data,
+		meta: data?.subjects.meta,
+		enabled: isOpen,
 	});
+	const items = useRememberValue(dataList);
 
 	return (
 		<>
@@ -65,6 +65,7 @@ export default function SubjectSelector() {
 				tooltip="Chọn các môn để hiển thị trên biểu đồ"
 				onPress={onOpen}
 				hasValue={hasValue}
+				isNoBorder={isNoBorder}
 			>
 				{buttonText}
 			</OptionButton>
@@ -106,14 +107,13 @@ export default function SubjectSelector() {
 								>{`Đã chọn ${subjects.size} môn`}</Button>
 							</ModalHeader>
 							<ModalBody className="mb-5">
-								{items.length > 0 || !isLoading ? (
+								{items?.length || 0 > 0 || !isLoading ? (
 									<>
 										{items?.map(
 											({
-												subject_name,
-												faculty_name,
+												display_name,
 												faculty_id,
-												average_point,
+												faculty,
 												subject_id,
 											}) => (
 												<div
@@ -121,7 +121,9 @@ export default function SubjectSelector() {
 													className="w-full mb-2"
 												>
 													<Checkbox
-														aria-label={subject_name}
+														aria-label={
+															display_name || ""
+														}
 														classNames={{
 															base: cn(
 																"inline-flex w-full max-w-7xl bg-content1",
@@ -146,10 +148,8 @@ export default function SubjectSelector() {
 																	subject_id,
 																	{
 																		subject_id,
-																		subject_name,
-																		faculty_name,
+																		display_name,
 																		faculty_id,
-																		average_point,
 																	}
 																);
 															setSubjects(
@@ -159,10 +159,12 @@ export default function SubjectSelector() {
 													>
 														<div className="w-full flex flex-col justify-between gap-0">
 															<p className=" text-md font-semibold mb-1 text-start">
-																{subject_name}
+																{display_name}
 															</p>
 															<p className=" text-sm w-full font-normal text-start">
-																{faculty_name}
+																{
+																	faculty?.display_name
+																}
 															</p>
 														</div>
 													</Checkbox>
@@ -194,7 +196,7 @@ export default function SubjectSelector() {
 											</div>
 										))
 								)}
-								{hasMore ? (
+								{/* {hasMore ? (
 									<div
 										// ref={bottomRef}
 										className=" w-full py-4 flex flex-row justify-center gap-2 items-center"
@@ -214,7 +216,7 @@ export default function SubjectSelector() {
 										</p>
 									</div>
 								)}
-								<div ref={bottomRef} />
+								<div ref={bottomRef} /> */}
 							</ModalBody>
 							<ModalFooter>
 								<Button
@@ -246,7 +248,7 @@ export default function SubjectSelector() {
 							<ModalBody>
 								<div className=" ">
 									{Array.from(subjects.entries()).map(
-										([_, { subject_name, subject_id }]) => (
+										([_, { display_name, subject_id }]) => (
 											<Chip
 												key={subject_id}
 												className="m-2"
@@ -255,7 +257,7 @@ export default function SubjectSelector() {
 													setSubjects(new Map(subjects));
 												}}
 											>
-												<p>{subject_name}</p>
+												<p>{display_name}</p>
 											</Chip>
 										)
 									)}
@@ -286,3 +288,7 @@ export default function SubjectSelector() {
 		</>
 	);
 }
+
+type SubjectSelectorPropTypes = {
+	isNoBorder?: boolean;
+};

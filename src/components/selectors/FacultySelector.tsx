@@ -1,9 +1,8 @@
 "use client";
 
-import { GET_FACULTY_LIST } from "@/constants/api_endpoint";
 import { useFilter } from "@/contexts/FilterContext";
+import { Faculty, useFacultiesQuery } from "@/gql/graphql";
 import useNavigate from "@/hooks/useNavigate";
-import { defaultFetcher } from "@/utils/fetchers";
 import { Button } from "@nextui-org/button";
 import {
 	Modal,
@@ -15,7 +14,6 @@ import {
 import { Spinner } from "@nextui-org/spinner";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import useSWR from "swr";
 import OptionButton from "../OptionButton";
 
 function FacultySelector_({
@@ -23,20 +21,21 @@ function FacultySelector_({
 	setFaculty,
 	data,
 	isLoading,
+	isNoBorder = false,
 }: {
 	faculty?: Faculty;
 	setFaculty?: (d: Faculty) => any;
 	data?: Faculty[];
 	isLoading: boolean;
-}) {
+} & FacultySelectorPropTypes) {
 	const { setSubjects } = useFilter();
 
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
 	const currentSelectedRef = useRef<any>();
 
-	const hasValue = Boolean(faculty?.faculty_name);
-	const buttonText = hasValue ? faculty?.faculty_name : "Chọn khoa";
+	const hasValue = Boolean(faculty?.display_name);
+	const buttonText = hasValue ? faculty?.display_name : "Chọn khoa";
 
 	useEffect(() => {
 		if (currentSelectedRef.current) {
@@ -53,7 +52,11 @@ function FacultySelector_({
 
 	return (
 		<>
-			<OptionButton onPress={onOpen} hasValue={hasValue}>
+			<OptionButton
+				onPress={onOpen}
+				hasValue={hasValue}
+				isNoBorder={isNoBorder}
+			>
 				{buttonText}
 			</OptionButton>
 			<Modal
@@ -70,39 +73,48 @@ function FacultySelector_({
 							</ModalHeader>
 							<ModalBody className="pb-8 pt-3">
 								{data && !isLoading ? (
-									data.map(
-										({ faculty_name = "", faculty_id = "" }) => (
+									[
+										{
+											display_name: "Chọn tất cả",
+											faculty_id: "",
+										},
+										...data,
+									].map(
+										({
+											display_name = "",
+											faculty_id = "",
+										}: Faculty) => (
 											<Button
 												ref={
-													faculty_name ==
-													faculty?.faculty_name
+													display_name ==
+													faculty?.display_name
 														? currentSelectedRef
 														: null
 												}
 												onPress={() => {
 													setFaculty?.({
 														faculty_id,
-														faculty_name,
+														display_name,
 													});
 													onClose();
 												}}
 												variant={
-													faculty_name ==
-													faculty?.faculty_name
+													display_name ==
+													faculty?.display_name
 														? "shadow"
 														: "flat"
 												}
 												color={
-													faculty_name ==
-													faculty?.faculty_name
+													display_name ==
+													faculty?.display_name
 														? "primary"
 														: "default"
 												}
 												className={`py-5`}
-												key={faculty_name}
+												key={display_name}
 											>
 												<p className="font-medium">
-													{faculty_name || "Tất cả"}
+													{display_name || "Tất cả"}
 												</p>
 											</Button>
 										)
@@ -124,36 +136,37 @@ function FacultySelector_({
 	);
 }
 
-export default function FacultySelector() {
+export default function FacultySelector(props: FacultySelectorPropTypes) {
 	const { faculty, setFaculty } = useFilter();
 
-	const { data, isLoading } = useSWR<Faculty[]>(GET_FACULTY_LIST, defaultFetcher);
+	const { data, loading } = useFacultiesQuery();
 
 	return (
 		<FacultySelector_
 			faculty={faculty}
 			setFaculty={setFaculty}
-			data={data}
-			isLoading={isLoading}
+			data={data?.faculties.data}
+			isLoading={loading}
+			{...props}
 		/>
 	);
 }
 
-export function FacultySelectorWithSearchParams() {
+export function FacultySelectorWithSearchParams(props: FacultySelectorPropTypes) {
 	const searchParams = useSearchParams();
 	const navigate = useNavigate();
 
-	const { data, isLoading } = useSWR<Faculty[]>(GET_FACULTY_LIST, defaultFetcher);
+	const { data, loading } = useFacultiesQuery();
 
 	const faculty = useMemo(() => {
-		const facultyName = searchParams.get("faculty") || undefined;
-		if (!facultyName) return undefined;
-		return data?.find((v) => v.faculty_name === facultyName);
+		const facultyId = searchParams.get("faculty") || undefined;
+		if (!facultyId) return undefined;
+		return data?.faculties.data?.find((v) => v.faculty_id === facultyId);
 	}, [searchParams, data]);
 
 	const setFaculty = useCallback(
 		(faculty: Faculty) => {
-			navigate.replace({ faculty: faculty.faculty_name, subject_id: "" });
+			navigate.replace({ faculty: faculty.faculty_id, subject_id: "" });
 		},
 		[navigate]
 	);
@@ -162,8 +175,13 @@ export function FacultySelectorWithSearchParams() {
 		<FacultySelector_
 			faculty={faculty}
 			setFaculty={setFaculty}
-			data={data}
-			isLoading={isLoading}
+			data={data?.faculties.data}
+			isLoading={loading}
+			{...props}
 		/>
 	);
 }
+
+type FacultySelectorPropTypes = {
+	isNoBorder?: boolean;
+};

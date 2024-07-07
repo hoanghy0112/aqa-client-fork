@@ -1,10 +1,9 @@
 "use client";
 
 import ProgramIcon from "@/assets/ProgramIcon";
-import { GET_PROGRAM_LIST } from "@/constants/api_endpoint";
 import { useFilter } from "@/contexts/FilterContext";
+import { useProgramsQuery } from "@/gql/graphql";
 import useNavigate from "@/hooks/useNavigate";
-import { defaultFetcher } from "@/utils/fetchers";
 import { Button } from "@nextui-org/button";
 import {
 	Dropdown,
@@ -16,16 +15,16 @@ import {
 import { Spinner } from "@nextui-org/spinner";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useMemo } from "react";
-import useSWR from "swr";
 
 function ProgramSelector_({
 	program,
 	setProgram,
+	isNoBorder = false,
 }: {
 	program?: string;
 	setProgram?: (d: string) => any;
-}) {
-	const { data, isLoading } = useSWR<string[]>(GET_PROGRAM_LIST, defaultFetcher);
+} & ProgramSelectorPropTypes) {
+	const { data, loading: isLoading } = useProgramsQuery();
 
 	const hasValue = Boolean(program);
 	const buttonText = program || "Chương trình";
@@ -42,7 +41,13 @@ function ProgramSelector_({
 							width={20}
 						/>
 					}
-					className={hasValue ? "" : "bg-white"}
+					className={`${
+						hasValue
+							? ""
+							: isNoBorder
+							? " bg-white dark:bg-zinc-800 border-0 dark:hover:!bg-zinc-700 hover:!bg-zinc-100"
+							: " border-0 bg-slate-100 dark:bg-slate-800 dark:hover:!bg-slate-700 hover:!bg-slate-200"
+					} rounded-lg`}
 				>
 					{buttonText}
 				</Button>
@@ -56,7 +61,7 @@ function ProgramSelector_({
 			>
 				<DropdownSection title="Chọn chương trình">
 					{data && !isLoading ? (
-						data.map((programTitle) => (
+						data.programs.map(({ program: programTitle }) => (
 							<DropdownItem
 								onPress={() => setProgram?.(programTitle)}
 								className={`py-2`}
@@ -86,13 +91,13 @@ function ProgramSelector_({
 	);
 }
 
-export default function ProgramSelector() {
+export default function ProgramSelector(props: ProgramSelectorPropTypes) {
 	const { program, setProgram } = useFilter();
 
-	return <ProgramSelector_ program={program} setProgram={setProgram} />;
+	return <ProgramSelector_ program={program} setProgram={setProgram} {...props} />;
 }
 
-export function ProgramSelectorWithSearchParam() {
+export function ProgramSelectorWithSearchParam(props: ProgramSelectorPropTypes) {
 	const searchParams = useSearchParams();
 	const navigate = useNavigate();
 
@@ -106,5 +111,9 @@ export function ProgramSelectorWithSearchParam() {
 		[navigate]
 	);
 
-	return <ProgramSelector_ program={program} setProgram={setProgram} />;
+	return <ProgramSelector_ program={program} setProgram={setProgram} {...props} />;
 }
+
+type ProgramSelectorPropTypes = {
+	isNoBorder?: boolean;
+};
