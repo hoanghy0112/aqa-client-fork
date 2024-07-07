@@ -36,7 +36,7 @@ export default function Layout({
 	);
 }
 
-export const tabs = [
+const tabs = [
 	{
 		link: "",
 		title: "Trang chủ",

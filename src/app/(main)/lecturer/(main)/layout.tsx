@@ -5,7 +5,7 @@ import PageTabs from "@/components/PageTabs";
 import { useRouter } from "next/navigation";
 import { ReactNode, useEffect } from "react";
 
-export const tabs = [
+const tabs = [
 	{
 		link: "",
 		title: "Trang chủ",
