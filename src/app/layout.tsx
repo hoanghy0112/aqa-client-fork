@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
 import Providers from "./providers";
@@ -28,6 +29,7 @@ export default async function RootLayout({
 						<Providers>
 							<div className="h-screen w-screen flex flex-row">
 								{children}
+								<Toaster />
 							</div>
 						</Providers>
 					) : (

@@ -1,4 +1,5 @@
 import { AuthDto } from "@/gql/graphql";
+import { setCookie } from "cookies-next";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
@@ -17,10 +18,12 @@ export const useAuth = create<
 	persist(
 		immer<IAuth>((set, get) => ({
 			authData: null,
+			isLogin: false,
 			authLogin(authEntity) {
 				set((state) => {
 					state.isLogin = true;
 					state.authData = authEntity;
+					setCookie("isLogin", true);
 				});
 			},
 			authLogout() {

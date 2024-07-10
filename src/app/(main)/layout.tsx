@@ -7,6 +7,7 @@ import CommentIcon from "@assets/CommentIcon";
 import CriteriaIcon from "@assets/CriteriaIcon";
 import HomeIcon from "@assets/HomeIcon";
 import SubjectIcon from "@assets/SubjectIcon";
+import { getCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import { Suspense, useEffect } from "react";
 
@@ -15,7 +16,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 	const { authData, isLogin } = useAuth();
 
 	useEffect(() => {
-		if (isLogin === false) {
+		if (!!getCookie("isLogin") == false) {
 			router.replace("/signin");
 		}
 	}, [isLogin, router]);

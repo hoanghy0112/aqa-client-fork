@@ -1,10 +1,11 @@
 "use client";
 
-import { providerMap } from "@/auth/auth";
 import { useLoginMutation } from "@/gql/graphql";
 import { useAuth } from "@/stores/auth.store";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import { setCookie, getCookie } from "cookies-next";
+import toast from "react-hot-toast";
 
 export default function Page() {
 	const router = useRouter();
@@ -12,7 +13,20 @@ export default function Page() {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 
-	const [login] = useLoginMutation();
+	const [login] = useLoginMutation({
+		onError(error, clientOptions) {
+			toast.error(
+				<div className=" flex flex-col gap-2">
+					<p className=" text-sm font-medium text-foreground-700">
+						Lỗi đăng nhập
+					</p>
+					<p className=" font-semibold text-foreground-900">
+						Tên đăng nhập hoặc mật khẩu không đúng
+					</p>
+				</div>
+			);
+		},
+	});
 	const { authData, isLogin, authLogin } = useAuth();
 
 	const handleSignIn = useCallback(async () => {
@@ -24,7 +38,7 @@ export default function Page() {
 	}, [login, username, password, authLogin, router]);
 
 	useEffect(() => {
-		if (isLogin === true) {
+		if (!!getCookie("isLogin") == true) {
 			router.replace("/");
 		}
 	}, [isLogin, router]);
@@ -32,14 +46,17 @@ export default function Page() {
 	return (
 		<>
 			<div className=" flex-1 grid place-items-center">
-				{Object.values(providerMap).map((provider) => (
+				<div className=" flex flex-col items-center gap-10">
+					<h1 className=" font-semibold text-xl">
+						Đăng nhập vào hệ thống
+					</h1>
 					<form
-						key={provider.id}
 						className=" w-unit-6xl max-w-3xl flex flex-col gap-4"
 						onSubmit={(e) => {
 							e.preventDefault();
 							handleSignIn();
 						}}
+						autoComplete="on"
 					>
 						<div className=" flex flex-col gap-2">
 							<label
@@ -52,6 +69,7 @@ export default function Page() {
 								className=" border-1 rounded-lg py-1 px-2"
 								id="username"
 								type="text"
+								role="username"
 								name="username"
 								value={username}
 								onChange={(e) => setUsername(e.target.value)}
@@ -69,6 +87,7 @@ export default function Page() {
 								id="password"
 								type="password"
 								name="password"
+								role="password"
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
 							/>
@@ -82,7 +101,7 @@ export default function Page() {
 							</p>
 						</button>
 					</form>
-				))}
+				</div>
 			</div>
 		</>
 	);

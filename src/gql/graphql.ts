@@ -193,6 +193,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   login: AuthDto;
   register: UserEntity;
+  update: UserEntity;
 };
 
 
@@ -204,6 +205,11 @@ export type MutationLoginArgs = {
 
 export type MutationRegisterArgs = {
   user: UserDto;
+};
+
+
+export type MutationUpdateArgs = {
+  user: UpdateUserDto;
 };
 
 export type PaginatedClass = {
@@ -436,6 +442,14 @@ export type SubjectPointsArgs = {
   filter?: InputMaybe<FilterArgs>;
   pagination?: InputMaybe<PaginationArgs>;
   sort?: InputMaybe<SortArgs>;
+};
+
+export type UpdateUserDto = {
+  displayName?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+  role: Role;
+  username: Scalars['String']['input'];
 };
 
 export type UserDto = {
