@@ -13,7 +13,9 @@ export default function Page() {
 
 	const [keyword, setKeyword] = useState("");
 
-	const { data } = useAllCriteriasQuery({ variables: { filter: { keyword } } });
+	const { data } = useAllCriteriasQuery({
+		variables: { filter: { ...query, keyword } },
+	});
 
 	return (
 		<div>

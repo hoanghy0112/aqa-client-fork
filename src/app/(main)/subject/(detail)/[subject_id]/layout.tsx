@@ -12,13 +12,13 @@ export default async function Layout({
 	params: { subject_id: string };
 	children: ReactNode;
 }) {
-	const res = await fetch(`${GET_SUBJECT_INFO}/${subject_id}`);
-	const { faculty_id, faculty_name, subject_name }: ISubjectInfo =
-		await res.json();
+	// const res = await fetch(`${GET_SUBJECT_INFO}/${subject_id}`);
+	// const { faculty_id, faculty_name, subject_name }: ISubjectInfo =
+	// 	await res.json();
 
 	return (
 		<div>
-			<h1 className="font-semibold text-2xl">{subject_name}</h1>
+			{/* <h1 className="font-semibold text-2xl">{subject_name}</h1>
 			<h2 className="mt-2 text-gray-600 dark:text-gray-300">
 				Khoa{" "}
 				<Link href={`/faculty/${faculty_id}`}>
@@ -26,7 +26,7 @@ export default async function Layout({
 						{faculty_name}
 					</span>
 				</Link>
-			</h2>
+			</h2> */}
 			<BreadCrumb />
 			<PageTabs
 				lastIndex={3}
@@ -70,15 +70,15 @@ interface ISubjectInfo {
 	faculty_name: string;
 }
 
-export async function generateMetadata({
-	params: { subject_id },
-}: {
-	params: { subject_id: string };
-}) {
-	const res = await fetch(`${GET_SUBJECT_INFO}/${subject_id}`);
-	const { subject_name }: ISubjectInfo = await res.json();
+// export async function generateMetadata({
+// 	params: { subject_id },
+// }: {
+// 	params: { subject_id: string };
+// }) {
+// 	const res = await fetch(`${GET_SUBJECT_INFO}/${subject_id}`);
+// 	const { subject_name }: ISubjectInfo = await res.json();
 
-	return {
-		title: `${subject_name} - AQA`,
-	};
-}
+// 	return {
+// 		title: `${subject_name} - AQA`,
+// 	};
+// }
