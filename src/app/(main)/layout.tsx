@@ -7,7 +7,6 @@ import { useAuth } from "@/stores/auth.store";
 import CommentIcon from "@assets/CommentIcon";
 import CriteriaIcon from "@assets/CriteriaIcon";
 import HomeIcon from "@assets/HomeIcon";
-import SubjectIcon from "@assets/SubjectIcon";
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import { Suspense, useEffect } from "react";
@@ -53,27 +52,20 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 						},
 					]}
 				/>
-				<NavItem
-					title="Môn học"
-					link="/subject"
-					icon={SubjectIcon}
-					subItems={[
-						{
-							title: "Điểm trung bình các môn",
-							link: "/subject/average-point",
-						},
-						{
-							title: "Điểm trung bình qua các học kỳ",
-							link: "/subject/point-per-year",
-						},
-					]}
-				/>
-				<NavItem
+				{/* <NavItem title="Môn học" link="/subject" icon={SubjectIcon} /> */}
+				{/* <NavItem
 					title="Giảng viên"
 					link="/lecturer"
 					icon={LecturerNavIcon}
-				/>
+				/> */}
 				<NavItem title="Tiêu chí" link="/criteria" icon={CriteriaIcon} />
+				{data?.profile.role === "ADMIN" ? (
+					<NavItem
+						title="Quản lý tài khoản"
+						link="/user"
+						icon={LecturerNavIcon}
+					/>
+				) : null}
 			</NavigationDrawer>
 			<main className="w-full xl:px-20 lg:px-16 px-5 pt-12 pb-10 overflow-y-scroll overflow-x-hidden">
 				<Suspense fallback={<p>Loading</p>}>{children}</Suspense>
