@@ -5,6 +5,7 @@ query Users($name: String) {
 		password
 		role
 		username
+		lastAccess
 	}
 }
 

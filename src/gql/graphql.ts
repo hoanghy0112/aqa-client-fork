@@ -412,6 +412,7 @@ export type QueryUsersArgs = {
 export enum Role {
   Admin = 'ADMIN',
   Faculty = 'FACULTY',
+  FullAccess = 'FULL_ACCESS',
   Lecturer = 'LECTURER'
 }
 
@@ -452,7 +453,9 @@ export type SubjectPointsArgs = {
 
 export type UpdateUserDto = {
   displayName?: InputMaybe<Scalars['String']['input']>;
+  facultyId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['String']['input'];
+  lastAccess: Scalars['DateTime']['input'];
   password: Scalars['String']['input'];
   role: Role;
   username: Scalars['String']['input'];
@@ -460,6 +463,7 @@ export type UpdateUserDto = {
 
 export type UserDto = {
   displayName?: InputMaybe<Scalars['String']['input']>;
+  facultyId?: InputMaybe<Scalars['String']['input']>;
   password: Scalars['String']['input'];
   role: Role;
   username: Scalars['String']['input'];
@@ -469,6 +473,7 @@ export type UserEntity = {
   __typename?: 'UserEntity';
   displayName: Scalars['String']['output'];
   id: Scalars['String']['output'];
+  lastAccess?: Maybe<Scalars['DateTime']['output']>;
   password: Scalars['String']['output'];
   role: Role;
   username: Scalars['String']['output'];
@@ -660,7 +665,7 @@ export type UsersQueryVariables = Exact<{
 }>;
 
 
-export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'UserEntity', displayName: string, id: string, password: string, role: Role, username: string }> };
+export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'UserEntity', displayName: string, id: string, password: string, role: Role, username: string, lastAccess?: any | null }> };
 
 export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1996,6 +2001,7 @@ export const UsersDocument = gql`
     password
     role
     username
+    lastAccess
   }
 }
     `;

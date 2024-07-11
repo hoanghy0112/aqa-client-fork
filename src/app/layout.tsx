@@ -27,7 +27,7 @@ export default async function RootLayout({
 				<body className={inter.className}>
 					{pingResponse.status == 200 ? (
 						<Providers>
-							<div className="h-screen w-screen flex flex-row">
+							<div className="h-screen w-screen bg-background flex flex-row">
 								{children}
 								<Toaster />
 							</div>
