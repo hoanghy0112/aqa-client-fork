@@ -621,7 +621,7 @@ export type DetailSubjectQueryVariables = Exact<{
 }>;
 
 
-export type DetailSubjectQuery = { __typename?: 'Query', subject?: { __typename?: 'Subject', display_name?: string | null, faculty_id?: string | null, subject_id: string, total_point?: number | null } | null };
+export type DetailSubjectQuery = { __typename?: 'Query', subject?: { __typename?: 'Subject', display_name?: string | null, faculty_id?: string | null, subject_id: string, total_point?: number | null, faculty?: { __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null, is_displayed?: boolean | null } | null } | null };
 
 export type SubjectsQueryVariables = Exact<{
   keyword?: InputMaybe<Scalars['String']['input']>;
@@ -1724,6 +1724,12 @@ export const DetailSubjectDocument = gql`
     faculty_id
     subject_id
     total_point
+    faculty {
+      display_name
+      faculty_id
+      full_name
+      is_displayed
+    }
   }
 }
     `;
