@@ -19,7 +19,7 @@ query Profile {
 	}
 }
 
-mutation Register($user: UserDto!) {
+mutation RegisterUser($user: UserDto!) {
 	register(user: $user) {
 		displayName
 		id
@@ -29,7 +29,7 @@ mutation Register($user: UserDto!) {
 	}
 }
 
-mutation Update($user: UpdateUserDto!) {
+mutation UpdateUser($user: UpdateUserDto!) {
 	update(user: $user) {
 		displayName
 		id

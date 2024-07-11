@@ -1,5 +1,6 @@
 "use client";
 
+import AddUserButton from "@/components/AddUserButton";
 import { ROLE_ENUM } from "@/constants/role";
 import { Role, useProfileQuery, useUsersQuery } from "@/gql/graphql";
 import { timeDiffString } from "@/utils/timeDiff";
@@ -27,7 +28,7 @@ const tabs = [
 	},
 ];
 
-export default function Layout({ children }: { children: ReactNode }) {
+export default function Page({ children }: { children: ReactNode }) {
 	const router = useRouter();
 
 	const [keyword, setKeyword] = useState("");
@@ -37,6 +38,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 		variables: { name: keyword },
 		fetchPolicy: "network-only",
 	});
+	console.log({ usersData });
 
 	useEffect(() => {
 		tabs.forEach(({ link }) => router.prefetch(`/lecturer/${link}`));
@@ -50,7 +52,10 @@ export default function Layout({ children }: { children: ReactNode }) {
 
 	return (
 		<div className=" flex flex-col gap-8">
-			<h1 className="font-semibold text-3xl">Quản lý tài khoản</h1>
+			<div className=" flex justify-between items-center">
+				<h1 className="font-semibold text-3xl">Quản lý tài khoản</h1>
+				<AddUserButton />
+			</div>
 			<div className=" flex flex-col gap-2">
 				<h2 className=" font-semibold text-base">Danh sách tài khoản</h2>
 				<Input

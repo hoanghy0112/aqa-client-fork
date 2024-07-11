@@ -1,12 +1,12 @@
 "use client";
 import { useFilter } from "@/contexts/FilterContext";
-import { Button } from "@nextui-org/button";
 import {
 	Dropdown,
 	DropdownItem,
 	DropdownMenu,
 	DropdownTrigger,
-} from "@nextui-org/dropdown";
+	Button,
+} from "@nextui-org/react";
 import { useEffect } from "react";
 import OptionButton from "../OptionButton";
 import SortIcon from "@/assets/SortIcon";

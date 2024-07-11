@@ -1,8 +1,6 @@
 "use client";
 import { useFilter } from "@/contexts/FilterContext";
-import { Button } from "@nextui-org/button";
-import { Card } from "@nextui-org/card";
-import { Input } from "@nextui-org/input";
+import { Button, Card, Input } from "@nextui-org/react";
 import { useRef } from "react";
 import FacultySelector from "../selectors/FacultySelector";
 import ProgramSelector from "../selectors/ProgramSelector";

@@ -672,19 +672,19 @@ export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'UserEntity', displayName: string, id: string, password: string, role: Role, username: string } };
 
-export type RegisterMutationVariables = Exact<{
+export type RegisterUserMutationVariables = Exact<{
   user: UserDto;
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserEntity', displayName: string, id: string, password: string, role: Role, username: string } };
+export type RegisterUserMutation = { __typename?: 'Mutation', register: { __typename?: 'UserEntity', displayName: string, id: string, password: string, role: Role, username: string } };
 
-export type UpdateMutationVariables = Exact<{
+export type UpdateUserMutationVariables = Exact<{
   user: UpdateUserDto;
 }>;
 
 
-export type UpdateMutation = { __typename?: 'Mutation', update: { __typename?: 'UserEntity', displayName: string, id: string, password: string, role: Role, username: string } };
+export type UpdateUserMutation = { __typename?: 'Mutation', update: { __typename?: 'UserEntity', displayName: string, id: string, password: string, role: Role, username: string } };
 
 
 export const AllClassesDocument = gql`
@@ -2087,8 +2087,8 @@ export type ProfileQueryResult = Apollo.QueryResult<ProfileQuery, ProfileQueryVa
 export function refetchProfileQuery(variables?: ProfileQueryVariables) {
       return { query: ProfileDocument, variables: variables }
     }
-export const RegisterDocument = gql`
-    mutation Register($user: UserDto!) {
+export const RegisterUserDocument = gql`
+    mutation RegisterUser($user: UserDto!) {
   register(user: $user) {
     displayName
     id
@@ -2098,34 +2098,34 @@ export const RegisterDocument = gql`
   }
 }
     `;
-export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, RegisterMutationVariables>;
+export type RegisterUserMutationFn = Apollo.MutationFunction<RegisterUserMutation, RegisterUserMutationVariables>;
 
 /**
- * __useRegisterMutation__
+ * __useRegisterUserMutation__
  *
- * To run a mutation, you first call `useRegisterMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useRegisterMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useRegisterUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRegisterUserMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [registerMutation, { data, loading, error }] = useRegisterMutation({
+ * const [registerUserMutation, { data, loading, error }] = useRegisterUserMutation({
  *   variables: {
  *      user: // value for 'user'
  *   },
  * });
  */
-export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<RegisterMutation, RegisterMutationVariables>) {
+export function useRegisterUserMutation(baseOptions?: Apollo.MutationHookOptions<RegisterUserMutation, RegisterUserMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument, options);
+        return Apollo.useMutation<RegisterUserMutation, RegisterUserMutationVariables>(RegisterUserDocument, options);
       }
-export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
-export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
-export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
-export const UpdateDocument = gql`
-    mutation Update($user: UpdateUserDto!) {
+export type RegisterUserMutationHookResult = ReturnType<typeof useRegisterUserMutation>;
+export type RegisterUserMutationResult = Apollo.MutationResult<RegisterUserMutation>;
+export type RegisterUserMutationOptions = Apollo.BaseMutationOptions<RegisterUserMutation, RegisterUserMutationVariables>;
+export const UpdateUserDocument = gql`
+    mutation UpdateUser($user: UpdateUserDto!) {
   update(user: $user) {
     displayName
     id
@@ -2135,29 +2135,29 @@ export const UpdateDocument = gql`
   }
 }
     `;
-export type UpdateMutationFn = Apollo.MutationFunction<UpdateMutation, UpdateMutationVariables>;
+export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, UpdateUserMutationVariables>;
 
 /**
- * __useUpdateMutation__
+ * __useUpdateUserMutation__
  *
- * To run a mutation, you first call `useUpdateMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useUpdateUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [updateMutation, { data, loading, error }] = useUpdateMutation({
+ * const [updateUserMutation, { data, loading, error }] = useUpdateUserMutation({
  *   variables: {
  *      user: // value for 'user'
  *   },
  * });
  */
-export function useUpdateMutation(baseOptions?: Apollo.MutationHookOptions<UpdateMutation, UpdateMutationVariables>) {
+export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserMutation, UpdateUserMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateMutation, UpdateMutationVariables>(UpdateDocument, options);
+        return Apollo.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, options);
       }
-export type UpdateMutationHookResult = ReturnType<typeof useUpdateMutation>;
-export type UpdateMutationResult = Apollo.MutationResult<UpdateMutation>;
-export type UpdateMutationOptions = Apollo.BaseMutationOptions<UpdateMutation, UpdateMutationVariables>;
+export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
+export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
+export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;

@@ -9,7 +9,7 @@ import { ProgramSelectorWithSearchParam } from "@/components/selectors/ProgramSe
 import { SingleSubjectSelectorWithSearchParam } from "@/components/selectors/SingleSubjectSelector";
 import { FilterArgs, useCommentListLazyQuery } from "@/gql/graphql";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
-import { Card } from "@nextui-org/card";
+import { Card } from "@nextui-org/react";
 import { useSearchParams } from "next/navigation";
 import Loading from "../Loading";
 import CommentItem from "./CommentItem";

@@ -4,20 +4,20 @@ import { FilterProvider, useFilter } from "@/contexts/FilterContext";
 import { Subject, useSubjectsLazyQuery } from "@/gql/graphql";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { useRememberValue } from "@/hooks/useRememberValue";
-import { Button } from "@nextui-org/button";
-import { Checkbox } from "@nextui-org/checkbox";
-import { Chip } from "@nextui-org/chip";
-import { Input } from "@nextui-org/input";
 import {
+	Button,
+	Checkbox,
+	Chip,
+	cn,
+	Input,
 	Modal,
 	ModalBody,
 	ModalContent,
 	ModalFooter,
 	ModalHeader,
+	Skeleton,
 	useDisclosure,
-} from "@nextui-org/modal";
-import { cn } from "@nextui-org/react";
-import { Skeleton } from "@nextui-org/skeleton";
+} from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useDebounce } from "usehooks-ts";

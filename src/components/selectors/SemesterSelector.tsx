@@ -1,13 +1,12 @@
 "use client";
 
-import { getSemesterList } from "@/api/semester";
 import SemesterIcon from "@/assets/SemesterIcon";
 import { useFilter } from "@/contexts/FilterContext";
 import { Semester, useSemestersQuery } from "@/gql/graphql";
 import useNavigate from "@/hooks/useNavigate";
 import { useRememberValue } from "@/hooks/useRememberValue";
-import { Button } from "@nextui-org/button";
 import {
+	Button,
 	Dropdown,
 	DropdownItem,
 	DropdownMenu,
@@ -16,7 +15,7 @@ import {
 	Spinner,
 } from "@nextui-org/react";
 import { useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 
 type FilterType = {
 	lecturer_id?: string;

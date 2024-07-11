@@ -3,15 +3,15 @@
 import { useFilter } from "@/contexts/FilterContext";
 import { Faculty, useFacultiesQuery } from "@/gql/graphql";
 import useNavigate from "@/hooks/useNavigate";
-import { Button } from "@nextui-org/button";
 import {
+	Button,
 	Modal,
 	ModalBody,
 	ModalContent,
 	ModalHeader,
+	Spinner,
 	useDisclosure,
-} from "@nextui-org/modal";
-import { Spinner } from "@nextui-org/spinner";
+} from "@nextui-org/react";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import OptionButton from "../OptionButton";
