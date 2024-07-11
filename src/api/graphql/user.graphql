@@ -1,0 +1,39 @@
+query Users($name: String) {
+	users(name: $name) {
+		displayName
+		id
+		password
+		role
+		username
+	}
+}
+
+query Profile {
+	profile {
+		displayName
+		id
+		password
+		role
+		username
+	}
+}
+
+mutation Register($user: UserDto!) {
+	register(user: $user) {
+		displayName
+		id
+		password
+		role
+		username
+	}
+}
+
+mutation Update($user: UpdateUserDto!) {
+	update(user: $user) {
+		displayName
+		id
+		password
+		role
+		username
+	}
+}

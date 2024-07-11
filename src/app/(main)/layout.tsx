@@ -2,6 +2,7 @@
 
 import LecturerNavIcon from "@/assets/LecturerNavIcon";
 import NavigationDrawer, { NavItem } from "@/components/NavigationDrawer";
+import { useProfileQuery } from "@/gql/graphql";
 import { useAuth } from "@/stores/auth.store";
 import CommentIcon from "@assets/CommentIcon";
 import CriteriaIcon from "@assets/CriteriaIcon";
@@ -15,11 +16,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 	const router = useRouter();
 	const { authData, isLogin } = useAuth();
 
+	const { data, loading } = useProfileQuery({ fetchPolicy: "network-only" });
+
 	useEffect(() => {
 		if (!!getCookie("isLogin") == false) {
 			router.replace("/signin");
 		}
 	}, [isLogin, router]);
+
+	useEffect(() => {
+		if (!loading && !data) {
+			router.replace("/signin");
+		}
+	}, [data, loading, router]);
 
 	return (
 		<>
