@@ -83,7 +83,7 @@ export default function BreadCrumb() {
 					// class_id: "",
 				},
 			},
-			...(authData?.user.role !== Role.Faculty
+			...(authData?.user?.role !== Role.Faculty
 				? [
 						{
 							title: "Khoa",
@@ -132,7 +132,7 @@ export default function BreadCrumb() {
 			},
 		],
 		[
-			authData?.user.role,
+			authData?.user?.role,
 			classData?.class?.display_name,
 			criteria?.criteria?.display_name,
 			faculty?.faculty?.display_name,

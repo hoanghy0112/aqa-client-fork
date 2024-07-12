@@ -1,4 +1,4 @@
-import { Skeleton } from "@nextui-org/skeleton";
+import { Skeleton } from "@nextui-org/react";
 import { motion } from "framer-motion";
 
 export default function StringSkeleteton({

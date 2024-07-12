@@ -13,7 +13,7 @@ export function useApolloLink() {
 	const { authData } = useAuth();
 
 	useEffect(() => {
-		if (!authData) return;
+		if (!authData?.access_token) return;
 
 		try {
 			const decodedAccessToken = jwtDecode(authData.access_token);

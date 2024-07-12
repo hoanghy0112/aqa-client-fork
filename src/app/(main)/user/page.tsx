@@ -36,7 +36,7 @@ const tabs = [
 	},
 ];
 
-export default function Page({ children }: { children: ReactNode }) {
+export default function Page() {
 	const router = useRouter();
 
 	const [keyword, setKeyword] = useState("");

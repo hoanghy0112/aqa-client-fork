@@ -8,7 +8,7 @@ import { FilterProvider, useFilter } from "@/contexts/FilterContext";
 import { FilterArgs, useCommentListLazyQuery } from "@/gql/graphql";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { useRememberValue } from "@/hooks/useRememberValue";
-import { Card } from "@nextui-org/card";
+import { Card } from "@nextui-org/react";
 import { useSearchParams } from "next/navigation";
 import { ReactNode } from "react";
 
