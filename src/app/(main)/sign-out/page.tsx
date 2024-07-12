@@ -12,7 +12,7 @@ export default function Page() {
 	useEffect(() => {
 		authLogout();
 		deleteCookie("isLogin");
-		router.push("/sign-in");
+		router.push("/signin");
 	}, [authLogout, router]);
 
 	return <></>;
