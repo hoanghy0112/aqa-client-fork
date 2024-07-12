@@ -11,8 +11,8 @@ import {
 	TableHeader,
 	TableRow,
 	getKeyValue,
-} from "@nextui-org/table";
-import { Tooltip } from "@nextui-org/tooltip";
+	Tooltip,
+} from "@nextui-org/react";
 
 import { useLecturerstWithPointsLazyQuery } from "@/gql/graphql";
 import { useFilterUrlQuery } from "@/hooks/useFilterUrlQuery";

@@ -4,15 +4,15 @@ import ProgramIcon from "@/assets/ProgramIcon";
 import { useFilter } from "@/contexts/FilterContext";
 import { useProgramsQuery } from "@/gql/graphql";
 import useNavigate from "@/hooks/useNavigate";
-import { Button } from "@nextui-org/button";
 import {
+	Button,
 	Dropdown,
 	DropdownItem,
 	DropdownMenu,
 	DropdownSection,
 	DropdownTrigger,
+	Spinner,
 } from "@nextui-org/react";
-import { Spinner } from "@nextui-org/spinner";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useMemo } from "react";
 

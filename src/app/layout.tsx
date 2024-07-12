@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
 import Providers from "./providers";
@@ -26,8 +27,9 @@ export default async function RootLayout({
 				<body className={inter.className}>
 					{pingResponse.status == 200 ? (
 						<Providers>
-							<div className="h-screen w-screen flex flex-row">
+							<div className="h-screen w-screen bg-background flex flex-row">
 								{children}
+								<Toaster />
 							</div>
 						</Providers>
 					) : (

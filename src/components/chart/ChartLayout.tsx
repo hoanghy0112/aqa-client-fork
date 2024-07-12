@@ -4,7 +4,7 @@ import { Color, Legend } from "@tremor/react";
 
 import DownloadIcon from "@assets/DownloadIcon";
 import BaseChart from "@components/chart/BaseChart";
-import { Button } from "@nextui-org/button";
+import { Button } from "@nextui-org/react";
 import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import Extensible from "../Extensible";
 
@@ -86,7 +86,11 @@ export default function ChartLayout({
 						</div>
 						<div className="w-fit flex flex-row flex-nowrap gap-4 pr-5">
 							<MediaQuery maxWidth={1280}>
-								<Button variant="ghost" color="primary" onPress={onOpen}>
+								<Button
+									variant="ghost"
+									color="primary"
+									onPress={onOpen}
+								>
 									Tùy chọn
 								</Button>
 								<Modal isOpen={open} onOpenChange={onOpenChange}>

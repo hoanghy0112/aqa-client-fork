@@ -1,7 +1,7 @@
 "use client";
 
 import { IFeatureIntroduction } from "@/constants/home_introduction";
-import { Card, CardBody, CardFooter, CardHeader } from "@nextui-org/card";
+import { Card, CardBody, CardFooter, CardHeader } from "@nextui-org/react";
 
 import NextLink from "next/link";
 

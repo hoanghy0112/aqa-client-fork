@@ -7,7 +7,7 @@ import {
 	TableColumn,
 	TableHeader,
 	TableRow,
-} from "@nextui-org/table";
+} from "@nextui-org/react";
 
 import StringSkeleteton from "./StringSkeleteton";
 

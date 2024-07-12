@@ -1,7 +1,6 @@
 "use client";
 
-import { Button } from "@nextui-org/button";
-import { Card, CardBody } from "@nextui-org/card";
+import { Button, Card, CardBody } from "@nextui-org/react";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -19,6 +18,9 @@ import {
 
 import NAV_ICON from "@assets/nav.svg";
 import ThemeSwitcher from "./ThemeSwitcher";
+import { twMerge } from "tailwind-merge";
+import LecturerNavIcon from "@/assets/LecturerNavIcon";
+import { IoLogInOutline } from "react-icons/io5";
 
 export default function NavigationDrawer({ children }: { children?: ReactNode }) {
 	const [open, setOpen] = useState(false);
@@ -56,12 +58,24 @@ export default function NavigationDrawer({ children }: { children?: ReactNode })
 				>
 					{children}
 				</div>
+				<NavItem
+					className=" mb-10"
+					title="Đăng xuất"
+					link="/sign-out"
+					icon={IoLogInOutline}
+				/>
 			</nav>
 		</NavigationDrawerContext.Provider>
 	);
 }
 
-export function NavItem({ title, link, icon: Icon, subItems }: INavItemProps) {
+export function NavItem({
+	title,
+	link,
+	icon: Icon,
+	subItems,
+	className,
+}: INavItemProps) {
 	const pathname = usePathname();
 	const router = useRouter();
 
@@ -76,7 +90,7 @@ export function NavItem({ title, link, icon: Icon, subItems }: INavItemProps) {
 
 	return (
 		<div
-			className="group/nav h-fit w-fit"
+			className={twMerge("group/nav h-fit w-fit", className)}
 			onMouseOver={() => setIsHover(true)}
 			onMouseLeave={() => setTimeout(() => setIsHover(false), 0)}
 		>
@@ -98,7 +112,7 @@ export function NavItem({ title, link, icon: Icon, subItems }: INavItemProps) {
 			>
 				<CardBody className="flex flex-col h-fit p-3">
 					<div className={` flex flex-row items-start transition-all`}>
-						<div className="w-[20px]">
+						<div className="w-[24px] grid place-items-center">
 							{Icon ? (
 								<Icon
 									color={
@@ -106,15 +120,17 @@ export function NavItem({ title, link, icon: Icon, subItems }: INavItemProps) {
 											? "white"
 											: ""
 									}
+									width={24}
+									size={24}
 								/>
 							) : null}
 						</div>
 						<div
 							className={`${
-								isOpen ? " w-48" : "w-0"
-							} h-5 relative  overflow-hidden transition-all`}
+								isOpen ? " ml-2 w-48" : "w-0"
+							} h-6 relative overflow-hidden transition-all`}
 						>
-							<p className="whitespace-nowrap font-medium text-base h-fit w-fit absolute top-0 left-3">
+							<p className="whitespace-nowrap font-semibold text-base h-fit w-fit absolute top-0 left-3">
 								{title}
 							</p>
 						</div>
@@ -146,7 +162,10 @@ export function NavItem({ title, link, icon: Icon, subItems }: INavItemProps) {
 											: ""
 									}`}
 								>
-									<p className=" font-semibold text-sm"> {title}</p>
+									<p className=" font-semibold text-sm">
+										{" "}
+										{title}
+									</p>
 								</li>
 							</Link>
 						))}
@@ -164,9 +183,9 @@ export type INavigationDrawerContext = {
 };
 
 export type INavItemProps = INavItem & {
-	icon?: FunctionComponent<{ width?: number; color: string }>;
+	icon?: FunctionComponent<{ width?: number; size?: number; color: string }>;
 	subItems?: INavItem[];
-};
+} & Pick<React.ComponentProps<"div">, "className">;
 
 export type INavItem = {
 	title: string;

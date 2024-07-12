@@ -3,6 +3,7 @@
 import { ReactNode, createContext, useContext, useEffect, useState } from "react";
 
 import { Faculty, Semester, Subject } from "@/gql/graphql";
+import { useIsFaculty } from "@/hooks/useIsFaculty";
 
 export const FilterContext = createContext<IFilterContext>({
 	setKeyword: (d: string) => {},
@@ -60,6 +61,8 @@ export function FilterProvider({
 	const [semester, setSemester] = useState(default_semester);
 	const [sort, setSort] = useState<ISortOptions>(default_sort);
 
+	const { isFaculty, faculty: facultyData } = useIsFaculty();
+
 	useEffect(() => {
 		default_setSort?.(sort);
 	}, [sort, default_setSort]);
@@ -77,7 +80,7 @@ export function FilterProvider({
 				setCriteria,
 				program,
 				setProgram,
-				faculty,
+				faculty: isFaculty && facultyData ? facultyData : faculty,
 				setFaculty,
 				semester,
 				setSemester: (d: Semester | undefined) => setSemester(d as Semester),

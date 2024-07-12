@@ -5,7 +5,9 @@ import { FilterProvider, useFilter } from "@/contexts/FilterContext";
 import {
 	FilterArgs,
 	GroupedPoint,
+	Role,
 	usePointsWithGroupByLazyQuery,
+	useProfileQuery,
 } from "@/gql/graphql";
 import Loading from "@components/Loading";
 import NoData from "@components/NoData";
@@ -36,9 +38,14 @@ function InnerPointWithGroupedEntity({
 	const [data, setData] = useState<GroupedPoint[]>([]);
 	const [loading, setLoading] = useState(false);
 
+	const { data: profile } = useProfileQuery();
+
 	const variables: FilterArgs & { groupEntity: string } = {
 		criteria_id: filter.criteria?.criteria_id,
-		faculty_id: filter.faculty?.faculty_id,
+		faculty_id:
+			profile?.profile.role === Role.Faculty
+				? profile.profile.faculty?.faculty_id
+				: filter.faculty?.faculty_id,
 		semester_id: filter.semester?.semester_id,
 		subjects: Array.from(filter.subjects.values()).length
 			? Array.from(filter.subjects.values()).map(
@@ -53,6 +60,7 @@ function InnerPointWithGroupedEntity({
 
 	useEffect(() => {
 		(async () => {
+			if (!profile) return;
 			setLoading(true);
 			const response = await fetchFunction({
 				variables: {
@@ -67,7 +75,7 @@ function InnerPointWithGroupedEntity({
 			setData(response.data?.groupedPoints.data || []);
 			setLoading(false);
 		})();
-	}, [JSON.stringify(query), JSON.stringify(variables)]);
+	}, [JSON.stringify(query), JSON.stringify(variables), profile]);
 
 	return (
 		<div className=" h-[400px]">

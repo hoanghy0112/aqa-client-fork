@@ -1,8 +1,7 @@
 "use client";
 
-import { Input } from "@nextui-org/input";
+import { Input } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 export default function SearchBar() {
 	const router = useRouter();
