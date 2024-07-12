@@ -455,10 +455,10 @@ export type UpdateUserDto = {
   displayName?: InputMaybe<Scalars['String']['input']>;
   facultyId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['String']['input'];
-  lastAccess: Scalars['DateTime']['input'];
-  password: Scalars['String']['input'];
-  role: Role;
-  username: Scalars['String']['input'];
+  lastAccess?: InputMaybe<Scalars['DateTime']['input']>;
+  password?: InputMaybe<Scalars['String']['input']>;
+  role?: InputMaybe<Role>;
+  username?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UserDto = {
@@ -472,6 +472,7 @@ export type UserDto = {
 export type UserEntity = {
   __typename?: 'UserEntity';
   displayName: Scalars['String']['output'];
+  faculty?: Maybe<Faculty>;
   id: Scalars['String']['output'];
   lastAccess?: Maybe<Scalars['DateTime']['output']>;
   password: Scalars['String']['output'];
@@ -665,7 +666,7 @@ export type UsersQueryVariables = Exact<{
 }>;
 
 
-export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'UserEntity', displayName: string, id: string, password: string, role: Role, username: string, lastAccess?: any | null }> };
+export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'UserEntity', displayName: string, id: string, password: string, role: Role, username: string, lastAccess?: any | null, faculty?: { __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null, is_displayed?: boolean | null } | null }> };
 
 export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2002,6 +2003,12 @@ export const UsersDocument = gql`
     role
     username
     lastAccess
+    faculty {
+      display_name
+      faculty_id
+      full_name
+      is_displayed
+    }
   }
 }
     `;

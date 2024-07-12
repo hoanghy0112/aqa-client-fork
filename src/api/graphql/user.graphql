@@ -6,6 +6,12 @@ query Users($name: String) {
 		role
 		username
 		lastAccess
+		faculty {
+			display_name
+			faculty_id
+			full_name
+			is_displayed
+		}
 	}
 }
 

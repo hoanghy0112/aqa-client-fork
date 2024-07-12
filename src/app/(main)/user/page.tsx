@@ -1,8 +1,15 @@
 "use client";
 
 import AddUserButton from "@/components/AddUserButton";
+import UpdateUserModal from "@/components/UpdateUserModal";
 import { ROLE_ENUM } from "@/constants/role";
-import { Role, useProfileQuery, useUsersQuery } from "@/gql/graphql";
+import {
+	Role,
+	useProfileQuery,
+	UserDto,
+	UserEntity,
+	useUsersQuery,
+} from "@/gql/graphql";
 import { timeDiffString } from "@/utils/timeDiff";
 import {
 	Input,
@@ -13,6 +20,7 @@ import {
 	TableColumn,
 	TableHeader,
 	TableRow,
+	useDisclosure,
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
@@ -34,11 +42,17 @@ export default function Page({ children }: { children: ReactNode }) {
 	const [keyword, setKeyword] = useState("");
 
 	const { data, loading } = useProfileQuery({ fetchPolicy: "network-only" });
-	const { data: usersData, loading: usersLoading } = useUsersQuery({
+	const {
+		data: usersData,
+		loading: usersLoading,
+		refetch,
+	} = useUsersQuery({
 		variables: { name: keyword },
 		fetchPolicy: "network-only",
 	});
-	console.log({ usersData });
+
+	const { isOpen, onOpen, onOpenChange } = useDisclosure();
+	const [selectedUser, setSelectedUser] = useState<Partial<UserEntity>>();
 
 	useEffect(() => {
 		tabs.forEach(({ link }) => router.prefetch(`/lecturer/${link}`));
@@ -51,10 +65,10 @@ export default function Page({ children }: { children: ReactNode }) {
 	}, [data, loading, router]);
 
 	return (
-		<div className=" flex flex-col gap-8">
+		<div className=" flex-1 flex flex-col gap-8">
 			<div className=" flex justify-between items-center">
 				<h1 className="font-semibold text-3xl">Quản lý tài khoản</h1>
-				<AddUserButton />
+				<AddUserButton refetch={refetch} />
 			</div>
 			<div className=" flex flex-col gap-2">
 				<h2 className=" font-semibold text-base">Danh sách tài khoản</h2>
@@ -91,7 +105,19 @@ export default function Page({ children }: { children: ReactNode }) {
 										id,
 										lastAccess,
 									}) => (
-										<TableRow key={id}>
+										<TableRow
+											className=" hover:bg-foreground-100 cursor-pointer duration-100"
+											onClick={() => {
+												onOpen();
+												setSelectedUser({
+													id,
+													displayName,
+													role,
+													username,
+												});
+											}}
+											key={id}
+										>
 											<TableCell>
 												<p className=" font-semibold">
 													{displayName}
@@ -116,6 +142,12 @@ export default function Page({ children }: { children: ReactNode }) {
 					</div>
 				</Skeleton>
 			</div>
+			<UpdateUserModal
+				user={selectedUser}
+				isOpen={isOpen}
+				onOpenChange={onOpenChange}
+				refetch={refetch}
+			/>
 		</div>
 	);
 }

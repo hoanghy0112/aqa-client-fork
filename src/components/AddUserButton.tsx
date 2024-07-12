@@ -1,7 +1,7 @@
 "use client";
 
-import { ROLE_ENUM } from "@/constants/role";
-import { Role } from "@/gql/graphql";
+import { ROLE_DESCRIPTION_ENUM, ROLE_ENUM } from "@/constants/role";
+import { Role, useRegisterUserMutation } from "@/gql/graphql";
 import {
 	Button,
 	Input,
@@ -16,10 +16,16 @@ import {
 } from "@nextui-org/react";
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import FacultySelector from "./selectors/FacultySelector";
+import { FilterProvider, useFilter } from "@/contexts/FilterContext";
 
-type Props = {};
+type Props = {
+	refetch?: () => any;
+};
 
-export default function AddUserButton({}: Props) {
+function AddUserButtonInner({ refetch }: Props) {
+	const { faculty } = useFilter();
+
 	const [displayName, setDisplayName] = useState<string>("");
 	const [username, setUsername] = useState<string>("");
 	const [role, setRole] = useState<Role>();
@@ -30,30 +36,50 @@ export default function AddUserButton({}: Props) {
 
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-	// const {} = useRegist
+	const [mutate] = useRegisterUserMutation();
 
 	const handleAddUser = useCallback(
-		(callback: () => any) => {
+		async (callback: () => any) => {
 			if (password !== password2) {
 				setIsPasswordMatch(false);
 				toast.error("Mật khẩu không khớp");
 				return;
 			}
-			// if (!user) return;
-			// setName("");
-			// const promise = saveFolderInformation({
-			// 	folderName: name,
-			// 	user,
-			// 	folderId: parentFolderId || "",
-			// });
-			// toast.promise(promise, {
-			// 	loading: "Creating folder...",
-			// 	success: "Create folder successfully",
-			// 	error: "Fail to create folder",
-			// });
-			callback?.();
+			if (!role) {
+				toast.error("Bạn phải chọn vai trò của tài khoản");
+				return;
+			}
+			try {
+				const promise = mutate({
+					variables: {
+						user: {
+							displayName,
+							username,
+							facultyId: faculty?.faculty_id || undefined,
+							role,
+							password,
+						},
+					},
+				});
+				await toast.promise(promise, {
+					loading: "Đang tạo tài khoản...",
+					success: "Tạo tài khoản thành công",
+					error: "Tên đăng nhập đã tồn tại",
+				});
+				refetch?.();
+				callback?.();
+			} catch (error) {}
 		},
-		[displayName, password, password2]
+		[
+			displayName,
+			faculty?.faculty_id,
+			mutate,
+			password,
+			password2,
+			refetch,
+			role,
+			username,
+		]
 	);
 
 	useEffect(() => {
@@ -61,6 +87,17 @@ export default function AddUserButton({}: Props) {
 			setIsPasswordMatch(true);
 		}
 	}, [isPasswordMatch, password, password2]);
+
+	useEffect(() => {
+		if (!isOpen) {
+			setDisplayName("");
+			setUsername("");
+			setPassword("");
+			setPassword2("");
+			setRole(undefined);
+			setIsPasswordMatch(true);
+		}
+	}, [isOpen]);
 
 	return (
 		<div>
@@ -100,18 +137,46 @@ export default function AddUserButton({}: Props) {
 										isRequired
 									/>
 									<Select
-										label="Favorite Animal"
-										placeholder="Select an animal"
-										className="max-w-xs"
+										label="Vai trò"
+										placeholder="Chọn vai trò cho tài khoản"
+										className=" w-full"
+										selectedKeys={
+											role ? new Set([role]) : undefined
+										}
+										onSelectionChange={(value) =>
+											value !== "all"
+												? setRole(
+														value.values().next()
+															.value as Role
+												  )
+												: null
+										}
 									>
 										{Array.from(Object.values(Role)).map(
 											(role) => (
-												<SelectItem key={role}>
-													<p> {ROLE_ENUM[role]}</p>
+												<SelectItem
+													key={role}
+													textValue={ROLE_ENUM[role]}
+												>
+													<div className=" py-1 flex flex-col gap-1">
+														<p className=" font-semibold text-foreground-900">
+															{ROLE_ENUM[role]}
+														</p>
+														<p className=" whitespace-pre-wrap text-foreground-600">
+															{
+																ROLE_DESCRIPTION_ENUM[
+																	role
+																]
+															}
+														</p>
+													</div>
 												</SelectItem>
 											)
 										)}
 									</Select>
+									{role == Role.Faculty ? (
+										<FacultySelector />
+									) : null}
 									<div className=" mt-4 flex flex-col gap-4 ">
 										<p className=" font-semibold text-foreground-800">
 											Cài đặt mật khẩu
@@ -148,7 +213,7 @@ export default function AddUserButton({}: Props) {
 							</ModalBody>
 							<ModalFooter>
 								<Button
-									color="danger"
+									color="default"
 									variant="light"
 									onPress={onClose}
 								>
@@ -163,5 +228,13 @@ export default function AddUserButton({}: Props) {
 				</ModalContent>
 			</Modal>
 		</div>
+	);
+}
+
+export default function AddUserButton(props: Props) {
+	return (
+		<FilterProvider>
+			<AddUserButtonInner {...props} />
+		</FilterProvider>
 	);
 }
