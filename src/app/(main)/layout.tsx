@@ -23,17 +23,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 	const { isFaculty } = useIsFaculty();
 	const { isLecturer } = useIsLecturer();
 
-	console.log({data, loading})
-
-	useEffect(() => {
-		if (!!getCookie("isLogin") == false) {
-			router.replace("/signin");
-		}
-	}, [isLogin, router]);
+	// useEffect(() => {
+	// 	if (!!getCookie("isLogin") == false) {
+	// 		router.replace("/signin");
+	// 	}
+	// }, [isLogin, router]);
 
 	useEffect(() => {
 		if (!loading && !data) {
-			router.replace("/signin");
+			console.log({ data, loading });
+			// router.replace("/signin");
 		}
 	}, [data, loading, router]);
 
