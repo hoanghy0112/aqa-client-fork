@@ -32,7 +32,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 	useEffect(() => {
 		if (!loading && !data) {
 			console.log({ data, loading });
-			// router.replace("/signin");
+			router.replace("/signin");
 		}
 	}, [data, loading, router]);
 
