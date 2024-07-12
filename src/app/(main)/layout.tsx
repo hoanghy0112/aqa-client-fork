@@ -3,6 +3,7 @@
 import LecturerNavIcon from "@/assets/LecturerNavIcon";
 import NavigationDrawer, { NavItem } from "@/components/NavigationDrawer";
 import { useProfileQuery } from "@/gql/graphql";
+import { useIsAdmin, useIsFullAccess } from "@/hooks/useIsAdmin";
 import { useAuth } from "@/stores/auth.store";
 import CommentIcon from "@assets/CommentIcon";
 import CriteriaIcon from "@assets/CriteriaIcon";
@@ -16,6 +17,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 	const { authData, isLogin } = useAuth();
 
 	const { data, loading } = useProfileQuery({ fetchPolicy: "network-only" });
+	const { isFullAcess } = useIsFullAccess();
+	const { isAdmin } = useIsAdmin();
 
 	useEffect(() => {
 		if (!!getCookie("isLogin") == false) {
@@ -33,37 +36,47 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 		<>
 			<NavigationDrawer>
 				<NavItem title="Trang chủ" link="/" icon={HomeIcon} />
-				<NavItem
-					title="Bình luận"
-					link="/comment"
-					icon={CommentIcon}
-					subItems={[
-						{
-							title: "Tất cả",
-							link: "/comment",
-						},
-						{
-							title: "Tích cực",
-							link: "/comment?type=positive",
-						},
-						{
-							title: "Tiêu cực",
-							link: "/comment?type=negative",
-						},
-					]}
-				/>
+				{isFullAcess ? (
+					<NavItem
+						title="Bình luận"
+						link="/comment"
+						icon={CommentIcon}
+						subItems={[
+							{
+								title: "Tất cả",
+								link: "/comment",
+							},
+							{
+								title: "Tích cực",
+								link: "/comment?type=positive",
+							},
+							{
+								title: "Tiêu cực",
+								link: "/comment?type=negative",
+							},
+						]}
+					/>
+				) : null}
 				{/* <NavItem title="Môn học" link="/subject" icon={SubjectIcon} /> */}
 				{/* <NavItem
 					title="Giảng viên"
 					link="/lecturer"
 					icon={LecturerNavIcon}
 				/> */}
-				<NavItem
-					title="Tra cứu dữ liệu"
-					link="/criteria"
-					icon={CriteriaIcon}
-				/>
-				{data?.profile.role === "ADMIN" ? (
+				{isFullAcess ? (
+					<NavItem
+						title="Tra cứu dữ liệu"
+						link="/criteria"
+						icon={CriteriaIcon}
+					/>
+				) : (
+					<NavItem
+						title="Tra cứu dữ liệu"
+						link={`/lecturer/${12}`}
+						icon={CriteriaIcon}
+					/>
+				)}
+				{isAdmin ? (
 					<NavItem
 						title="Quản lý tài khoản"
 						link="/user"

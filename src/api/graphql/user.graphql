@@ -12,6 +12,12 @@ query Users($name: String) {
 			full_name
 			is_displayed
 		}
+		lecturer {
+			display_name
+			faculty_id
+			full_name
+			is_displayed
+		}
 	}
 }
 
@@ -23,6 +29,12 @@ query Profile {
 		role
 		username
 		faculty {
+			display_name
+			faculty_id
+			full_name
+			is_displayed
+		}
+		lecturer {
 			display_name
 			faculty_id
 			full_name

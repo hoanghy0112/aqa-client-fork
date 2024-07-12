@@ -5,15 +5,16 @@ import { Subject, useSubjectsLazyQuery } from "@/gql/graphql";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import useNavigate from "@/hooks/useNavigate";
 import { useRememberValue } from "@/hooks/useRememberValue";
-import { Input } from "@nextui-org/input";
 import {
+	Card,
+	Input,
 	Modal,
 	ModalBody,
 	ModalContent,
 	ModalHeader,
+	Spinner,
 	useDisclosure,
-} from "@nextui-org/modal";
-import { Card, Spinner } from "@nextui-org/react";
+} from "@nextui-org/react";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useDebounce } from "usehooks-ts";

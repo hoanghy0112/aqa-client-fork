@@ -1,7 +1,7 @@
 "use client";
 
 import { ROLE_DESCRIPTION_ENUM, ROLE_ENUM } from "@/constants/role";
-import { Role, useRegisterUserMutation } from "@/gql/graphql";
+import { Lecturer, Role, useRegisterUserMutation } from "@/gql/graphql";
 import {
 	Button,
 	Input,
@@ -18,6 +18,7 @@ import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import FacultySelector from "./selectors/FacultySelector";
 import { FilterProvider, useFilter } from "@/contexts/FilterContext";
+import LecturerSelector from "./LecturerSelector";
 
 type Props = {
 	refetch?: () => any;
@@ -29,6 +30,7 @@ function AddUserButtonInner({ refetch }: Props) {
 	const [displayName, setDisplayName] = useState<string>("");
 	const [username, setUsername] = useState<string>("");
 	const [role, setRole] = useState<Role>();
+	const [lecturer, setLecturer] = useState<Partial<Lecturer>>();
 	const [password, setPassword] = useState<string>("");
 	const [password2, setPassword2] = useState<string>("");
 
@@ -118,24 +120,6 @@ function AddUserButtonInner({ refetch }: Props) {
 							</ModalHeader>
 							<ModalBody>
 								<div className=" flex flex-col gap-4">
-									<Input
-										value={displayName}
-										onChange={(e) =>
-											setDisplayName(e.target.value)
-										}
-										label="Tên hiển thị"
-										labelPlacement="inside"
-										required
-										isRequired
-									/>
-									<Input
-										value={username}
-										onChange={(e) => setUsername(e.target.value)}
-										label="Tên đăng nhập"
-										labelPlacement="inside"
-										required
-										isRequired
-									/>
 									<Select
 										label="Vai trò"
 										placeholder="Chọn vai trò cho tài khoản"
@@ -143,14 +127,14 @@ function AddUserButtonInner({ refetch }: Props) {
 										selectedKeys={
 											role ? new Set([role]) : undefined
 										}
-										onSelectionChange={(value) =>
-											value !== "all"
-												? setRole(
-														value.values().next()
-															.value as Role
-												  )
-												: null
-										}
+										onSelectionChange={(value) => {
+											const role =
+												value !== "all"
+													? (value.values().next()
+															.value as Role)
+													: null;
+											if (role) setRole(role);
+										}}
 									>
 										{Array.from(Object.values(Role)).map(
 											(role) => (
@@ -176,7 +160,38 @@ function AddUserButtonInner({ refetch }: Props) {
 									</Select>
 									{role == Role.Faculty ? (
 										<FacultySelector />
+									) : role == Role.Lecturer ? (
+										<LecturerSelector
+											lecturer={lecturer}
+											setLecturer={(lecturer) => {
+												if (lecturer) {
+													setDisplayName(
+														lecturer.display_name || ""
+													);
+												}
+												setLecturer(lecturer);
+											}}
+										/>
 									) : null}
+									<Input
+										value={displayName}
+										onChange={(e) =>
+											setDisplayName(e.target.value)
+										}
+										label="Tên hiển thị"
+										labelPlacement="inside"
+										required
+										isRequired
+									/>
+									<Input
+										value={username}
+										onChange={(e) => setUsername(e.target.value)}
+										label="Tên đăng nhập"
+										labelPlacement="inside"
+										required
+										isRequired
+									/>
+
 									<div className=" mt-4 flex flex-col gap-4 ">
 										<p className=" font-semibold text-foreground-800">
 											Cài đặt mật khẩu

@@ -462,6 +462,7 @@ export type UpdateUserDto = {
   facultyId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['String']['input'];
   lastAccess?: InputMaybe<Scalars['DateTime']['input']>;
+  lecturerId?: InputMaybe<Scalars['String']['input']>;
   password?: InputMaybe<Scalars['String']['input']>;
   role?: InputMaybe<Role>;
   username?: InputMaybe<Scalars['String']['input']>;
@@ -470,6 +471,7 @@ export type UpdateUserDto = {
 export type UserDto = {
   displayName?: InputMaybe<Scalars['String']['input']>;
   facultyId?: InputMaybe<Scalars['String']['input']>;
+  lecturerId?: InputMaybe<Scalars['String']['input']>;
   password: Scalars['String']['input'];
   role: Role;
   username: Scalars['String']['input'];
@@ -481,6 +483,7 @@ export type UserEntity = {
   faculty?: Maybe<Faculty>;
   id: Scalars['String']['output'];
   lastAccess?: Maybe<Scalars['DateTime']['output']>;
+  lecturer?: Maybe<Faculty>;
   password: Scalars['String']['output'];
   role: Role;
   username: Scalars['String']['output'];
@@ -672,12 +675,12 @@ export type UsersQueryVariables = Exact<{
 }>;
 
 
-export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'UserEntity', displayName: string, id: string, password: string, role: Role, username: string, lastAccess?: any | null, faculty?: { __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null, is_displayed?: boolean | null } | null }> };
+export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'UserEntity', displayName: string, id: string, password: string, role: Role, username: string, lastAccess?: any | null, faculty?: { __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null, is_displayed?: boolean | null } | null, lecturer?: { __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null, is_displayed?: boolean | null } | null }> };
 
 export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'UserEntity', displayName: string, id: string, password: string, role: Role, username: string, faculty?: { __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null, is_displayed?: boolean | null } | null } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'UserEntity', displayName: string, id: string, password: string, role: Role, username: string, faculty?: { __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null, is_displayed?: boolean | null } | null, lecturer?: { __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null, is_displayed?: boolean | null } | null } };
 
 export type RegisterUserMutationVariables = Exact<{
   user: UserDto;
@@ -2022,6 +2025,12 @@ export const UsersDocument = gql`
       full_name
       is_displayed
     }
+    lecturer {
+      display_name
+      faculty_id
+      full_name
+      is_displayed
+    }
   }
 }
     `;
@@ -2070,6 +2079,12 @@ export const ProfileDocument = gql`
     role
     username
     faculty {
+      display_name
+      faculty_id
+      full_name
+      is_displayed
+    }
+    lecturer {
       display_name
       faculty_id
       full_name
