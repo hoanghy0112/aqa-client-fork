@@ -2,6 +2,7 @@
 
 import BreadCrumb from "@/components/BreadCrumb";
 import PageTabs from "@/components/PageTabs";
+import { useIsLecturer } from "@/hooks/useIsAdmin";
 import useLecturerInfo from "@/hooks/useLecturerInfo";
 import { ReactNode } from "react";
 
@@ -14,6 +15,8 @@ export default function Layout({
 }) {
 	const { lecturer } = useLecturerInfo(lecturer_id);
 
+	const { isLecturer } = useIsLecturer();
+
 	return (
 		<div>
 			<h1 className="font-semibold text-2xl">{lecturer.display_name}</h1>
@@ -25,7 +28,7 @@ export default function Layout({
 					</span>
 				</Link>
 			</h2> */}
-			<BreadCrumb />
+			{isLecturer ? null : <BreadCrumb />}
 			<PageTabs
 				lastIndex={3}
 				defaultPath={`lecturer/${lecturer_id}`}
