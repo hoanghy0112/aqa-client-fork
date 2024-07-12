@@ -2,7 +2,12 @@
 
 import { ROLE_DESCRIPTION_ENUM, ROLE_ENUM } from "@/constants/role";
 import { FilterProvider, useFilter } from "@/contexts/FilterContext";
-import { Role, UserEntity, useUpdateUserMutation } from "@/gql/graphql";
+import {
+	Role,
+	useRemoveUserMutation,
+	UserEntity,
+	useUpdateUserMutation,
+} from "@/gql/graphql";
 import {
 	Button,
 	Input,
@@ -37,6 +42,7 @@ function UpdateUserModalInner({ refetch, isOpen, onOpenChange, user }: Props) {
 	const [isPasswordMatch, setIsPasswordMatch] = useState<boolean>(true);
 
 	const [mutate] = useUpdateUserMutation();
+	const [removeUser] = useRemoveUserMutation();
 
 	const handleAddUser = useCallback(
 		async (callback: () => any) => {
@@ -187,7 +193,20 @@ function UpdateUserModalInner({ refetch, isOpen, onOpenChange, user }: Props) {
 								<Button
 									color={"danger"}
 									variant={"solid"}
-									onPress={onClose}
+									onPress={async () => {
+										if (user?.id) {
+											const promise = removeUser({
+												variables: { id: user.id || "" },
+											});
+											toast.promise(promise, {
+												loading: "Đang xóa tài khoản...",
+												success: "Xóa tài khoản thành công",
+												error: "Xóa tài khoản thất bại",
+											});
+										}
+										refetch?.();
+										onClose();
+									}}
 								>
 									Xóa tài khoản
 								</Button>

@@ -192,8 +192,9 @@ export type LecturerPointsArgs = {
 export type Mutation = {
   __typename?: 'Mutation';
   login: AuthDto;
-  register: UserEntity;
-  update: UserEntity;
+  registerUser: UserEntity;
+  removeUser: Scalars['Boolean']['output'];
+  updateUser: UserEntity;
 };
 
 
@@ -203,12 +204,17 @@ export type MutationLoginArgs = {
 };
 
 
-export type MutationRegisterArgs = {
+export type MutationRegisterUserArgs = {
   user: UserDto;
 };
 
 
-export type MutationUpdateArgs = {
+export type MutationRemoveUserArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationUpdateUserArgs = {
   user: UpdateUserDto;
 };
 
@@ -678,14 +684,21 @@ export type RegisterUserMutationVariables = Exact<{
 }>;
 
 
-export type RegisterUserMutation = { __typename?: 'Mutation', register: { __typename?: 'UserEntity', displayName: string, id: string, password: string, role: Role, username: string } };
+export type RegisterUserMutation = { __typename?: 'Mutation', registerUser: { __typename?: 'UserEntity', displayName: string, id: string, password: string, role: Role, username: string } };
 
 export type UpdateUserMutationVariables = Exact<{
   user: UpdateUserDto;
 }>;
 
 
-export type UpdateUserMutation = { __typename?: 'Mutation', update: { __typename?: 'UserEntity', displayName: string, id: string, password: string, role: Role, username: string } };
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'UserEntity', displayName: string, id: string, password: string, role: Role, username: string } };
+
+export type RemoveUserMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type RemoveUserMutation = { __typename?: 'Mutation', removeUser: boolean };
 
 
 export const AllClassesDocument = gql`
@@ -2096,7 +2109,7 @@ export function refetchProfileQuery(variables?: ProfileQueryVariables) {
     }
 export const RegisterUserDocument = gql`
     mutation RegisterUser($user: UserDto!) {
-  register(user: $user) {
+  registerUser(user: $user) {
     displayName
     id
     password
@@ -2133,7 +2146,7 @@ export type RegisterUserMutationResult = Apollo.MutationResult<RegisterUserMutat
 export type RegisterUserMutationOptions = Apollo.BaseMutationOptions<RegisterUserMutation, RegisterUserMutationVariables>;
 export const UpdateUserDocument = gql`
     mutation UpdateUser($user: UpdateUserDto!) {
-  update(user: $user) {
+  updateUser(user: $user) {
     displayName
     id
     password
@@ -2168,3 +2181,34 @@ export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<U
 export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
 export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
 export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
+export const RemoveUserDocument = gql`
+    mutation RemoveUser($id: String!) {
+  removeUser(id: $id)
+}
+    `;
+export type RemoveUserMutationFn = Apollo.MutationFunction<RemoveUserMutation, RemoveUserMutationVariables>;
+
+/**
+ * __useRemoveUserMutation__
+ *
+ * To run a mutation, you first call `useRemoveUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeUserMutation, { data, loading, error }] = useRemoveUserMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useRemoveUserMutation(baseOptions?: Apollo.MutationHookOptions<RemoveUserMutation, RemoveUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemoveUserMutation, RemoveUserMutationVariables>(RemoveUserDocument, options);
+      }
+export type RemoveUserMutationHookResult = ReturnType<typeof useRemoveUserMutation>;
+export type RemoveUserMutationResult = Apollo.MutationResult<RemoveUserMutation>;
+export type RemoveUserMutationOptions = Apollo.BaseMutationOptions<RemoveUserMutation, RemoveUserMutationVariables>;

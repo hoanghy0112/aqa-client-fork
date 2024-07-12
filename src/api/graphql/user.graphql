@@ -26,7 +26,7 @@ query Profile {
 }
 
 mutation RegisterUser($user: UserDto!) {
-	register(user: $user) {
+	registerUser(user: $user) {
 		displayName
 		id
 		password
@@ -36,11 +36,15 @@ mutation RegisterUser($user: UserDto!) {
 }
 
 mutation UpdateUser($user: UpdateUserDto!) {
-	update(user: $user) {
+	updateUser(user: $user) {
 		displayName
 		id
 		password
 		role
 		username
 	}
+}
+
+mutation RemoveUser($id: String!) {
+	removeUser(id: $id)
 }
