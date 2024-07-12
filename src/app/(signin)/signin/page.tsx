@@ -1,6 +1,6 @@
 "use client";
 
-import { useLoginMutation } from "@/gql/graphql";
+import { useLoginMutation, useProfileQuery } from "@/gql/graphql";
 import { useAuth } from "@/stores/auth.store";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -28,6 +28,7 @@ export default function Page() {
 		},
 	});
 	const { authData, isLogin, authLogin } = useAuth();
+	const { data, loading } = useProfileQuery({ fetchPolicy: "network-only" });
 
 	const handleSignIn = useCallback(async () => {
 		const res = await login({ variables: { username, password } });
@@ -38,11 +39,17 @@ export default function Page() {
 		}
 	}, [login, username, password, authLogin, router]);
 
+	// useEffect(() => {
+	// 	if (!!getCookie("isLogin") == true) {
+	// 		router.replace("/");
+	// 	}
+	// }, [isLogin, router]);
+
 	useEffect(() => {
-		if (!!getCookie("isLogin") == true) {
+		if (loading === false && data) {
 			router.replace("/");
 		}
-	}, [isLogin, router]);
+	}, [data, loading, router]);
 
 	return (
 		<>
