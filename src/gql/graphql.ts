@@ -677,7 +677,7 @@ export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'Us
 export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'UserEntity', displayName: string, id: string, password: string, role: Role, username: string } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'UserEntity', displayName: string, id: string, password: string, role: Role, username: string, faculty?: { __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null, is_displayed?: boolean | null } | null } };
 
 export type RegisterUserMutationVariables = Exact<{
   user: UserDto;
@@ -2069,6 +2069,12 @@ export const ProfileDocument = gql`
     password
     role
     username
+    faculty {
+      display_name
+      faculty_id
+      full_name
+      is_displayed
+    }
   }
 }
     `;

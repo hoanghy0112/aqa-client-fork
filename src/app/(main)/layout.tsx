@@ -58,7 +58,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 					link="/lecturer"
 					icon={LecturerNavIcon}
 				/> */}
-				<NavItem title="Tiêu chí" link="/criteria" icon={CriteriaIcon} />
+				<NavItem
+					title="Tra cứu dữ liệu"
+					link="/criteria"
+					icon={CriteriaIcon}
+				/>
 				{data?.profile.role === "ADMIN" ? (
 					<NavItem
 						title="Quản lý tài khoản"

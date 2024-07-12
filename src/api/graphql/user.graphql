@@ -22,6 +22,12 @@ query Profile {
 		password
 		role
 		username
+		faculty {
+			display_name
+			faculty_id
+			full_name
+			is_displayed
+		}
 	}
 }
 

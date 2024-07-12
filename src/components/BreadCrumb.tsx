@@ -1,6 +1,7 @@
 "use client";
 
 import {
+	Role,
 	useDetailClassQuery,
 	useDetailCriteriaQuery,
 	useDetailFacultyQuery,
@@ -9,6 +10,7 @@ import {
 } from "@/gql/graphql";
 import { useFilterUrlQuery } from "@/hooks/useFilterUrlQuery";
 import useLecturerInfo from "@/hooks/useLecturerInfo";
+import { useAuth } from "@/stores/auth.store";
 import { Button } from "@nextui-org/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useMemo } from "react";
@@ -17,6 +19,8 @@ import { twMerge } from "tailwind-merge";
 export default function BreadCrumb() {
 	const router = useRouter();
 	const pathname = usePathname();
+
+	const { authData } = useAuth();
 
 	const { query, setUrlQuery } = useFilterUrlQuery();
 
@@ -79,19 +83,23 @@ export default function BreadCrumb() {
 					// class_id: "",
 				},
 			},
-			{
-				title: "Khoa",
-				link: "faculty",
-				className: " flex-initial w-[150px]",
-				value: query?.faculty_id,
-				name: faculty?.faculty?.display_name,
-				onClickValue: {
-					faculty_id: "",
-					// subjects: undefined,
-					// lecturer_id: "",
-					// class_id: "",
-				},
-			},
+			...(authData?.user.role !== Role.Faculty
+				? [
+						{
+							title: "Khoa",
+							link: "faculty",
+							className: " flex-initial w-[150px]",
+							value: query?.faculty_id,
+							name: faculty?.faculty?.display_name,
+							onClickValue: {
+								faculty_id: "",
+								// subjects: undefined,
+								// lecturer_id: "",
+								// class_id: "",
+							},
+						},
+				  ]
+				: []),
 			{
 				title: "Môn học",
 				link: "subject",
@@ -124,6 +132,7 @@ export default function BreadCrumb() {
 			},
 		],
 		[
+			authData?.user.role,
 			classData?.class?.display_name,
 			criteria?.criteria?.display_name,
 			faculty?.faculty?.display_name,
@@ -139,7 +148,6 @@ export default function BreadCrumb() {
 		]
 	);
 
-	console.log(pathname);
 	return (
 		<div className=" mt-5 mb-5 w-fit flex flex-col items-start gap-4">
 			<div className=" -ml-5 flex flex-row gap-2">

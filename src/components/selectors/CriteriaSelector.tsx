@@ -6,16 +6,16 @@ import { useCriteriasLazyQuery } from "@/gql/graphql";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import useNavigate from "@/hooks/useNavigate";
 import { useRememberValue } from "@/hooks/useRememberValue";
-import { Card } from "@nextui-org/card";
-import { Input } from "@nextui-org/input";
 import {
+	Card,
+	Input,
 	Modal,
 	ModalBody,
 	ModalContent,
 	ModalHeader,
+	Skeleton,
 	useDisclosure,
-} from "@nextui-org/modal";
-import { Skeleton } from "@nextui-org/skeleton";
+} from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
