@@ -3,7 +3,8 @@
 import LecturerNavIcon from "@/assets/LecturerNavIcon";
 import NavigationDrawer, { NavItem } from "@/components/NavigationDrawer";
 import { useProfileQuery } from "@/gql/graphql";
-import { useIsAdmin, useIsFullAccess } from "@/hooks/useIsAdmin";
+import { useIsAdmin, useIsFullAccess, useIsLecturer } from "@/hooks/useIsAdmin";
+import { useIsFaculty } from "@/hooks/useIsFaculty";
 import { useAuth } from "@/stores/auth.store";
 import CommentIcon from "@assets/CommentIcon";
 import CriteriaIcon from "@assets/CriteriaIcon";
@@ -19,6 +20,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 	const { data, loading } = useProfileQuery({ fetchPolicy: "network-only" });
 	const { isFullAcess } = useIsFullAccess();
 	const { isAdmin } = useIsAdmin();
+	const { isFaculty } = useIsFaculty();
+	const { isLecturer } = useIsLecturer();
+
+	console.log({data, loading})
 
 	useEffect(() => {
 		if (!!getCookie("isLogin") == false) {
@@ -63,19 +68,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 					link="/lecturer"
 					icon={LecturerNavIcon}
 				/> */}
-				{isFullAcess ? (
+				{isFullAcess && isFaculty ? (
 					<NavItem
 						title="Tra cứu dữ liệu"
 						link="/criteria"
 						icon={CriteriaIcon}
 					/>
-				) : (
+				) : isLecturer ? (
 					<NavItem
 						title="Tra cứu dữ liệu"
-						link={`/lecturer/${12}`}
+						link={`/lecturer/${data?.profile.lecturer?.lecturer_id}`}
 						icon={CriteriaIcon}
 					/>
-				)}
+				) : null}
 				{isAdmin ? (
 					<NavItem
 						title="Quản lý tài khoản"

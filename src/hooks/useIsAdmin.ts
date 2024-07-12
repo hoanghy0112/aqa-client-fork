@@ -17,3 +17,11 @@ export const useIsFullAccess = () => {
 			data?.profile.role === Role.FullAccess,
 	};
 };
+
+export const useIsLecturer = () => {
+	const { data } = useProfileQuery();
+
+	return {
+		isLecturer: data?.profile.role === Role.Lecturer,
+	};
+};

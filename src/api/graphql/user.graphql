@@ -13,10 +13,20 @@ query Users($name: String) {
 			is_displayed
 		}
 		lecturer {
+			birth_date
 			display_name
+			email
 			faculty_id
-			full_name
-			is_displayed
+			gender
+			learning
+			learning_position
+			lecturer_id
+			mscb
+			ngach
+			phone
+			position
+			total_point
+			username
 		}
 	}
 }
@@ -36,9 +46,18 @@ query Profile {
 		}
 		lecturer {
 			display_name
+			email
 			faculty_id
-			full_name
-			is_displayed
+			gender
+			learning
+			learning_position
+			lecturer_id
+			mscb
+			ngach
+			phone
+			position
+			total_point
+			username
 		}
 	}
 }

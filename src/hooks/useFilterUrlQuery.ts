@@ -61,6 +61,10 @@ export function useFilterUrlQuery() {
 				data?.profile.role === Role.Faculty
 					? data?.profile.faculty?.faculty_id
 					: query.faculty_id,
+			lecturer_id:
+				data?.profile.role === Role.Lecturer
+					? data?.profile.lecturer?.lecturer_id
+					: query.lecturer_id,
 		},
 		setUrlQuery,
 	};

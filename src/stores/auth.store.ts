@@ -1,4 +1,5 @@
 import { AuthDto } from "@/gql/graphql";
+import { DeepPartial } from "@apollo/client/utilities";
 import { setCookie } from "cookies-next";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
@@ -6,8 +7,8 @@ import { immer } from "zustand/middleware/immer";
 
 export type IAuth = {
 	isLogin?: boolean;
-	authData: AuthDto | null;
-	authLogin: (authEntity: AuthDto) => any;
+	authData: DeepPartial<AuthDto> | null;
+	authLogin: (authEntity: DeepPartial<AuthDto>) => any;
 	authLogout: () => any;
 };
 

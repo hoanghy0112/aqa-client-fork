@@ -483,7 +483,7 @@ export type UserEntity = {
   faculty?: Maybe<Faculty>;
   id: Scalars['String']['output'];
   lastAccess?: Maybe<Scalars['DateTime']['output']>;
-  lecturer?: Maybe<Faculty>;
+  lecturer?: Maybe<Lecturer>;
   password: Scalars['String']['output'];
   role: Role;
   username: Scalars['String']['output'];
@@ -597,7 +597,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthDto', access_token: string, user: { __typename?: 'UserEntity', displayName: string, id: string, password: string, role: Role, username: string } } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthDto', access_token: string, user: { __typename?: 'UserEntity', displayName: string, id: string, password: string, role: Role, username: string, faculty?: { __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null, is_displayed?: boolean | null } | null, lecturer?: { __typename?: 'Lecturer', display_name?: string | null, email?: string | null, faculty_id?: string | null, gender?: boolean | null, learning?: string | null, learning_position?: string | null, lecturer_id: string, mscb?: number | null, ngach?: string | null, phone?: string | null, position?: string | null, total_point?: number | null, username?: string | null } | null } } };
 
 export type PointsEachSemesterQueryVariables = Exact<{
   groupEntity: Scalars['String']['input'];
@@ -675,12 +675,12 @@ export type UsersQueryVariables = Exact<{
 }>;
 
 
-export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'UserEntity', displayName: string, id: string, password: string, role: Role, username: string, lastAccess?: any | null, faculty?: { __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null, is_displayed?: boolean | null } | null, lecturer?: { __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null, is_displayed?: boolean | null } | null }> };
+export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'UserEntity', displayName: string, id: string, password: string, role: Role, username: string, lastAccess?: any | null, faculty?: { __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null, is_displayed?: boolean | null } | null, lecturer?: { __typename?: 'Lecturer', birth_date?: any | null, display_name?: string | null, email?: string | null, faculty_id?: string | null, gender?: boolean | null, learning?: string | null, learning_position?: string | null, lecturer_id: string, mscb?: number | null, ngach?: string | null, phone?: string | null, position?: string | null, total_point?: number | null, username?: string | null } | null }> };
 
 export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'UserEntity', displayName: string, id: string, password: string, role: Role, username: string, faculty?: { __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null, is_displayed?: boolean | null } | null, lecturer?: { __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null, is_displayed?: boolean | null } | null } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'UserEntity', displayName: string, id: string, password: string, role: Role, username: string, faculty?: { __typename?: 'Faculty', display_name: string, faculty_id: string, full_name?: string | null, is_displayed?: boolean | null } | null, lecturer?: { __typename?: 'Lecturer', display_name?: string | null, email?: string | null, faculty_id?: string | null, gender?: boolean | null, learning?: string | null, learning_position?: string | null, lecturer_id: string, mscb?: number | null, ngach?: string | null, phone?: string | null, position?: string | null, total_point?: number | null, username?: string | null } | null } };
 
 export type RegisterUserMutationVariables = Exact<{
   user: UserDto;
@@ -1519,6 +1519,27 @@ export const LoginDocument = gql`
       password
       role
       username
+      faculty {
+        display_name
+        faculty_id
+        full_name
+        is_displayed
+      }
+      lecturer {
+        display_name
+        email
+        faculty_id
+        gender
+        learning
+        learning_position
+        lecturer_id
+        mscb
+        ngach
+        phone
+        position
+        total_point
+        username
+      }
     }
   }
 }
@@ -2026,10 +2047,20 @@ export const UsersDocument = gql`
       is_displayed
     }
     lecturer {
+      birth_date
       display_name
+      email
       faculty_id
-      full_name
-      is_displayed
+      gender
+      learning
+      learning_position
+      lecturer_id
+      mscb
+      ngach
+      phone
+      position
+      total_point
+      username
     }
   }
 }
@@ -2086,9 +2117,18 @@ export const ProfileDocument = gql`
     }
     lecturer {
       display_name
+      email
       faculty_id
-      full_name
-      is_displayed
+      gender
+      learning
+      learning_position
+      lecturer_id
+      mscb
+      ngach
+      phone
+      position
+      total_point
+      username
     }
   }
 }

@@ -31,6 +31,7 @@ export default function Page() {
 
 	const handleSignIn = useCallback(async () => {
 		const res = await login({ variables: { username, password } });
+		console.log({ res });
 		if (res.data?.login) {
 			authLogin(res.data.login);
 			router.push("/");
