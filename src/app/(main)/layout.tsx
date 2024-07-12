@@ -30,9 +30,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 	// }, [isLogin, router]);
 
 	useEffect(() => {
-		if (!loading && !data) {
+		if (loading === false && !data) {
 			console.log({ data, loading });
-			// router.replace("/signin");
+			router.replace("/signin");
 		}
 	}, [data, loading, router]);
 
