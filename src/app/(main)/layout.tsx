@@ -67,7 +67,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 					link="/lecturer"
 					icon={LecturerNavIcon}
 				/> */}
-				{isFullAcess && isFaculty ? (
+				{isFullAcess || isFaculty ? (
 					<NavItem
 						title="Tra cứu dữ liệu"
 						link="/criteria"
