@@ -79,7 +79,7 @@ export default function ChartLayout({
 				<div className="w-full px-8">
 					<div className="  w-full mb-6 pl-2 pr-8 pt-5 flex flex-row gap-5 justify-between items-start xl:items-center">
 						<div className=" w-3/4 mt-2">
-							<p>{primaryTitle}</p>
+							<p className=" text-foreground-900 font-semibold">{primaryTitle}</p>
 							<p className="w-full mt-2 font-normal text-sm">
 								{secondaryTitle}
 							</p>
@@ -121,7 +121,7 @@ export default function ChartLayout({
 							<Button
 								isIconOnly
 								color="primary"
-								className="w-fit"
+								className="w-fit px-3"
 								onPress={() => {
 									domtoimage
 										.toJpeg(document.getElementById("chart"), {

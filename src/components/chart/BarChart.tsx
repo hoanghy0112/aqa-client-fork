@@ -103,6 +103,9 @@ export function BarChart({
 					display: false,
 				},
 				beginAtZero: false,
+				ticks: {
+					color: "black",
+				},
 			},
 			y: {
 				border: {
@@ -112,6 +115,9 @@ export function BarChart({
 					display: false,
 				},
 				beginAtZero: false,
+				ticks: {
+					color: "black",
+				},
 			},
 			y1: {
 				border: {

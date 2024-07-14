@@ -43,11 +43,11 @@ module.exports = {
 						DEFAULT: "#e5e7eb", // gray-200
 					},
 					content: {
-						subtle: "#9ca3af", // gray-400
-						DEFAULT: "#6b7280", // gray-500
-						emphasis: "#374151", // gray-700
-						strong: "#111827", // gray-900
-						inverted: "#ffffff", // white
+						subtle: "#000", // gray-400
+						DEFAULT: "#000", // gray-500
+						emphasis: "#000", // gray-700
+						strong: "#000", // gray-900
+						inverted: "#000", // white
 					},
 				},
 				// dark mode
@@ -101,8 +101,8 @@ module.exports = {
 				"tremor-full": "9999px",
 			},
 			fontSize: {
-				"tremor-label": ["0.75rem"],
-				"tremor-default": ["0.875rem", { lineHeight: "1.25rem" }],
+				"tremor-label": ["1rem"],
+				"tremor-default": ["1rem", { lineHeight: "1.25rem" }],
 				"tremor-title": ["1.125rem", { lineHeight: "1.75rem" }],
 				"tremor-metric": ["1.875rem", { lineHeight: "2.25rem" }],
 			},
