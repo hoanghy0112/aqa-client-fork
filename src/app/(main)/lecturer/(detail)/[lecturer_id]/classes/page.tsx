@@ -7,6 +7,7 @@ import React from "react";
 
 import { useAllClassesQuery, useSemestersQuery } from "@/gql/graphql";
 import { useFilterUrlQuery } from "@/hooks/useFilterUrlQuery";
+import PointWithGroupedEntity from "@/components/chart/PointWithGroupedEntity";
 
 function SemesterClass({
 	semester_id,
@@ -47,7 +48,7 @@ export default function Page({
 }: {
 	params: { lecturer_id: string };
 }) {
-	const { setUrlQuery } = useFilterUrlQuery();
+	const { query, setUrlQuery } = useFilterUrlQuery();
 	const { data: semesters, loading: isLoading } = useSemestersQuery();
 
 	return (
@@ -55,33 +56,51 @@ export default function Page({
 			{isLoading ? (
 				<Loading />
 			) : (
-				<Accordion variant="splitted" selectionMode="multiple" isCompact>
-					{semesters?.semesters?.map(({ semester_id, display_name }) => (
-						<AccordionItem
-							key={semester_id}
-							aria-label={display_name}
-							title={
-								<p className="py-1 font-medium">{display_name}</p>
-							}
-						>
-							<React.Suspense
-								fallback={
-									<div className=" pb-4">
-										<Loading />
-									</div>
-								}
-							>
-								<SemesterClass
-									semester_id={semester_id}
-									lecturer_id={lecturer_id}
-									onPress={(class_id) =>
-										setUrlQuery(`/class/${class_id}`)
+				<div className=" flex flex-col gap-4">
+					<PointWithGroupedEntity
+						query={{ ...query, class_id: "" }}
+						groupEntity="Class"
+						title="Điểm đánh giá của các lớp"
+						legend="Điểm đánh giá"
+						onClick={(item) => {
+							setUrlQuery(`/class/${item.id}`, {
+								subjects: [item.id],
+							});
+						}}
+						selectors={<></>}
+					/>
+					<Accordion variant="splitted" selectionMode="multiple" isCompact>
+						{semesters?.semesters?.map(
+							({ semester_id, display_name }) => (
+								<AccordionItem
+									key={semester_id}
+									aria-label={display_name}
+									title={
+										<p className="py-1 font-medium">
+											{display_name}
+										</p>
 									}
-								/>
-							</React.Suspense>
-						</AccordionItem>
-					)) || <></>}
-				</Accordion>
+								>
+									<React.Suspense
+										fallback={
+											<div className=" pb-4">
+												<Loading />
+											</div>
+										}
+									>
+										<SemesterClass
+											semester_id={semester_id}
+											lecturer_id={lecturer_id}
+											onPress={(class_id) =>
+												setUrlQuery(`/class/${class_id}`)
+											}
+										/>
+									</React.Suspense>
+								</AccordionItem>
+							)
+						) || <></>}
+					</Accordion>
+				</div>
 			)}
 		</FilterProvider>
 	);
