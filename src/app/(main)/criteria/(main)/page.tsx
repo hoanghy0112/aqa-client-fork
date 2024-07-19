@@ -41,6 +41,11 @@ export default function Page() {
 					},
 					...(data?.criterias.data
 						.filter((v) => {
+							if (
+								query.class_type === "TH2" &&
+								v.type.some((d) => d.class_type === "TH2")
+							)
+								return true;
 							let maxType: any = null;
 							v.type.forEach((d) => {
 								if (!maxType) maxType = d;
