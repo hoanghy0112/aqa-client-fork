@@ -105,18 +105,22 @@ export function BarChart({
 				beginAtZero: false,
 				ticks: {
 					color: "black",
+					font: { size: 16 },
 				},
 			},
 			y: {
 				border: {
-					display: false,
+					display: true,
 				},
 				grid: {
-					display: false,
+					display: true,
 				},
 				beginAtZero: false,
 				ticks: {
 					color: "black",
+					font: { size: 16 },
+					autoSkip: true,
+					stepSize: 0.2,
 				},
 			},
 			y1: {
@@ -126,9 +130,14 @@ export function BarChart({
 				beginAtZero: true,
 				display: true,
 				position: "right" as const,
-				min: -5,
+				min: 0,
 				grid: {
 					drawOnChartArea: false,
+				},
+				ticks: {
+					color: "black",
+					font: { size: 16 },
+					stepSize: 1,
 				},
 			},
 		},

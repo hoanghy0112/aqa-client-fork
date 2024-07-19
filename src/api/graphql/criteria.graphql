@@ -17,6 +17,10 @@ query AllCriterias($filter: FilterArgs) {
 		data {
 			display_name
 			criteria_id
+			type {
+				class_type
+				num
+			}
 		}
 		meta {
 			hasNext

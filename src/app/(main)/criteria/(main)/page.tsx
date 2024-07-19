@@ -4,11 +4,9 @@ import ChildrenItems from "@/components/ChildrenItems";
 import { useAllCriteriasQuery } from "@/gql/graphql";
 import { useFilterUrlQuery } from "@/hooks/useFilterUrlQuery";
 import { Input } from "@nextui-org/react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function Page() {
-	const router = useRouter();
 	const { query, setUrlQuery } = useFilterUrlQuery();
 
 	const [keyword, setKeyword] = useState("");
@@ -28,7 +26,7 @@ export default function Page() {
 				size="md"
 				placeholder="Nhập từ khóa cần tìm..."
 				variant="bordered"
-				className="w-full"
+				className=" mt-4 w-full"
 			/>
 			<ChildrenItems
 				items={[
@@ -41,17 +39,29 @@ export default function Page() {
 							});
 						},
 					},
-					...(data?.criterias.data.map(
-						({ display_name, criteria_id }) => ({
-							display_name,
+					...(data?.criterias.data
+						.filter((v) => {
+							let maxType: any = null;
+							v.type.forEach((d) => {
+								if (!maxType) maxType = d;
+								else if (maxType.num < d.num) maxType = d;
+							});
+							if (
+								query.class_type === "" ||
+								query.class_type === "All"
+							)
+								return true;
+							return maxType.class_type === query.class_type;
+						})
+						.map(({ display_name, criteria_id }, index) => ({
+							display_name: `${display_name}`,
 							value: criteria_id,
 							onClick() {
 								setUrlQuery(`/criteria/${criteria_id}`, {
 									criteria_id,
 								});
 							},
-						})
-					) || []),
+						})) || []),
 				]}
 			/>
 		</div>

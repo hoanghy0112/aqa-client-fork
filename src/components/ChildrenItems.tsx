@@ -28,7 +28,7 @@ export default function ChildrenItems({ items, isSort = true }: Props) {
 					isSort ? (a.display_name < b.display_name ? -1 : 1) : 0
 				)
 				.filter((v) => v.value !== "all")
-				.map(({ display_name, value, onClick }) => (
+				.map(({ display_name, value, onClick }, index) => (
 					<>
 						<Button
 							variant={"ghost"}
@@ -36,7 +36,7 @@ export default function ChildrenItems({ items, isSort = true }: Props) {
 							onClick={() => onClick(value)}
 						>
 							<p className=" text-start font-semibold">
-								{display_name}
+								{`${index + 1}. ${display_name}`}
 							</p>
 						</Button>
 					</>
