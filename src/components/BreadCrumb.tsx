@@ -11,10 +11,11 @@ import {
 import { useFilterUrlQuery } from "@/hooks/useFilterUrlQuery";
 import useLecturerInfo from "@/hooks/useLecturerInfo";
 import { useAuth } from "@/stores/auth.store";
-import { Button } from "@nextui-org/react";
+import { Button, Tooltip } from "@nextui-org/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
+import { IoChevronForwardOutline } from "react-icons/io5";
 
 export default function BreadCrumb() {
 	const router = useRouter();
@@ -148,36 +149,43 @@ export default function BreadCrumb() {
 
 	return (
 		<div className=" w-full mt-5 mb-5 flex flex-col items-start gap-4">
-			<div className=" w-full -ml-5 flex flex-row gap-2">
+			<div className=" w-full -ml-5 flex flex-row gap-1">
 				{paths.map(
-					({ className, title, name, link, value, onClickValue }) => (
-						<Button
-							key={title}
-							variant="light"
-							className={twMerge(
-								" w-fit h-fit",
-								name ? className : ""
-							)}
-							onClick={() => {
-								setUrlQuery(`/${link}`, onClickValue);
-							}}
-						>
-							<div className=" p-2 flex-col gap-2 items-start">
-								<p className=" text-foreground-900 text-xs text-start">
-									{title}
-								</p>
-								<p
+					(
+						{ className, title, name, link, value, onClickValue },
+						index
+					) => (
+						<div key={title} className=" flex gap-1 items-center">
+							<Tooltip content={name}>
+								<Button
+									variant="light"
 									className={twMerge(
-										" h-auto max-w-[200px] text-ellipsis text-foreground-900 text-start font-semibold",
-										link === "criteria"
-											? " whitespace-nowrap overflow-hidden"
-											: ""
+										" w-fit h-fit",
+										name ? className : ""
 									)}
+									onClick={() => {
+										setUrlQuery(`/${link}`, onClickValue);
+									}}
 								>
-									{name || "Tất cả"}
-								</p>
-							</div>
-						</Button>
+									<div className=" p-2 flex-col gap-2 items-start">
+										<p className=" text-foreground-900 text-xs text-start">
+											{title}
+										</p>
+										<p
+											className={twMerge(
+												" h-auto max-w-[150px] whitespace-nowrap overflow-hidden text-ellipsis text-foreground-900 text-start font-semibold",
+												link === "criteria" ? " " : ""
+											)}
+										>
+											{name || "Tất cả"}
+										</p>
+									</div>
+								</Button>
+							</Tooltip>
+							{index !== paths.length - 1 ? (
+								<IoChevronForwardOutline size={20} />
+							) : null}
+						</div>
 					)
 				)}
 			</div>
