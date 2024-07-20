@@ -112,6 +112,11 @@ function InnerPointEachSemester({
 					colors={["sky"]}
 					yAxisWidth={80}
 					minValue={3.3}
+					rotateLabelX={{
+						angle: 0,
+						verticalShift: 30,
+						xAxisHeight: 50,
+					}}
 					valueFormatter={(number: number) => {
 						return `${number.toFixed(2)}`;
 					}}

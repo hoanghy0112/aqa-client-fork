@@ -17,7 +17,8 @@ import ChartLayout from "@components/chart/ChartLayout";
 import ProgramSelector from "@components/selectors/ProgramSelector";
 import SemesterSelector from "@components/selectors/SemesterSelector";
 import { Color } from "@tremor/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useDeepCompareEffect } from "react-use";
 
 function Page_({ subject_id }: { subject_id: string }) {
 	const { sort } = useFilter();
@@ -28,22 +29,35 @@ function Page_({ subject_id }: { subject_id: string }) {
 	const [data, setData] = useState<GroupedPoint[]>([]);
 	const [loading, setLoading] = useState(false);
 
-	const variables: FilterArgs & { groupEntity: string } = {
-		criteria_id: filter.criteria?.criteria_id,
-		faculty_id: filter.faculty?.faculty_id,
-		semester_id: filter.semester?.semester_id,
-		subjects: Array.from(filter.subjects.values()).length
-			? Array.from(filter.subjects.values()).map(
-					(subject) => subject.subject_id
-			  )
-			: undefined,
-		program: filter.program,
-		groupEntity: "Semester",
-	};
+	const subjects = useMemo(
+		() => Array.from(filter.subjects.values()),
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[JSON.stringify(Array.from(filter.subjects.values()))]
+	);
+
+	const variables = useMemo<FilterArgs & { groupEntity: string }>(
+		() => ({
+			criteria_id: filter.criteria?.criteria_id,
+			faculty_id: filter.faculty?.faculty_id,
+			semester_id: filter.semester?.semester_id,
+			subjects: subjects.length
+				? subjects.map((subject) => subject.subject_id)
+				: undefined,
+			program: filter.program,
+			groupEntity: "Semester",
+		}),
+		[
+			filter.criteria?.criteria_id,
+			filter.faculty?.faculty_id,
+			filter.program,
+			filter.semester?.semester_id,
+			subjects,
+		]
+	);
 
 	const [fetchFunction] = usePointsWithGroupByLazyQuery();
 
-	useEffect(() => {
+	useDeepCompareEffect(() => {
 		(async () => {
 			setLoading(true);
 			const response = await fetchFunction({
@@ -65,7 +79,7 @@ function Page_({ subject_id }: { subject_id: string }) {
 			);
 			setLoading(false);
 		})();
-	}, [JSON.stringify(query), JSON.stringify(variables), sort]);
+	}, [query, sort, variables]);
 
 	// const mappedData = useMemo<
 	// 	{
