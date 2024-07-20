@@ -55,22 +55,21 @@ export default function BreadCrumb() {
 			{
 				title: "Tiêu chí",
 				link: "criteria",
-				className: " flex-initial w-[300px]",
+				className: "",
 				value: query?.criteria_id,
 				name: criteria?.criteria?.display_name,
 				onClickValue: {
 					criteria_id: "",
 					// semester_id: "",
-					// faculty_id: "",
-					// subjects: undefined,
-					// lecturer_id: "",
-					// class_id: "",
+					faculty_id: "",
+					subjects: undefined,
+					lecturer_id: "",
+					class_id: "",
 				},
 			},
 			{
 				title: "Học kỳ",
 				link: "semester",
-				className: " flex-initial w-[150px]",
 				value: query?.semester_id,
 				name: semesters?.semesters?.find(
 					(semester) => semester.semester_id === query.semester_id
@@ -88,14 +87,13 @@ export default function BreadCrumb() {
 						{
 							title: "Khoa",
 							link: "faculty",
-							className: " flex-initial w-[150px]",
 							value: query?.faculty_id,
 							name: faculty?.faculty?.display_name,
 							onClickValue: {
 								faculty_id: "",
-								// subjects: undefined,
-								// lecturer_id: "",
-								// class_id: "",
+								subjects: undefined,
+								lecturer_id: "",
+								class_id: "",
 							},
 						},
 				  ]
@@ -107,8 +105,8 @@ export default function BreadCrumb() {
 				name: subject?.subject?.display_name,
 				onClickValue: {
 					subjects: undefined,
-					// lecturer_id: "",
-					// class_id: "",
+					lecturer_id: "",
+					class_id: "",
 				},
 			},
 			{
@@ -118,7 +116,7 @@ export default function BreadCrumb() {
 				name: lecturer?.display_name,
 				onClickValue: {
 					lecturer_id: "",
-					// class_id: "",
+					class_id: "",
 				},
 			},
 			{
@@ -149,15 +147,15 @@ export default function BreadCrumb() {
 	);
 
 	return (
-		<div className=" mt-5 mb-5 w-fit flex flex-col items-start gap-4">
-			<div className=" -ml-5 flex flex-row gap-2">
+		<div className=" w-full mt-5 mb-5 flex flex-col items-start gap-4">
+			<div className=" w-full -ml-5 flex flex-row gap-2">
 				{paths.map(
 					({ className, title, name, link, value, onClickValue }) => (
 						<Button
 							key={title}
 							variant="light"
 							className={twMerge(
-								" flex-1 h-fit",
+								" w-fit h-fit",
 								name ? className : ""
 							)}
 							onClick={() => {
@@ -168,7 +166,14 @@ export default function BreadCrumb() {
 								<p className=" text-foreground-900 text-xs text-start">
 									{title}
 								</p>
-								<p className=" h-auto max-w-[350px] whitespace-normal text-foreground-900 text-start font-semibold">
+								<p
+									className={twMerge(
+										" h-auto max-w-[200px] text-ellipsis text-foreground-900 text-start font-semibold",
+										link === "criteria"
+											? " whitespace-nowrap overflow-hidden"
+											: ""
+									)}
+								>
 									{name || "Tất cả"}
 								</p>
 							</div>
