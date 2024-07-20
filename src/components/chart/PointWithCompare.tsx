@@ -115,7 +115,7 @@ function InnerPointWithCompare({
 
 	return (
 		<div className=" h-[500px]">
-			{legends?.length && data?.length ? (
+			{true ? (
 				<ChartLayout
 					primaryTitle={title}
 					secondaryTitle={""}
