@@ -8,7 +8,7 @@ export default function PageTabs({
 	defaultPath,
 	lastIndex = 2,
 	tabs,
-	className = "mt-12",
+	className = "mt-4",
 }: {
 	defaultPath: string;
 	lastIndex?: number;

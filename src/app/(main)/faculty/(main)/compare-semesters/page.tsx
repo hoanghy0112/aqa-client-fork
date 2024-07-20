@@ -14,7 +14,7 @@ export default function Page() {
 
 	return faculties ? (
 		<>
-			<div className=" mb-10 grid grid-cols-2 items-stretch gap-x-5 gap-y-5">
+			<div className=" mb-10 grid grid-cols-2 items-stretch gap-x-2 gap-y-2">
 				{faculties.faculties.data.map((faculty) => (
 					<Checkbox
 						key={faculty.faculty_id}
@@ -23,7 +23,7 @@ export default function Page() {
 							base: cn(
 								"inline-flex w-full max-w-3xl bg-content1 !m-0",
 								"hover:bg-content2 items-center justify-start",
-								"cursor-pointer rounded-lg gap-2 p-4 border-2 border-transparent",
+								"cursor-pointer rounded-lg gap-2 p-3 border-2 border-transparent",
 								"data-[selected=true]:border-primary"
 							),
 							label: "w-full",

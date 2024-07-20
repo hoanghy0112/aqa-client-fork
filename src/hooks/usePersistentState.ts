@@ -1,12 +1,18 @@
-import { useState, useEffect } from "react";
+import {
+	useState,
+	useEffect,
+	SetStateAction,
+	Dispatch,
+	useLayoutEffect,
+} from "react";
 
 export default function usePersistentState<T>(
 	name: string,
-	defaultValue?: T | undefined
-): [T | undefined, (data: T) => void] {
-	const [data, setData] = useState<T | undefined>(undefined);
+	defaultValue: T
+): [T, Dispatch<SetStateAction<T>>] {
+	const [data, setData] = useState<T>(defaultValue);
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		const value = localStorage.getItem(name);
 		setData(value != null ? JSON.parse(value) : defaultValue);
 	}, [defaultValue, name]);
@@ -15,5 +21,5 @@ export default function usePersistentState<T>(
 		if (data) localStorage.setItem(name, JSON.stringify(data));
 	}, [data, name]);
 
-	return [data === undefined ? defaultValue : data, setData];
+	return [data, setData];
 }

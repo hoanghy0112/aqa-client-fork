@@ -11,10 +11,11 @@ import {
 import { useFilterUrlQuery } from "@/hooks/useFilterUrlQuery";
 import useLecturerInfo from "@/hooks/useLecturerInfo";
 import { useAuth } from "@/stores/auth.store";
-import { Button } from "@nextui-org/react";
+import { Button, Tooltip } from "@nextui-org/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
+import { IoChevronForwardOutline } from "react-icons/io5";
 
 export default function BreadCrumb() {
 	const router = useRouter();
@@ -55,28 +56,26 @@ export default function BreadCrumb() {
 			{
 				title: "Tiêu chí",
 				link: "criteria",
-				className: " flex-initial w-[300px]",
+				className: "",
 				value: query?.criteria_id,
 				name: criteria?.criteria?.display_name,
+				defaultValue: { criteria_id: "" },
 				onClickValue: {
-					criteria_id: "",
-					// semester_id: "",
-					// faculty_id: "",
-					// subjects: undefined,
-					// lecturer_id: "",
-					// class_id: "",
+					faculty_id: "",
+					subjects: undefined,
+					lecturer_id: "",
+					class_id: "",
 				},
 			},
 			{
 				title: "Học kỳ",
 				link: "semester",
-				className: " flex-initial w-[150px]",
 				value: query?.semester_id,
 				name: semesters?.semesters?.find(
 					(semester) => semester.semester_id === query.semester_id
 				)?.display_name,
+				defaultValue: { semester_id: "" },
 				onClickValue: {
-					semester_id: "",
 					// faculty_id: "",
 					// subjects: undefined,
 					// lecturer_id: "",
@@ -88,14 +87,13 @@ export default function BreadCrumb() {
 						{
 							title: "Khoa",
 							link: "faculty",
-							className: " flex-initial w-[150px]",
 							value: query?.faculty_id,
 							name: faculty?.faculty?.display_name,
+							defaultValue: { faculty_id: "" },
 							onClickValue: {
-								faculty_id: "",
-								// subjects: undefined,
-								// lecturer_id: "",
-								// class_id: "",
+								subjects: undefined,
+								lecturer_id: "",
+								class_id: "",
 							},
 						},
 				  ]
@@ -105,10 +103,10 @@ export default function BreadCrumb() {
 				link: "subject",
 				value: query?.subjects?.at(0),
 				name: subject?.subject?.display_name,
+				defaultValue: { subjects: undefined },
 				onClickValue: {
-					subjects: undefined,
-					// lecturer_id: "",
-					// class_id: "",
+					lecturer_id: "",
+					class_id: "",
 				},
 			},
 			{
@@ -116,9 +114,9 @@ export default function BreadCrumb() {
 				link: "lecturer",
 				value: query?.lecturer_id,
 				name: lecturer?.display_name,
+				defaultValue: { lecturer_id: "" },
 				onClickValue: {
-					lecturer_id: "",
-					// class_id: "",
+					class_id: "",
 				},
 			},
 			{
@@ -126,9 +124,8 @@ export default function BreadCrumb() {
 				link: "class",
 				value: query?.class_id,
 				name: classData?.class?.display_name,
-				onClickValue: {
-					class_id: "",
-				},
+				defaultValue: { class_id: "" },
+				onClickValue: {},
 			},
 		],
 		[
@@ -149,30 +146,71 @@ export default function BreadCrumb() {
 	);
 
 	return (
-		<div className=" mt-5 mb-5 w-fit flex flex-col items-start gap-4">
-			<div className=" -ml-5 flex flex-row gap-2">
+		<div className=" w-full mt-5 mb-5 flex flex-col items-start gap-4">
+			<div className=" w-full -ml-5 flex flex-row gap-1">
 				{paths.map(
-					({ className, title, name, link, value, onClickValue }) => (
-						<Button
-							key={title}
-							variant="light"
-							className={twMerge(
-								" flex-1 h-fit",
-								name ? className : ""
-							)}
-							onClick={() => {
-								setUrlQuery(`/${link}`, onClickValue);
-							}}
-						>
-							<div className=" p-2 flex-col gap-2 items-start">
-								<p className=" text-foreground-900 text-xs text-start">
-									{title}
-								</p>
-								<p className=" h-auto max-w-[350px] whitespace-normal text-foreground-900 text-start font-semibold">
-									{name || "Tất cả"}
-								</p>
-							</div>
-						</Button>
+					(
+						{
+							className,
+							title,
+							name,
+							link,
+							value,
+							defaultValue,
+							onClickValue,
+						},
+						index
+					) => (
+						<div key={title} className=" flex gap-0 items-center">
+							<Tooltip content={name}>
+								<Button
+									variant="light"
+									className={twMerge(
+										" w-fit h-fit",
+										name ? className : ""
+									)}
+									onClick={() => {
+										setUrlQuery(`/${link}`, {
+											...onClickValue,
+											...defaultValue,
+										});
+									}}
+								>
+									<div className=" p-2 flex-col gap-2 items-start">
+										<p className=" text-foreground-900 text-xs text-start">
+											{title}
+										</p>
+										<p
+											className={twMerge(
+												" h-auto max-w-[150px] whitespace-nowrap overflow-hidden text-ellipsis text-foreground-900 text-start font-semibold",
+												link === "criteria" ? " " : ""
+											)}
+										>
+											{name || "Tất cả"}
+										</p>
+									</div>
+								</Button>
+							</Tooltip>
+							{index !== paths.length - 1 ? (
+								<div
+									className=" rounded-xl grid place-items-center h-full px-2 cursor-pointer bg-background hover:bg-foreground-100 active:bg-foreground-200 duration-200"
+									onClick={() => {
+										if (value)
+											setUrlQuery(
+												`/${link}/${value}`,
+												onClickValue
+											);
+										else
+											setUrlQuery(`/${link}`, {
+												...onClickValue,
+												...defaultValue,
+											});
+									}}
+								>
+									<IoChevronForwardOutline size={20} />
+								</div>
+							) : null}
+						</div>
 					)
 				)}
 			</div>

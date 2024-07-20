@@ -20,7 +20,7 @@ export default function Layout({
 	return (
 		<FilterProvider>
 			<p className="font-medium text-slate-500">{`Tiêu chí`}</p>
-			<h1 className="mt-1 font-semibold text-2xl">
+			<h1 className="mt-1 font-semibold text-2xl ">
 				{data?.criteria?.display_name || ""}
 			</h1>
 			<BreadCrumb />

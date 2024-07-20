@@ -37,7 +37,9 @@ export default function CommentPage({ defaultFilter = {}, selectors = [] }: IPro
 			: undefined,
 	};
 
-	const [getCommentList, { data, loading: isLoading }] = useCommentListLazyQuery();
+	const [getCommentList, { data, loading: isLoading }] = useCommentListLazyQuery({
+		fetchPolicy: "cache-and-network",
+	});
 
 	const { dataList: comments, bottomRef } = useInfiniteScroll({
 		queryFunction: getCommentList,

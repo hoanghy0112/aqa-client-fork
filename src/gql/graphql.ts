@@ -533,7 +533,7 @@ export type AllCriteriasQueryVariables = Exact<{
 }>;
 
 
-export type AllCriteriasQuery = { __typename?: 'Query', criterias: { __typename?: 'PaginatedCriteria', data: Array<{ __typename?: 'Criteria', display_name: string, criteria_id: string }>, meta: { __typename?: 'PaginatedMetaData', hasNext: boolean, hasPrev: boolean, page: number, size: number, total_item: number, total_page: number } } };
+export type AllCriteriasQuery = { __typename?: 'Query', criterias: { __typename?: 'PaginatedCriteria', data: Array<{ __typename?: 'Criteria', display_name: string, criteria_id: string, type: Array<{ __typename?: 'CriteriaProperty', class_type: string, num: number }> }>, meta: { __typename?: 'PaginatedMetaData', hasNext: boolean, hasPrev: boolean, page: number, size: number, total_item: number, total_page: number } } };
 
 export type CriteriasQueryVariables = Exact<{
   filter?: InputMaybe<FilterArgs>;
@@ -1052,6 +1052,10 @@ export const AllCriteriasDocument = gql`
     data {
       display_name
       criteria_id
+      type {
+        class_type
+        num
+      }
     }
     meta {
       hasNext

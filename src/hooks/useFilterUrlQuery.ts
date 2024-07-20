@@ -41,13 +41,13 @@ export function useFilterUrlQuery() {
 				})
 			);
 		},
-		[query]
+		[params, query, router]
 	);
 
 	useEffect(() => {
 		if (params.has("tree"))
 			setQuery(JSON.parse(decodeURI(params.get("tree")?.toString() || "")));
-	}, []);
+	}, [params]);
 
 	// useEffect(() => {
 	// 	if (authData?.user.role === Role.Faculty)

@@ -21,9 +21,11 @@ import ThemeSwitcher from "./ThemeSwitcher";
 import { twMerge } from "tailwind-merge";
 import LecturerNavIcon from "@/assets/LecturerNavIcon";
 import { IoLogInOutline } from "react-icons/io5";
+import usePersistentState from "@/hooks/usePersistentState";
 
 export default function NavigationDrawer({ children }: { children?: ReactNode }) {
-	const [open, setOpen] = useState(false);
+	const [a, setA] = useState("");
+	const [open, setOpen] = usePersistentState("nav-open", false);
 
 	const toggleDrawer = useCallback(() => {
 		setOpen((prev) => !prev);

@@ -104,6 +104,7 @@ function InnerPointWithGroupedEntity({
 					colors={["sky"]}
 					yAxisWidth={80}
 					autoMinValue
+					showAnimation
 					valueFormatter={(number: number) => {
 						return `${number.toFixed(2)}`;
 					}}
