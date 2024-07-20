@@ -154,6 +154,11 @@ function InnerPointWithCompare({
 						valueFormatter={(number: number) => {
 							return `${number.toFixed(2)}`;
 						}}
+						rotateLabelX={{
+							angle: 0,
+							verticalShift: 30,
+							xAxisHeight: 50,
+						}}
 						onValueChange={() => {}}
 						// onValueChange={(v) => {
 						// 	const item = data.find(

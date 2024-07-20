@@ -32,7 +32,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 		<>
 			<h1 className="font-semibold text-3xl text-slate-500">Khoa/Bộ môn</h1>
 			<BreadCrumb />
-			<PageTabs defaultPath="subject" tabs={tabs} />
+			<PageTabs defaultPath="faculty" tabs={tabs} />
 			<div className=" w-full mt-5 p-0 h-auto">
 				<FilterProvider>{children}</FilterProvider>
 			</div>
