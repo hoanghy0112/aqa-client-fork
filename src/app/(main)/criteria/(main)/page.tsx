@@ -11,7 +11,7 @@ export default function Page() {
 
 	const [keyword, setKeyword] = useState("");
 
-	const { data } = useAllCriteriasQuery({
+	const { data, loading } = useAllCriteriasQuery({
 		variables: { filter: { ...query, keyword } },
 	});
 
@@ -29,6 +29,7 @@ export default function Page() {
 				className=" mt-4 w-full"
 			/>
 			<ChildrenItems
+				loading={loading}
 				items={[
 					{
 						display_name: "Chọn tất cả tiêu chí",

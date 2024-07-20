@@ -76,42 +76,45 @@ function InnerPointEachSemester({
 				<AreaChart
 					className=" h-full mt-4"
 					data={
-						[...data]
-							.sort((a, b) => {
-								const [semesterA, yearA] = a.display_name?.split(
-									", "
-								) || [0, 0];
-								const [semesterB, yearB] = b.display_name?.split(
-									", "
-								) || [0, 0];
-								if (yearA == yearB) {
-									return (
-										parseInt(
-											semesterA.toString().at(-1) || "",
-											10
-										) -
-										parseInt(
-											semesterB.toString().at(-1) || "",
-											10
-										)
-									);
-								} else {
-									return (
-										parseInt(yearA.toString(), 10) -
-										parseInt(yearB.toString(), 10)
-									);
-								}
-							})
-							.map((point) => ({
-								Điểm: point.average_point * 4,
-								semester_name: point.display_name,
-							})) || []
+						loading
+							? []
+							: [...data]
+									.sort((a, b) => {
+										const [semesterA, yearA] =
+											a.display_name?.split(", ") || [0, 0];
+										const [semesterB, yearB] =
+											b.display_name?.split(", ") || [0, 0];
+										if (yearA == yearB) {
+											return (
+												parseInt(
+													semesterA.toString().at(-1) ||
+														"",
+													10
+												) -
+												parseInt(
+													semesterB.toString().at(-1) ||
+														"",
+													10
+												)
+											);
+										} else {
+											return (
+												parseInt(yearA.toString(), 10) -
+												parseInt(yearB.toString(), 10)
+											);
+										}
+									})
+									.map((point) => ({
+										Điểm: point.average_point * 4,
+										semester_name: point.display_name,
+									})) || []
 					}
 					index="semester_name"
 					categories={["Điểm"]}
 					colors={["sky"]}
 					yAxisWidth={80}
 					minValue={3.3}
+					showAnimation
 					rotateLabelX={{
 						angle: 0,
 						verticalShift: 30,
