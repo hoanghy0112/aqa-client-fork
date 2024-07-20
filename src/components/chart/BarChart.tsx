@@ -105,7 +105,7 @@ export function BarChart({
 				beginAtZero: false,
 				ticks: {
 					color: "black",
-					font: { size: 16 },
+					font: { size: 15, weight: "bold" },
 				},
 			},
 			y: {
@@ -118,7 +118,7 @@ export function BarChart({
 				beginAtZero: false,
 				ticks: {
 					color: "black",
-					font: { size: 16 },
+					font: { size: 15 },
 					autoSkip: true,
 					stepSize: 0.2,
 				},
@@ -136,7 +136,7 @@ export function BarChart({
 				},
 				ticks: {
 					color: "black",
-					font: { size: 16 },
+					font: { size: 15 },
 					stepSize: 1,
 				},
 			},

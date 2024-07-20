@@ -116,7 +116,7 @@ function Page_({ subject_id }: { subject_id: string }) {
 				legends={LEGEND_NAMES}
 				colors={CHART_COLORS}
 				columnNum={data?.length || 0}
-				height={450}
+				height={500}
 				showLegend
 				handlerButtons={
 					<>
