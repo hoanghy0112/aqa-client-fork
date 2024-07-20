@@ -31,7 +31,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
 	useEffect(() => {
 		if (loading === false && !data) {
-			console.log({ data, loading });
 			router.replace("/signin");
 		}
 	}, [data, loading, router]);
