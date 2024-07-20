@@ -10,14 +10,14 @@ import {
 import { sortSemester } from "@/utils/sortSemester";
 import Loading from "@components/Loading";
 import NoData from "@components/NoData";
-import { AreaChart, BarChart, LineChart } from "@tremor/react";
+import { AreaChart, BarChart, Color, LineChart } from "@tremor/react";
 import { ReactNode, useEffect, useState } from "react";
 
 type Props = {
 	title?: string;
 	groupEntity: string;
 	selectors?: ReactNode;
-	queries?: (FilterArgs & { name: string })[];
+	queries?: (FilterArgs & { name?: string | null })[];
 	xTitle?: string;
 };
 
@@ -73,17 +73,33 @@ function InnerPointWithCompare({
 						if (prev.length === 0) {
 							return data.map((value) => ({
 								display_name: value?.display_name || "",
-								[query.name]: (value.average_point || 0) * 4,
+								[query.name || ""]: (value.average_point || 0) * 4,
 							}));
 						} else {
-							return prev.map((item) => ({
-								...item,
-								[query.name]:
-									(data.find(
-										(value) =>
-											value.display_name === item.display_name
-									)?.average_point || 0) * 4 || null,
-							}));
+							return [
+								...prev.map((item) => ({
+									...item,
+									[query.name || ""]:
+										(data.find(
+											(value) =>
+												value.display_name ===
+												item.display_name
+										)?.average_point || 0) * 4 || null,
+								})),
+								...data
+									.filter((value) =>
+										prev.every(
+											(item) =>
+												value.display_name !==
+												item.display_name
+										)
+									)
+									.map((value) => ({
+										display_name: value?.display_name || "",
+										[query.name || ""]:
+											(value.average_point || 0) * 4,
+									})),
+							];
 						}
 					});
 					return response;
@@ -105,22 +121,7 @@ function InnerPointWithCompare({
 					secondaryTitle={""}
 					legends={legends}
 					showLegend={false}
-					colors={[
-						"sky",
-						"cyan",
-						"indigo",
-						"orange",
-						"violet",
-						"teal",
-						"lime",
-						"fuchsia",
-						"emerald",
-						"green",
-						"indigo",
-						"red",
-						"stone",
-						"yellow",
-					]}
+					colors={COLORS}
 					columnNum={data.length || 0}
 					columnSize={100}
 					isFullWidth
@@ -133,24 +134,11 @@ function InnerPointWithCompare({
 						categories={legends}
 						curveType={"natural"}
 						enableLegendSlider
-						colors={[
-							"sky",
-							"yellow",
-							"emerald",
-							"orange",
-							"violet",
-							"teal",
-							"lime",
-							"fuchsia",
-							"red",
-							"red",
-							"indigo",
-							"red",
-							"stone",
-							"yellow",
-						]}
+						colors={COLORS}
 						yAxisWidth={80}
 						autoMinValue
+						connectNulls
+						showAnimation
 						valueFormatter={(number: number) => {
 							return `${number.toFixed(2)}`;
 						}}
@@ -183,3 +171,230 @@ export default function PointWithCompare(props: Props) {
 		</FilterProvider>
 	);
 }
+
+const COLORS: Color[] = [
+	"sky",
+	"cyan",
+	"indigo",
+	"orange",
+	"violet",
+	"teal",
+	"lime",
+	"fuchsia",
+	"emerald",
+	"green",
+	"indigo",
+	"red",
+	"stone",
+	"yellow",
+	"sky",
+	"cyan",
+	"indigo",
+	"orange",
+	"violet",
+	"teal",
+	"lime",
+	"fuchsia",
+	"emerald",
+	"green",
+	"indigo",
+	"red",
+	"stone",
+	"yellow",
+	"sky",
+	"cyan",
+	"indigo",
+	"orange",
+	"violet",
+	"teal",
+	"lime",
+	"fuchsia",
+	"emerald",
+	"green",
+	"indigo",
+	"red",
+	"stone",
+	"yellow",
+	"sky",
+	"cyan",
+	"indigo",
+	"orange",
+	"violet",
+	"teal",
+	"lime",
+	"fuchsia",
+	"emerald",
+	"green",
+	"indigo",
+	"red",
+	"stone",
+	"yellow",
+	"sky",
+	"cyan",
+	"indigo",
+	"orange",
+	"violet",
+	"teal",
+	"lime",
+	"fuchsia",
+	"emerald",
+	"green",
+	"indigo",
+	"red",
+	"stone",
+	"yellow",
+	"sky",
+	"cyan",
+	"indigo",
+	"orange",
+	"violet",
+	"teal",
+	"lime",
+	"fuchsia",
+	"emerald",
+	"green",
+	"indigo",
+	"red",
+	"stone",
+	"yellow",
+	"sky",
+	"cyan",
+	"indigo",
+	"orange",
+	"violet",
+	"teal",
+	"lime",
+	"fuchsia",
+	"emerald",
+	"green",
+	"indigo",
+	"red",
+	"stone",
+	"yellow",
+	"sky",
+	"cyan",
+	"indigo",
+	"orange",
+	"violet",
+	"teal",
+	"lime",
+	"fuchsia",
+	"emerald",
+	"green",
+	"indigo",
+	"red",
+	"stone",
+	"yellow",
+	"sky",
+	"cyan",
+	"indigo",
+	"orange",
+	"violet",
+	"teal",
+	"lime",
+	"fuchsia",
+	"emerald",
+	"green",
+	"indigo",
+	"red",
+	"stone",
+	"yellow",
+	"sky",
+	"cyan",
+	"indigo",
+	"orange",
+	"violet",
+	"teal",
+	"lime",
+	"fuchsia",
+	"emerald",
+	"green",
+	"indigo",
+	"red",
+	"stone",
+	"yellow",
+	"sky",
+	"cyan",
+	"indigo",
+	"orange",
+	"violet",
+	"teal",
+	"lime",
+	"fuchsia",
+	"emerald",
+	"green",
+	"indigo",
+	"red",
+	"stone",
+	"yellow",
+	"sky",
+	"cyan",
+	"indigo",
+	"orange",
+	"violet",
+	"teal",
+	"lime",
+	"fuchsia",
+	"emerald",
+	"green",
+	"indigo",
+	"red",
+	"stone",
+	"yellow",
+	"sky",
+	"cyan",
+	"indigo",
+	"orange",
+	"violet",
+	"teal",
+	"lime",
+	"fuchsia",
+	"emerald",
+	"green",
+	"indigo",
+	"red",
+	"stone",
+	"yellow",
+	"sky",
+	"cyan",
+	"indigo",
+	"orange",
+	"violet",
+	"teal",
+	"lime",
+	"fuchsia",
+	"emerald",
+	"green",
+	"indigo",
+	"red",
+	"stone",
+	"yellow",
+	"sky",
+	"cyan",
+	"indigo",
+	"orange",
+	"violet",
+	"teal",
+	"lime",
+	"fuchsia",
+	"emerald",
+	"green",
+	"indigo",
+	"red",
+	"stone",
+	"yellow",
+	"sky",
+	"cyan",
+	"indigo",
+	"orange",
+	"violet",
+	"teal",
+	"lime",
+	"fuchsia",
+	"emerald",
+	"green",
+	"indigo",
+	"red",
+	"stone",
+	"yellow",
+];

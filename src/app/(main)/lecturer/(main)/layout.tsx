@@ -14,6 +14,10 @@ const tabs = [
 		link: "list",
 		title: "Danh sách giảng viên",
 	},
+	{
+		link: "compare",
+		title: "So sánh giảng viên",
+	},
 ];
 
 export default function Layout({ children }: { children: ReactNode }) {
