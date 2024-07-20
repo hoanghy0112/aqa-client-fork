@@ -59,9 +59,8 @@ export default function BreadCrumb() {
 				className: "",
 				value: query?.criteria_id,
 				name: criteria?.criteria?.display_name,
+				defaultValue: { criteria_id: "" },
 				onClickValue: {
-					criteria_id: "",
-					// semester_id: "",
 					faculty_id: "",
 					subjects: undefined,
 					lecturer_id: "",
@@ -75,8 +74,8 @@ export default function BreadCrumb() {
 				name: semesters?.semesters?.find(
 					(semester) => semester.semester_id === query.semester_id
 				)?.display_name,
+				defaultValue: { semester_id: "" },
 				onClickValue: {
-					semester_id: "",
 					// faculty_id: "",
 					// subjects: undefined,
 					// lecturer_id: "",
@@ -90,8 +89,8 @@ export default function BreadCrumb() {
 							link: "faculty",
 							value: query?.faculty_id,
 							name: faculty?.faculty?.display_name,
+							defaultValue: { faculty_id: "" },
 							onClickValue: {
-								faculty_id: "",
 								subjects: undefined,
 								lecturer_id: "",
 								class_id: "",
@@ -104,8 +103,8 @@ export default function BreadCrumb() {
 				link: "subject",
 				value: query?.subjects?.at(0),
 				name: subject?.subject?.display_name,
+				defaultValue: { subjects: undefined },
 				onClickValue: {
-					subjects: undefined,
 					lecturer_id: "",
 					class_id: "",
 				},
@@ -115,8 +114,8 @@ export default function BreadCrumb() {
 				link: "lecturer",
 				value: query?.lecturer_id,
 				name: lecturer?.display_name,
+				defaultValue: { lecturer_id: "" },
 				onClickValue: {
-					lecturer_id: "",
 					class_id: "",
 				},
 			},
@@ -125,9 +124,8 @@ export default function BreadCrumb() {
 				link: "class",
 				value: query?.class_id,
 				name: classData?.class?.display_name,
-				onClickValue: {
-					class_id: "",
-				},
+				defaultValue: { class_id: "" },
+				onClickValue: {},
 			},
 		],
 		[
@@ -152,10 +150,18 @@ export default function BreadCrumb() {
 			<div className=" w-full -ml-5 flex flex-row gap-1">
 				{paths.map(
 					(
-						{ className, title, name, link, value, onClickValue },
+						{
+							className,
+							title,
+							name,
+							link,
+							value,
+							defaultValue,
+							onClickValue,
+						},
 						index
 					) => (
-						<div key={title} className=" flex gap-1 items-center">
+						<div key={title} className=" flex gap-0 items-center">
 							<Tooltip content={name}>
 								<Button
 									variant="light"
@@ -164,7 +170,10 @@ export default function BreadCrumb() {
 										name ? className : ""
 									)}
 									onClick={() => {
-										setUrlQuery(`/${link}`, onClickValue);
+										setUrlQuery(`/${link}`, {
+											...onClickValue,
+											...defaultValue,
+										});
 									}}
 								>
 									<div className=" p-2 flex-col gap-2 items-start">
@@ -183,7 +192,23 @@ export default function BreadCrumb() {
 								</Button>
 							</Tooltip>
 							{index !== paths.length - 1 ? (
-								<IoChevronForwardOutline size={20} />
+								<div
+									className=" rounded-xl grid place-items-center h-full px-2 cursor-pointer bg-background hover:bg-foreground-100 active:bg-foreground-200 duration-200"
+									onClick={() => {
+										if (value)
+											setUrlQuery(
+												`/${link}/${value}`,
+												onClickValue
+											);
+										else
+											setUrlQuery(`/${link}`, {
+												...onClickValue,
+												...defaultValue,
+											});
+									}}
+								>
+									<IoChevronForwardOutline size={20} />
+								</div>
 							) : null}
 						</div>
 					)
