@@ -30,12 +30,12 @@ export default function CriteriaIcon({
 					viewBox="0 0 24 24"
 					fill="none"
 				>
-					<path d="M21 21H3" stroke={color} stroke-linecap="round" />
-					<path d="M4 16V14" stroke={color} stroke-linecap="round" />
-					<path d="M12 12V9" stroke={color} stroke-linecap="round" />
-					<path d="M8 16V10" stroke={color} stroke-linecap="round" />
-					<path d="M16 13V11" stroke={color} stroke-linecap="round" />
-					<path d="M20 15V5" stroke={color} stroke-linecap="round" />
+					<path d="M21 21H3" stroke={color} strokeLinecap="round" />
+					<path d="M4 16V14" stroke={color} strokeLinecap="round" />
+					<path d="M12 12V9" stroke={color} strokeLinecap="round" />
+					<path d="M8 16V10" stroke={color} strokeLinecap="round" />
+					<path d="M16 13V11" stroke={color} strokeLinecap="round" />
+					<path d="M20 15V5" stroke={color} strokeLinecap="round" />
 				</svg>
 			) : null}
 		</>
