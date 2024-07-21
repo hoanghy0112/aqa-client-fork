@@ -1,7 +1,9 @@
 "use client";
 
-import { Button, Spinner } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import Loading from "./Loading";
+import NoData from "./NoData";
+import EmptyDataMessage from "./EmptyDataMessage";
 
 type Props = {
 	items: {
@@ -18,7 +20,8 @@ export default function ChildrenItems({ items, loading, isSort = true }: Props) 
 		<div className=" flex-1 py-6 flex flex-col items-start gap-4">
 			{loading ? (
 				<Loading />
-			) : (
+			) : items.length > 1 ||
+			  (items.length === 1 && items.at(0)?.value !== "all") ? (
 				<>
 					<Button
 						variant={"shadow"}
@@ -55,6 +58,8 @@ export default function ChildrenItems({ items, loading, isSort = true }: Props) 
 							))}
 					</div>
 				</>
+			) : (
+				<EmptyDataMessage reason="Không có dữ liệu nào được tìm thấy" />
 			)}
 		</div>
 	);
