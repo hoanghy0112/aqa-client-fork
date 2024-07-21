@@ -6,5 +6,5 @@ import { useFilterUrlQuery } from "@/hooks/useFilterUrlQuery";
 export default function Page() {
 	const { query, setUrlQuery } = useFilterUrlQuery();
 
-	return <PointEachSemester query={query} />;
+	return <PointEachSemester query={{ ...query, semester_id: undefined }} />;
 }

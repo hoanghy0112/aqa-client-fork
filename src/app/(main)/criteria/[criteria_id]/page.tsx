@@ -19,6 +19,7 @@ export default function Page({
 	return (
 		<div>
 			<ChildrenItems
+				isSort={false}
 				items={[
 					{
 						display_name: "Tất cả học kỳ",

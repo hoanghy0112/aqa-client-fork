@@ -182,7 +182,7 @@ export default function BreadCrumb() {
 										</p>
 										<p
 											className={twMerge(
-												" h-auto max-w-[150px] whitespace-nowrap overflow-hidden text-ellipsis text-foreground-900 text-start font-semibold",
+												" h-auto max-w-[120px] whitespace-nowrap overflow-hidden text-ellipsis text-foreground-900 text-start font-semibold",
 												link === "criteria" ? " " : ""
 											)}
 										>
@@ -219,6 +219,10 @@ export default function BreadCrumb() {
 				color="danger"
 				className={twMerge(" flex-1 h-fit")}
 				onClick={() => {
+					const currentPage = pathname.split("/").at(1);
+					const currentPageKey =
+						currentPage !== "subject" ? `${currentPage}_id` : "subjects";
+
 					setUrlQuery(pathname, {
 						criteria_id: "",
 						semester_id: "",
@@ -226,6 +230,8 @@ export default function BreadCrumb() {
 						subjects: undefined,
 						lecturer_id: "",
 						class_id: "",
+						//@ts-expect-error
+						[currentPageKey]: query?.[currentPageKey] as any,
 					});
 				}}
 			>

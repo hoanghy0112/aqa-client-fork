@@ -68,6 +68,7 @@ function InnerPointWithGroupedEntity({
 					...Object.fromEntries(
 						Object.entries(variables).filter(([key, value]) => !!value)
 					),
+					[`${groupEntity.toLowerCase()}_id`]: undefined,
 					groupEntity: groupEntity,
 				},
 				fetchPolicy: "network-only",
@@ -102,8 +103,13 @@ function InnerPointWithGroupedEntity({
 					index="name"
 					categories={[xTitle]}
 					colors={["sky"]}
+					minValue={3.5}
+					rotateLabelX={{
+						angle: 0,
+						verticalShift: 20,
+						xAxisHeight: 40,
+					}}
 					yAxisWidth={80}
-					autoMinValue
 					showAnimation
 					valueFormatter={(number: number) => {
 						return `${number.toFixed(2)}`;
