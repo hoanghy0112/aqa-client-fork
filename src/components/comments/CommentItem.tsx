@@ -49,7 +49,7 @@ export default function CommentItem({
 						{content}
 					</p>
 					<div className="ml-auto w-fit pl-5 flex shrink-0 flex-row gap-5">
-						<Card
+						{/* <Card
 							isPressable
 							shadow="sm"
 							className="p-3 flex flex-row justify-center items-center"
@@ -60,7 +60,7 @@ export default function CommentItem({
 								height={18}
 								alt="Copy comment"
 							/>
-						</Card>
+						</Card> */}
 						<Card
 							isPressable
 							shadow="sm"

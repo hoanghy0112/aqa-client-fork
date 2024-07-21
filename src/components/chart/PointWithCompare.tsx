@@ -64,6 +64,7 @@ function InnerPointWithCompare({
 									([key, value]) => !!value
 								)
 							),
+							[`${groupEntity.toLowerCase()}_id`]: undefined,
 							groupEntity,
 						},
 						fetchPolicy: "network-only",

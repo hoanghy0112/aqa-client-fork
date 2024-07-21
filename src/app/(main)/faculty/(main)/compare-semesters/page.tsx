@@ -5,12 +5,15 @@ import { Faculty, useFacultiesQuery } from "@/gql/graphql";
 import { useFilterUrlQuery } from "@/hooks/useFilterUrlQuery";
 import { Checkbox, cn } from "@nextui-org/react";
 import { useState } from "react";
+import { useDebounce } from "usehooks-ts";
 
 export default function Page() {
 	const { query } = useFilterUrlQuery();
 	const { data: faculties } = useFacultiesQuery();
 
 	const [isIgnored, setIsIgnored] = useState<Map<string, boolean>>(new Map());
+
+	const isIgnoredDebounce = useDebounce(isIgnored, 800);
 
 	return faculties ? (
 		<>
@@ -50,7 +53,9 @@ export default function Page() {
 				queries={[
 					{ ...query, faculty_id: "", name: "Trung bình toàn trường" },
 					...faculties.faculties.data
-						.filter((faculty) => !isIgnored.get(faculty.faculty_id))
+						.filter(
+							(faculty) => !isIgnoredDebounce.get(faculty.faculty_id)
+						)
 						.map((faculty) => ({
 							...query,
 							faculty_id: faculty.faculty_id,
