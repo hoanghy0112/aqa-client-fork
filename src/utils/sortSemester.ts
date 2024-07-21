@@ -1,4 +1,3 @@
-
 export function sortSemester(
 	data: ({ display_name?: string } & Record<string, any>)[]
 ) {
