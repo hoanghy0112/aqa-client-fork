@@ -12,7 +12,7 @@ export default function Page({ params }: { params: any }) {
 
 	const [keyword, setKeyword] = useState("");
 	const { data } = useAllSubjectsQuery({
-		variables: { filter: { ...query, keyword } },
+		variables: { filter: { ...query, criteria_id: "", keyword } },
 	});
 
 	return (

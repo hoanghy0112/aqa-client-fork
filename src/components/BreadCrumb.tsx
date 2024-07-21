@@ -182,7 +182,7 @@ export default function BreadCrumb() {
 										</p>
 										<p
 											className={twMerge(
-												" h-auto max-w-[150px] whitespace-nowrap overflow-hidden text-ellipsis text-foreground-900 text-start font-semibold",
+												" h-auto max-w-[120px] whitespace-nowrap overflow-hidden text-ellipsis text-foreground-900 text-start font-semibold",
 												link === "criteria" ? " " : ""
 											)}
 										>
